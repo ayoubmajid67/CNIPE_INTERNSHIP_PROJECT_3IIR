@@ -3,7 +3,7 @@ Here is the full `README.md` code with the logo path specified and without the l
 
 # Poste de Maroc Internship Project
 
-![Project Logo](CNIPE_INTERNSHIP_PROJECT_3IIR/dev/front-end/imgs/logo.jpg)
+![Project Logo](./dev/front-end/imgs/logo.jpg)
 
 This project is part of my internship at **Poste de Maroc**. The goal of this project was to develop a digital platform using **Flask** and **MongoDB** for the internal management of operations, such as role-based controls for admin, agent postale, and chef de siège. The platform allows for product shipments, transaction logs, and tariff management.
 
