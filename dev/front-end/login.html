@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Login</title>
+
+		<!-- font awesome cdn -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+		<link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" href="css/login.css" />
+	</head>
+	<body>
+		<form class="authForm">
+			<h1>Login</h1>
+			<div>
+				<input type="email" placeholder="Email" required />
+			</div>
+			<div class="passwordContainer">
+				<input type="password" placeholder="password" autocomplete required />
+				<i id="togglePassword" class="fas fa-eye toggle-password"></i>
+			</div>
+
+			<div class="btnContainer">
+				<input type="submit" value="login" />
+				<button id="register"><a href="./register.html">register</a></button>
+				<button id="register"><a href="./index.html">Home</a></button>
+			</div>
+		</form>
+
+		<section class="hint">
+			<div class="alert alert-primary">
+				<h3 class="alert-title">Hello World</h3>
+				<p class="alert-content">Lorem ipsum</p>
+			</div>
+		</section>
+
+		<!-- axios library -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js" integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+		<script src="js/script.js"></script>
+
+		<script src="js/login.js"></script>
+	</body>
+</html>

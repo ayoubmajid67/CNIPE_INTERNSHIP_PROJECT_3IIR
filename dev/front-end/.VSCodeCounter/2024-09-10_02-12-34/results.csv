@@ -1,0 +1,37 @@
+"filename", "language", "HTML", "JavaScript", "CSS", "XML", "comment", "blank", "total"
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\EspaceFormation.html", "HTML", 148, 0, 0, 0, 29, 19, 196
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\aide.html", "HTML", 159, 0, 0, 0, 6, 24, 189
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\course.html", "HTML", 216, 0, 0, 0, 3, 18, 237
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\courseContent.html", "HTML", 443, 0, 0, 0, 115, 39, 597
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\css\aide.css", "CSS", 0, 0, 286, 0, 11, 86, 383
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\css\course.css", "CSS", 0, 0, 211, 0, 3, 109, 323
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\css\courseContent.css", "CSS", 0, 0, 989, 0, 7, 449, 1445
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\css\domain.css", "CSS", 0, 0, 351, 0, 5, 139, 495
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\css\espaceFormation.css", "CSS", 0, 0, 118, 0, 6, 42, 166
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\css\formation.css", "CSS", 0, 0, 137, 0, 0, 35, 172
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\css\index.css", "CSS", 0, 0, 195, 0, 2, 59, 256
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\css\login.css", "CSS", 0, 0, 6, 0, 0, 2, 8
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\css\register.css", "CSS", 0, 0, 17, 0, 1, 4, 22
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\css\style.css", "CSS", 0, 0, 554, 0, 12, 176, 742
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\formation.html", "HTML", 154, 0, 0, 0, 6, 23, 183
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\imgs\addPost.svg", "XML", 0, 0, 0, 7, 0, 1, 8
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\index.html", "HTML", 134, 0, 0, 0, 4, 14, 152
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\js\course.js", "JavaScript", 0, 179, 0, 0, 3, 37, 219
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\js\courseContent\clsManageCourseContent.js", "JavaScript", 0, 47, 0, 0, 0, 13, 60
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\js\courseContent\clsManageCourseContentClasses\clsManageCourseContentAddDelete.js", "JavaScript", 0, 246, 0, 0, 22, 54, 322
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\js\courseContent\clsManageCourseContentClasses\clsManageCourseContentEdit.js", "JavaScript", 0, 235, 0, 0, 8, 58, 301
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\js\courseContent\clsManageCourseContentClasses\clsManageCourseContentSwitch.js", "JavaScript", 0, 175, 0, 0, 5, 32, 212
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\js\courseContent\clsManageCourseContentClasses\clsManageRenderCourseContent.js", "JavaScript", 0, 130, 0, 0, 1, 23, 154
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\js\courseContent\clsManageSideBarAndOptions.js", "JavaScript", 0, 149, 0, 0, 3, 29, 181
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\js\courseContent\courseContent.js", "JavaScript", 0, 19, 0, 0, 0, 7, 26
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\js\courseContent\courseContentDomVariables.js", "JavaScript", 0, 1, 0, 0, 0, 0, 1
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\js\domain.js", "JavaScript", 0, 52, 0, 0, 0, 7, 59
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\js\espaceFormation.js", "JavaScript", 0, 412, 0, 0, 8, 86, 506
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\js\formation.js", "JavaScript", 0, 641, 0, 0, 11, 144, 796
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\js\index.js", "JavaScript", 0, 23, 0, 0, 2, 8, 33
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\js\login.js", "JavaScript", 0, 59, 0, 0, 5, 21, 85
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\js\register.js", "JavaScript", 0, 106, 0, 0, 6, 22, 134
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\js\script.js", "JavaScript", 0, 361, 0, 0, 22, 58, 441
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\login.html", "HTML", 37, 0, 0, 0, 2, 7, 46
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\front-end\register.html", "HTML", 58, 0, 0, 0, 2, 8, 68
+"Total", "-", 1349, 2835, 2864, 7, 310, 1853, 9218

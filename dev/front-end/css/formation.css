@@ -1,0 +1,189 @@
+.mainContent {
+padding-top :30px;
+
+}
+.formationInfo {
+    padding: 10px;
+    padding-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    gap: 40px;
+    margin-bottom: 30px;
+    background-color: #ededed4f;
+    background-image: url('../imgs/categoriesPage.jpg');
+    background-size: cover;
+    background-repeat :no-repeat;
+    background-blend-mode: color;
+    background-color: rgba(86, 85, 85, 0.495);
+    .mainTitle{
+        color: white;
+        border: 2px solid white;
+    }
+}
+
+.formationInfo .introVideo {
+
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+
+}
+
+.controlContainer {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+
+    width: 90%;
+}
+
+.introVideo .imgContainer,
+.introVideo video {
+    width: 90%;
+    border-radius: 12px;
+}
+
+.introVideo video.hidden {
+    display: none;
+}
+
+.introVideo .imgContainer .content {
+    height: 100%;
+
+}
+
+.introVideo .imgContainer {
+    position: relative;
+    overflow: hidden;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.imgContainer {
+    width: 90%;
+    position: relative;
+    overflow: hidden;
+    
+}
+
+@media (min-width:1200px) {
+
+    .controlContainer,
+    .introVideo video {
+        width: 70%;
+    }
+}
+
+.formationPictureContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding: 10px;
+    align-items: center;
+}
+
+.formationPictureContainer>div {
+
+    min-width: 350px;
+    width: 90%;
+}
+
+.formationPictureContainer .textInfo {
+   box-shadow: 1px 5px 10px rgba(0, 0, 0, 0.05);
+    border-left: 2px solid var(--primaryColor);
+    background-color: white;
+
+    padding: 15px 25px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.formationPictureContainer .thumbnailContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.thumbnailContainer img {
+    width: 350px;
+    max-width: 100%;
+    aspect-ratio: 1/1;
+    height: 350px;
+}
+
+.controlContainer button.save:disabled {
+    background: var(--primaryColor);
+    opacity: 0.5;
+}
+
+.card{
+    overflow: hidden;
+    .imgContainer{
+        width: 100%;
+       border: none;
+        padding: 0;
+    }
+}
+.card .controlContainer{ 
+    width: 100%;
+}
+.card *:not(img){
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.card  p{ 
+
+    margin-bottom: 20px;
+color: #494848;
+
+}
+
+.statistiques {
+    display: flex;
+    background-color: white;
+    padding: 5px;
+ border-top: 1px solid rgba(0, 0, 0, 0.103);
+}
+
+.statistiques figure {
+    
+    display: flex;
+
+    justify-content: center;
+    gap: 10px;
+    align-items: center;
+    gap: 10px;
+    width: 50%;
+
+}
+
+.statistiques figure:not(:last-child) {
+    border-right: 2px solid black;
+}
+
+.statistiques figure:not(.review) img {
+    --width: 40px;
+    width: var(--width);
+    height: var(--width);
+    aspect-ratio: 1/1;
+
+}
+.statistiques figure.review{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+.statistiques figure.review img{ 
+    
+    width: 100px;
+}

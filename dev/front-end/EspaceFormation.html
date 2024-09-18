@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Espace Catégories</title>
+		<link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" href="css/domain.css" />
+		<link rel="stylesheet" href="css/espaceFormation.css" />
+		<link rel="shortcut icon" href="imgs/logo.jpg" type="image/x-icon" />
+
+		<!-- font awesome -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	</head>
+	<body>
+		<header>
+			<div class="logoContainer">
+				<img src="imgs/logo.jpg" class="logo" alt="logo de la page d'accueil" />
+				<img src="imgs/logoAr.jpg" class="logoAr" alt="logo de la page d'accueil" />
+			</div>
+
+			<ul>
+				<li class="currentPage"><a href="#">Espace Catégories</a></li>
+				<li class="aideLi"><a href="aide.html">Aide</a></li>
+
+				<div class="loginContainer">
+					<button id="loginBtn"><a href="/login.html">Connexion</a></button>
+				</div>
+			</ul>
+			<i class="fa-solid fa-bars" id="toggleMenu"></i>
+		</header>
+
+		<section class="mainContent">
+			<div class="espaceFormationContainer">
+				<div class="espaceFormation">
+					<div class="mainTitle">Espace Catégories</div>
+	
+					<div class="searchContainer">
+						<div class="content">
+							<i class="fa-solid fa-magnifying-glass"></i>
+							<input type="text" id="SearchInput" placeholder="Rechercher" />
+						</div>
+					</div>
+	
+					<div class="weContainerFormations domainContent"></div>
+				</div>
+			</div>
+		
+			<!--start features   -->
+			<div class="features" id="features">
+				<div class="mainTitle">Caractéristiques</div>
+				<div class="container">
+					<div class="box quality">
+						<div class="imgHolder">
+							<img src="imgs/features-01.jpg" alt="" />
+						</div>
+						<h2>Qualité</h2>
+						<p>Notre plateforme offre des formations de haute qualité, conçues par des experts du domaine pour vous garantir un apprentissage approfondi et efficace.</p>
+						<a>Plus</a>
+					</div>
+
+					<div class="box time">
+						<div class="imgHolder">
+							<img src="imgs/features-02.jpg" alt="" />
+						</div>
+						<h2>Temps</h2>
+						<p>Accédez à des formations à votre propre rythme, selon votre emploi du temps. Nous offrons des cours flexibles qui s'adaptent à vos besoins.</p>
+						<a>Plus</a>
+					</div>
+
+					<div class="box passion">
+						<div class="imgHolder">
+							<img src="imgs/features-03.jpg" alt="" />
+						</div>
+						<h2>Passion</h2>
+						<p>Nous sommes passionnés par l'éducation et nous nous engageons à vous fournir les meilleures ressources et outils pour réussir dans votre parcours d'apprentissage.</p>
+						<a>Plus</a>
+					</div>
+				</div>
+			</div>
+			<div class="spikes"></div>
+			<!--end features   -->
+		</section>
+
+		<!-- Footer Section -->
+		<footer>
+			<div class="footerContainer">
+				<div class="footerContent">
+					<div class="footerColumn">
+						<h4>Sites importants</h4>
+						<ul>
+							<li><a href="https://www.men.gov.ma/Fr/Pages/Accueil.aspx" target="_blank">Ministère de l'Éducation Nationale, du Préscolaire & des Sports</a></li>
+							<li><a href="https://soutiensco.men.gov.ma/" target="_blank">Taalim Tice</a></li>
+
+							<li><a href="https://mtaess.gov.ma/fr/tourisme/metiers-et-formation/guides-de-tourisme/" target="_blank">Guides</a></li>
+						</ul>
+					</div>
+
+					<div class="footerColumn">
+						<h4>Contact</h4>
+						<ul>
+							<li><a href="https://www.men.gov.ma/Fr/Pages/DSI.aspx" target="_blank">Direction du Système d'Information</a></li>
+							<li><a href="https://www.men.gov.ma/Fr/Pages/cahier-charges-stages-CRMEF.aspx" target="_blank">Unité Centrale de la Formation des Cadres</a></li>
+							<li><a href="https://www.men.gov.ma/Fr/Pages/crmef.aspx" target="_blank">Centres Régionaux des Métiers de l'Éducation et de la Formation</a></li>
+						</ul>
+					</div>
+
+					<ul class="social">
+						<li>
+							<a href="" target="_blank">
+								<i class="fa-brands fa-facebook"></i>
+							</a>
+						</li>
+						<li>
+							<a href="" target="_blank">
+								<i class="fa-brands fa-youtube"></i>
+							</a>
+						</li>
+						<li>
+							<a href="" target="_blank">
+								<i class="fa-brands fa-instagram"></i>
+							</a>
+						</li>
+						<li><a href="" target="_blank"> </a></li>
+					</ul>
+				</div>
+			</div>
+		</footer>
+
+		<section class="hint">
+			<div class="alert alert-primary">
+				<h3 class="alert-title"></h3>
+				<p class="alert-content"></p>
+			</div>
+		</section>
+
+		<div class="blackDrop"></div>
+
+		<div class="deletePopup popUpBox">
+			<div class="popupContent">
+				<h2 class="popUpTitle">Supprimer Catégorie ?</h2>
+				<p>Cela supprimera <span class="popUpDomainName"></span></p>
+				<div class="popupButtons">
+					<button class="popupButton popupButtonCancel">Annuler</button>
+					<button class="popupButton popupButtonDelete">Supprimer</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="addPopup popUpBox">
+			<div class="popupContent">
+				<div class="header">
+					<h2 class="popUpTitle">Ajouter catégorie</h2>
+					<button id="closeAddDomainBtn">
+						<i class="fa-solid fa-xmark" onclick="setDisablePopUpBoxMode()"></i>
+					</button>
+				</div>
+
+				<input class="domainTitleInput" placeholder="le nom de la catégorie" />
+
+				<textarea class="descriptionInput" placeholder="description de la catégorie" oninput="manageAddFormationDescriptionChange(event)"></textarea>
+				<div class="imgContainer">
+					<div class="content">
+						<h4>Choisir un fichier</h4>
+						<img src="imgs/addPost.svg" alt="ajouter une image" />
+					</div>
+					<input type="file" name="image" accept="image/*" onchange="manageAddDomainImgFileChange(event)" />
+				</div>
+
+				<div class="popupButtons">
+					<button class="popupButton popupButtonCancel">Annuler</button>
+					<button class="popupButton popupButtonAddDomain" onclick="addFormation(event)">Ajouter</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- axios library -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js" integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+		<script src="js/script.js"></script>
+		<script src="js/domain.js"></script>
+		<script src="js/espaceFormation.js"></script>
+	</body>
+</html>
+
+<!-- 8QvpTfEZ5A -->

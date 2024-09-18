@@ -1,0 +1,15 @@
+"filename", "language", "Properties", "Python", "JSON", "comment", "blank", "total"
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\back-end\.env", "Properties", 4, 0, 0, 1, 0, 5
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\back-end\app\__init__.py", "Python", 0, 13, 0, 0, 7, 20
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\back-end\app\file_utils.py", "Python", 0, 188, 0, 13, 68, 269
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\back-end\app\models\course.py", "Python", 0, 20, 0, 0, 9, 29
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\back-end\app\models\formation.py", "Python", 0, 678, 0, 56, 147, 881
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\back-end\app\models\user.py", "Python", 0, 133, 0, 9, 78, 220
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\back-end\app\routes.py", "Python", 0, 964, 0, 59, 339, 1362
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\back-end\app\utile.py", "Python", 0, 51, 0, 2, 17, 70
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\back-end\config.py", "Python", 0, 10, 0, 0, 4, 14
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\back-end\databaseStructureComments.json", "JSON", 0, 0, 9, 0, 2, 11
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\back-end\databaseStructureFormation.json", "JSON", 0, 0, 25, 0, 1, 26
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\back-end\databaseStructureUser.json", "JSON", 0, 0, 22, 0, 7, 29
+"c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\back-end\run.py", "Python", 0, 4, 0, 0, 3, 7
+"Total", "-", 4, 2061, 56, 140, 682, 2943

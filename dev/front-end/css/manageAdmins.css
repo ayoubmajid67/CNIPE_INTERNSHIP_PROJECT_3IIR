@@ -1,0 +1,228 @@
+:root {
+    --primaryColor: #ed731d;
+    --secondaryColor: #1e3875;
+    --secondaryLightColor: #6d8eda;
+    --mainTransitionDuration: 0.3s;
+    --borderColor: #e9e6e6;
+    --sectionPaddingTop: 100px;
+    --sectionPaddingBottom: 100px;
+    --sectionBk: #ececec;
+    --cancelBg: #f11818;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: var(--sectionBk);
+    margin: 0;
+    padding: 0;
+}
+
+.mainContent {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    margin-top: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+
+    button {
+        background-color: var(--secondaryLightColor);
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        color: white;
+        cursor: pointer;
+        transition: background-color var(--mainTransitionDuration);
+
+        &:hover {
+            background-color: #5c79c2;
+        }
+    }
+}
+
+.mainTitle {
+    color: var(--secondaryColor);
+    text-align: center;
+    margin: 30px 0;
+}
+
+.inputSection {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-bottom: -50px;
+    font-size: 1.5em;
+
+    .formGroup {
+        margin-right: 15px;
+
+        label {
+            margin-right: 10px;
+            color: var(--secondaryColor);
+        }
+
+        .formControl {
+            padding: 8px;
+            border: 1px solid var(--borderColor);
+            border-radius: 4px;
+        }
+    }
+
+    input {
+        font-size: 1em;
+        border-radius: 6px;
+        padding: 20px 17px;
+        border: 2px solid black;
+        box-shadow:1px 2px 10px rgba(0, 0, 0, 0.164);
+    }
+
+ 
+}
+
+.tableSection {
+
+    width: 90%;
+
+    .tableTitle {
+        color: var(--secondaryColor);
+        margin-bottom: 15px;
+    }
+
+    .tableContainer {
+        overflow-x: auto;
+    }
+
+    .userTable {
+        width: 100%;
+        border-collapse: collapse;
+
+        th,
+        td {
+            border: 1px solid var(--borderColor);
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--secondaryLightColor);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr{
+           select{
+            width: 100%;
+            font-size: 0.95em;
+           }
+ 
+            &.editStat {
+
+                border-left: 2px solid var(--primaryColor);
+                box-shadow: 1px 2px 20px rgba(166, 165, 165, 0.098);
+
+                input{
+                    padding: 0;
+                }
+        }
+    }
+        .editBtn,
+        .saveBtn {
+            padding: 6px 12px;
+            margin: 2px;
+
+            &.editBtn {
+                background-color: var(--secondaryColor);
+                color: white;
+
+                &:hover {
+                    background-color: #162a5c;
+                }
+            }
+
+            &.saveBtn {
+                background-color: var(--secondaryLightColor);
+                color: white;
+
+                &:hover {
+                    background-color: #5c79c2;
+                }
+
+                &:disabled {
+                    background-color: #cccccc;
+                    cursor: not-allowed;
+                }
+            }
+        }
+    }
+}
+
+#toggleShowUsersBtn {
+    display: block;
+    margin: 20px auto 0;
+}
+
+@media (max-width: 768px) {
+    .inputSection {
+        flex-direction: column;
+        align-items: stretch;
+
+        .formGroup {
+            margin-right: 0;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    }
+}
+
+.addAdminSection {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+
+    form#addAdminForm {
+        margin-top: 0;
+        width: 80%;
+
+        .formGroup {
+            margin-bottom: 15px;
+
+            label {
+                display: block;
+                margin-bottom: 5px;
+            }
+
+            .formControl {
+                padding: 10px;
+                border: 1px solid var(--borderColor);
+                border-radius: 4px;
+                width: 100%;
+            }
+        }
+
+    
+    }
+}
+
+.hidden {
+    display: none;
+}
+.passVerf {
+    backdrop-filter: blur(75px);
+    background-color: #efefef;
+    filter: drop-shadow(0px 0px 20px #19191965);
+
+}

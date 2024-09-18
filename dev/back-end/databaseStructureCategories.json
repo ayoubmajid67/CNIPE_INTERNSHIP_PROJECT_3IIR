@@ -1,0 +1,102 @@
+[
+	{
+		"_id": {
+			"$oid": "669f74b71772a4eb541fd60f"
+		},
+		"categoryName": "imgs",
+		"createdDate": {
+"$date": "2024-07-23T09:15:35.390Z"
+		},
+		"description": "",
+		"thumbnail": "http://127.0.0.1:5000/formations/imgs/thumbnails",
+		"introVideo": "http://127.0.0.1:5000/formations/imgs/introVideo",                                                                                                                                   
+		"courses": [
+			{
+				"courseName": "course 1",
+				"description": "",
+				"review": 2,
+				"numberOfLikes": 1,
+				"numberOfVideos": 5,
+				"numberOfUsers": 5,
+				"numberOfRatings": 2,
+				"totalRating": 4,
+				"thumbnail": "http://127.0.0.1:5000/formations/imgs/courses/course 1/thumbnails",
+				"createdDate": {
+					"$date": "2024-08-25T16:32:58.525Z"
+				},
+				"courseContent": [
+					{
+						"videoLink": "http://127.0.0.1:5000/formations/imgs/courses/course 1/videos/2-video",
+						"thumbnail": "http://127.0.0.1:5000/formations/imgs/courses/course 1/thumbnails/2-video",
+						"addedDate": "2024-09-08T17:45:22.053300",
+						"duration": 127,
+						"nbrOfLikes": 0,
+						"title": "2-video",
+						"description": "sdsa",
+						"resources": [
+							{
+								"title": "documentation : ",
+								"description": "",
+								"link": "google.com",
+								"_id": "66e73af31ddab771cd1e822a"
+							}
+						]
+					}
+				],
+				"comments": [
+					{
+						"_id": "66e08d673e5ac141577dacf3",
+						"userProfile": "http://127.0.0.1:5000/profiles/youbista_profile.webp",
+						"username": "youbista",
+						"message": "good content",
+						"courseName": "course 1",
+						"createdDate": {
+							"$date": "2024-09-10T18:18:15.661Z"
+						},
+						"usersPullUpList": ["amine"],
+						"nbrPullUp": 1,
+						"isReply": false,
+						"replyList": [
+							{
+								"_id": "66e171c084a00db163fe3cde",
+								"userProfile": "http://127.0.0.1:5000/profiles/youbista_profile.webp",
+								"username": "youbista",
+								"message": "nice",
+								"courseName": "course 1",
+								"createdDate": {
+									"$date": "2024-09-11T10:32:32.748Z"
+								},
+								"isReply": true,
+								"nbrPullUp": 0,
+								"usersPullUpList": []
+							}
+						]
+					}
+				],
+
+				"reviews": [
+					{
+						"_id": "66e1aedf39449e25101b6dea",
+						"username": "amine",
+						"review": "good course",
+						"rating": 3.5,
+						"createdDate": {
+							"$date": "2024-09-11T14:53:19.200Z"
+						},
+						"userProfile": "http://127.0.0.1:5000/profiles/user1_profile.webp"
+					},
+					{
+						"_id": "66e6b721d3fe7229c5dafef9",
+						"username": "youbista",
+						"review": "",
+						"rating": 0.5,
+						"createdDate": {
+							"$date": "2024-09-15T10:29:53.836Z"
+						},
+						"userProfile": "http://127.0.0.1:5000/profiles/youbista_profile.webp"
+					}
+				]
+			}
+		]
+	}
+]

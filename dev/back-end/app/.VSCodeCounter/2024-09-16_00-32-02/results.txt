@@ -1,0 +1,34 @@
+Date : 2024-09-16 00:32:02
+Directory : c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\back-end\app
+Total : 8 files,  2345 codes, 173 comments, 774 blanks, all 3292 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| Python   |          8 |      2,345 |        173 |        774 |      3,292 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++--------------------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                                                             | files      | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                                                                |          8 |      2,345 |        173 |        774 |      3,292 |
+| . (Files)                                                                                                                                        |          4 |      1,402 |        101 |        504 |      2,007 |
+| models                                                                                                                                           |          4 |        943 |         72 |        270 |      1,285 |
++--------------------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++--------------------------------------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                                                                                         | language | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\back-end\app\__init__.py         | Python   |         13 |          0 |          7 |         20 |
+| c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\back-end\app\file_utils.py       | Python   |        188 |         13 |         68 |        269 |
+| c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\back-end\app\models\course.py    | Python   |        101 |          5 |         35 |        141 |
+| c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\back-end\app\models\formation.py | Python   |        685 |         56 |        150 |        891 |
+| c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\back-end\app\models\test.py      | Python   |          0 |          0 |          1 |          1 |
+| c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\back-end\app\models\user.py      | Python   |        157 |         11 |         84 |        252 |
+| c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\back-end\app\routes.py           | Python   |      1,150 |         86 |        412 |      1,648 |
+| c:\vs code\GitHub\internship\Center National des Innovations Pédagogiques et d'Expérimentation (CNIPE)\2024\dev\back-end\app\utile.py            | Python   |         51 |          2 |         17 |         70 |
+| Total                                                                                                                                            |          |      2,345 |        173 |        774 |      3,292 |
++--------------------------------------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+

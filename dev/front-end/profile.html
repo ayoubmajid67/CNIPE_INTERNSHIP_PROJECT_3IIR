@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>profile</title>
+		<link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" href="css/profile.css" />
+		<link rel="shortcut icon" href="imgs/logo.jpg" type="image/x-icon" />
+
+		<!-- font awesome -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	</head>
+	<body>
+		<header>
+			<div class="logoContainer">
+				<img src="imgs/logo.jpg" class="logo" alt="landing page logo" />
+				<img src="imgs/logoAr.jpg" class="logoAr" alt="landing page logo" />
+			</div>
+
+			<ul>
+				<li><a href="EspaceFormation.html">Espace Catégories</a></li>
+				<li class="aideLi"><a href="aide.html">Aide</a></li>
+				<!-- <li class="currentPage"><a href="#">Profile</a></li> -->
+				<div class="loginContainer">
+					<button id="loginBtn"><a href="/login.html">Connexion</a></button>
+				</div>
+			</ul>
+			<i class="fa-solid fa-bars" id="toggleMenu"></i>
+		</header>
+		<section class="mainContent container">
+			<div class="profileMainContainer">
+				<div class="profileContainer">
+					<div class="profilePicContainer">
+						<div class="currentProfilePic" oncontextmenu="event.preventDefault();">
+							<img src="./imgs/profile.png" id="profilePic" alt="Logo" oncontextmenu="event.preventDefault();" />
+						</div>
+						<div class="profilePicUploader">
+							<label for="file">
+								<i class="fa fa-upload"></i>
+								<h1>Déposer votre image</h1>
+								<p>ou</p>
+								<input type="file" id="file" name="file" accept="image/*" src="" alt="" />
+							</label>
+						</div>
+					</div>
+					<div class="profileNameContainer">
+						<h1>Votre nom d'utilisateur:</h1>
+						<input type="text" name="username" id="username" value="" readonly />
+					</div>
+					<div class="profileEmailContainer">
+						<h1>Votre Email:</h1>
+						<input type="email" name="email" id="email" value="" readonly />
+					</div>
+					<div class="profileUserTypeContainer">
+						<h1>Type d'utilisateur:</h1>
+						<input type="text" name="userType" id="userType" value="" readonly />
+					</div>
+					<div class="profilePasswordContainer">
+						<h1>Mot de passe:</h1>
+						<label for="newPassword">Nouveau mot de passe</label>
+						<div class="newPassword inputContainer">
+							<input type="password" name="newPassword" id="newPassword" value="" placeholder="" />
+							<i id="toggleNewPassword" class="fas fa-eye toggle-password" onclick="changeVisibility(event)"></i>
+						</div>
+						<ul class="passVerf" id="hintBubbl">
+							<li id="charSize">
+								<i class="fa-solid fa-circle"></i>
+								<p>Le mot de passe doit comporter au moins 6 caractères</p>
+							</li>
+							<li id="numExi">
+								<i class="fa-solid fa-circle"></i>
+								<p>Le mot de passe doit contenir au moins un chiffre</p>
+							</li>
+							<li id="charExi">
+								<i class="fa-solid fa-circle"></i>
+								<p>Le mot de passe doit contenir au moins un caractère spécial</p>
+							</li>
+						</ul>
+		
+						<label for="confirmPassword">Confirmer le mot de passe</label>
+						<div class="confirmNewPassword inputContainer">
+							<input type="password" name="confirmPassword" id="confirmPassword" value="" disabled />
+							<i id="toggleConfirmPassword" class="fas fa-eye toggle-password unActive" onclick="changeVisibility(event)"></i>
+						</div>
+					</div>
+					<div class="profileCoursesContainer">
+						<h1>Derniers 3 Moocs inscrits:</h1>
+		
+						<input type="text" name="course1" id="course1" value="" readonly />
+						<p id="course1CurrentContent">contenu vidéo actuel: N/A</p>
+						<input type="text" name="course2" id="course2" value="" readonly />
+						<p id="course2CurrentContent">contenu vidéo actuel: N/A</p>
+						<input type="text" name="course3" id="course3" value="" readonly />
+						<p id="course3CurrentContent">contenu vidéo actuel: N/A</p>
+					</div>
+					<div class="profileAccountStatusContainer">
+						<h1>Statut du compte:</h1>
+						<label for="activeAccountStat">Statut du compte:</label>
+						<input type="text" name="activeAccountStat" id="activeAccountStat" value="Activé ✅" readonly />
+						<label for="Stat">Statut de commentaire du compte:</label>
+						<input type="text" name="renewStatus" id="canCommentStat" value="Désactivé ❌" readonly />
+						<button class="renewBtn">Imprimer le résumé</button>
+					</div>
+					<div class="profileSaveBtnContainer">
+						<button id="save" type="button" disabled><i class="fa fa-save"></i> Sauvegarder les modifications</button>
+					</div>
+				</div>
+			</div>
+		</section>
+		
+	<!-- Footer Section -->
+	<footer>
+		<div class="footerContainer">
+			<div class="footerContent">
+				<div class="footerColumn">
+					<h4>Sites importants</h4>
+					<ul>
+						<li><a href="https://www.men.gov.ma/Fr/Pages/Accueil.aspx" target="_blank">Ministère de l'Éducation Nationale, du Préscolaire & des Sports</a></li>
+						<li><a href="https://soutiensco.men.gov.ma/" target="_blank">Taalim Tice</a></li>
+
+						<li><a href="https://mtaess.gov.ma/fr/tourisme/metiers-et-formation/guides-de-tourisme/" target="_blank">Guides</a></li>
+					</ul>
+				</div>
+
+				<div class="footerColumn">
+					<h4>Contact</h4>
+					<ul>
+						<li><a href="https://www.men.gov.ma/Fr/Pages/DSI.aspx" target="_blank">Direction du Système d'Information</a></li>
+						<li><a href="https://www.men.gov.ma/Fr/Pages/cahier-charges-stages-CRMEF.aspx" target="_blank">Unité Centrale de la Formation des Cadres</a></li>
+						<li><a href="https://www.men.gov.ma/Fr/Pages/crmef.aspx" target="_blank">Centres Régionaux des Métiers de l'Éducation et de la Formation</a></li>
+					</ul>
+				</div>
+
+				<ul class="social">
+					<li>
+						<a href="" target="_blank">
+							<i class="fa-brands fa-facebook"></i>
+						</a>
+					</li>
+					<li>
+						<a href="" target="_blank">
+							<i class="fa-brands fa-youtube"></i>
+						</a>
+					</li>
+					<li>
+						<a href="" target="_blank">
+							<i class="fa-brands fa-instagram"></i>
+						</a>
+					</li>
+					<li><a href="" target="_blank"> </a></li>
+				</ul>
+			</div>
+		</div>
+	</footer>
+
+		<div class="blackDrop"></div>
+
+		<section class="hint">
+			<div class="alert alert-primary">
+				<h3 class="alert-title">Hello World</h3>
+				<p class="alert-content">Lorem ipsum</p>
+			</div>
+		</section>
+		<div id="resumeContainer" style="display: none">
+			<div class="mainHeader">
+				<div class="logoContainer">
+					<img src="imgs/logo.jpg" class="logo" alt="logo de la page d'accueil" />
+				</div>
+				<div class="logoContainer">
+					<img src="imgs/logoAr.jpg" class="logoAr" alt="logo de la page d'accueil" />
+				</div>
+			</div>
+		
+			<div class="resume-header">
+				<div class="profile-img">
+					<img id="resumeProfileImage" src="" alt="Image de profil" />
+				</div>
+				<div class="profile-info">
+					<h1 id="resumeUsername"></h1>
+					<p><strong>Email :</strong> <span id="resumeEmail"></span></p>
+					<p><strong>Type d'utilisateur :</strong> <span id="resumeUserType"></span></p>
+					<p><strong>État du compte :</strong> <span id="resumeAccountStatus"></span></p>
+					<p><strong>Permission de commentaire :</strong> <span id="resumeCommentStatus"></span></p>
+				</div>
+			</div>
+		
+			<div class="resume-body">
+				<h2>Moocs</h2>
+				<div class="course-item">
+					<h3>Mooc 1 : <span id="resumeCourse1"></span></h3>
+					<p><strong>Contenu :</strong> <span id="resumeCourseContent1"></span></p>
+				</div>
+				<div class="course-item">
+					<h3>Mooc 2 : <span id="resumeCourse2"></span></h3>
+					<p><strong>Contenu :</strong> <span id="resumeCourseContent2"></span></p>
+				</div>
+				<div class="course-item">
+					<h3>Mooc 3 : <span id="resumeCourse3"></span></h3>
+					<p><strong>Contenu :</strong> <span id="resumeCourseContent3"></span></p>
+				</div>
+			</div>
+			<div class="date-time">
+				<p><strong>Date d'impression :</strong> <span id="printDate"></span></p>
+				<p><strong>Heure d'impression :</strong> <span id="printTime"></span></p>
+			</div>
+		</div>
+		
+
+		<!-- axios library -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js" integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+		<script src="js/script.js"></script>
+		<script src="js/profile.js"></script>
+	</body>
+</html>

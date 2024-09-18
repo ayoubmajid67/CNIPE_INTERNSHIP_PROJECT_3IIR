@@ -1,0 +1,335 @@
+
+.mainContent {
+backdrop-filter: blur(5px);
+    --garyColor: #2d2f31;
+    display: flex;
+    flex-direction: column;
+    
+
+    .introSection {
+
+        position: relative;
+        display: flex;
+
+
+        color: black;
+        gap: 15px;
+
+
+        @media (max-width : 1200px) {
+            flex-direction: column-reverse;
+            align-items: center;
+
+        }
+
+        &>.leftSide {
+            width: 65%;
+            padding: 10px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border-left: 5px solid var(--primaryColor);
+            background-color: rgba(255, 249, 249, 0.831);
+
+
+            @media (max-width : 1200px) {
+                width: 100%;
+                margin-top: 40px;
+                border: none;
+            }
+
+
+            .videoContainer {
+                video {
+                    width: 100%;
+                    object-fit: cover;
+                }
+            }
+
+            .courseDescription {
+
+                color: rgba(0, 0, 0, 0.829);
+
+
+            }
+
+            .courseContent {
+                margin-top: 20px;
+                padding: 20px 10px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 45px;
+                max-height: 50vh;
+                overflow: auto;
+
+                /* Hide scrollbar in Internet Explorer and Edge */
+                scrollbar-width: none;
+
+                /* Hide scrollbar in Firefox */
+                ::-webkit-scrollbar {
+                    display: none;
+                    /* Hide scrollbar in Chrome, Safari, and Opera */
+                }
+
+                @media(max-width:1200px) {
+                    max-height: 100vh;
+                }
+
+                @media(max-width:768px) {
+                    max-height: unset;
+                }
+
+                .contentBox {
+
+                    border-radius: 5px;
+                    background-color: white;
+                    display: flex;
+                    padding: 10px 15px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.089);
+                    border-left: 4px solid var(--primaryColor);
+                    width: 100%;
+                    gap: 10px;
+
+                    @media(max-width:1200px) {
+                        width: 92%;
+                    }
+
+
+                    @media(max-width:768px) {
+                        max-height: 100vh;
+                        flex-direction: column-reverse;
+                    }
+
+                    .leftSide {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 6px;
+                        width: calc(80% - 5px);
+
+                        h2 {
+                            text-transform: capitalize;
+                            padding-left: 10px;
+                        }
+
+                        p {
+                            color: #2d2f31;
+                            padding: 10px;
+                        }
+
+
+                    }
+
+                    .rightSide {
+                        flex-grow: 1;
+                        display: flex;
+                        justify-content: center;
+
+
+
+
+                        .videoContainer {
+                            display: flex;
+                            flex-direction: column;
+                            gap: 10px;
+                            padding: 10px;
+                            align-items: center;
+
+                            img {
+                                width: 100px;
+
+                            }
+
+                            .infoContainer {
+
+                                display: flex;
+                                align-items: center;
+                                gap: 10px;
+
+                                img {
+                                    width: 20px;
+                                }
+                            }
+
+
+
+                        }
+
+
+
+
+
+
+                    }
+
+                }
+            }
+
+
+
+
+        }
+
+        &>.rightSide {
+
+            width: calc(33% - 15px);
+            padding: 5px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background-color: white;
+            border-bottom: 5px solid var(--primaryColor);
+            
+            position: relative;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.123);
+            top: 15px;
+
+            @media (max-width : 1200px) {
+                width: 80%;
+                border-radius: 12px;
+                flex-direction: row;
+                flex-wrap: wrap;
+
+                align-items: center;
+
+            }
+
+            @media (max-width : 768px) {
+                justify-content: center;
+            }
+
+
+            &>div {
+                padding: 0 10px;
+            }
+
+            .thumbnailContainer {
+                padding: 0;
+
+                height: 300px;
+                display: flex;
+                justify-content: center;
+
+                @media (max-width : 1200px) {
+                    height: initial;
+                }
+
+                position: relative;
+
+                span {
+                    position: absolute;
+                    width: 100%;
+                    left: 0;
+                    text-align: center;
+                    bottom: 0;
+                    padding: 10px;
+                    font-size: 1em;
+                    font-weight: bold;
+
+                    color: rgb(197, 193, 193);
+                    font-weight: bold;
+                    text-shadow: 1p 2px 10px black;
+                    background-color: var(--garyColor);
+
+                }
+
+                img {
+                    width: 100%;
+
+                    height: 100%;
+
+
+
+
+                    @media (max-width : 1200px) {
+                        max-width: 400px;
+
+                    }
+
+
+                    @media (max-width : 652px) {
+                        max-width: initial;
+
+                    }
+
+
+
+
+                }
+            }
+
+            .controlSection {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                align-items: center;
+
+                button {
+                    font-size: 1.4em;
+                    background-color: var(--primaryColor);
+                    color: white;
+                    border-radius: 5px;
+                    padding: 10px 20px;
+                    a{
+                        color: white;
+                    }
+
+
+                }
+            }
+
+            .Statistics {
+                display: flex;
+                flex-direction: column;
+                flex-grow: 1;
+                gap: 20px;
+                color: black;
+
+                @media (max-width : 1200px) {
+                    gap: 10px;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    font-size: 0.9em;
+                    justify-content: center;
+
+                }
+
+                &>div {
+                    display: flex;
+                    align-items: center;
+                    gap: 20px;
+
+                    @media (max-width : 1200px) {
+                        gap: 10px;
+
+
+                    }
+
+                    padding: 10px;
+
+                    padding-left: 15px;
+
+                }
+
+                .reviewBox {
+                    flex-direction: column;
+                    width: 100%;
+                    gap: 5px;
+
+                    img {
+
+
+                        width: 140px;
+                    }
+                }
+
+            }
+        }
+
+
+
+
+
+
+    }
+}

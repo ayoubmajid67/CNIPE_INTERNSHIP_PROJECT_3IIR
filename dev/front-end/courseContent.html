@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Contenu du cours</title>
+		<link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" href="css/courseContent.css" />
+
+		<link rel="shortcut icon" href="imgs/logo.jpg" type="image/x-icon" />
+
+		<!-- font awesome -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	</head>
+	<body>
+		<header>
+			<div class="logoContainer">
+				<img src="imgs/logo.jpg" class="logo" alt="landing page logo" />
+				<img src="imgs/logoAr.jpg" class="logoAr" alt="landing page logo" />
+			</div>
+
+			<ul>
+				<li><a href="EspaceFormation.html">Espace Catégories</a></li>
+				<li class="currentPage"><a href="#">ContenuMooc</a></li>
+				<li class="aideLi"><a href="aide.html">Aide</a></li>
+
+				<div class="loginContainer">
+					<button id="loginBtn"><a href="/login.html">Connexion</a></button>
+				</div>
+			</ul>
+			<i class="fa-solid fa-bars" id="toggleMenu"></i>
+		</header>
+
+		<section class="mainContent">
+			<div class="content">
+				<div class="leftSide">
+					<div class="videoContainer">
+						<div class="arrow leftArrow">
+							<img src="imgs/leftArrowIcon.png" alt="" />
+						</div>
+						<video id="currentVideo" poster="" src="videos/landingVideo.mp4" controls></video>
+						<div class="fillVideoContainer">
+							<i class="fa-solid fa-arrows-left-right-to-line"></i>
+						</div>
+
+						<div class="arrow rightArrow">
+							<img src="imgs/rightArrowIcon.png" alt="" />
+						</div>
+					</div>
+					<div id="contentOptions">
+						<ul>
+							<li><a href="#overviewSection" data-section="overviewSection">Aperçu</a></li>
+							<li><a href="#reviewsSection" data-section="reviewsSection">Avis</a></li>
+							<li><a href="#questionsSection" data-section="questionsSection">Questions</a></li>
+							<li><a href="#resourcesSection" data-section="resourcesSection">Ressources</a></li>
+						</ul>
+					</div>
+					<div class="courseInfoContainer">
+						<!-- overview  section-->
+						<div class="overviewSection courseSection">
+							<div class="courseInfo">
+								<!-- <h1 class="title">Course 1</h1>
+								statistic content here 
+								</div> -->
+								<div class="courseDescriptionContainer descriptionContainer">
+									<h1 class="title">Description de Mooc :</h1>
+									<p class="description"></p>
+								</div>
+							</div>
+							<div class="currentContentInfo descriptionContainer">
+								<h1 class="title">Description de la vidéo :</h1>
+								<p class="description"></p>
+							</div>
+						</div>
+
+						<!-- reviews  section-->
+						<div class="container reviewsSection courseSection">
+							<section class="feedBack">
+								<div class="header">
+									<h1 class="title">Avis des utilisateurs</h1>
+								</div>
+								<div class="content">
+									<div class="leftContent">
+										<h1 class="rating">N</h1>
+										<img src="imgs/0_star-removebg-preview.png" alt="" />
+										<h4 class="ratingTitle">
+											<span>Évaluation du Mooc</span>
+										</h4>
+									</div>
+									<div class="rightContent">
+										<div class="ratingBox">
+											<div class="fillDiv">
+												<figure style="width: 0%"></figure>
+											</div>
+											<h4 class="fillValue">0%</h4>
+										</div>
+										<div class="ratingBox">
+											<div class="fillDiv" data-width="0%">
+												<figure style="width: 0%"></figure>
+											</div>
+											<h4 class="fillValue">72%</h4>
+										</div>
+										<div class="ratingBox">
+											<div class="fillDiv" data-width="0%">
+												<figure style="width: 0%"></figure>
+											</div>
+											<h4 class="fillValue">25%</h4>
+										</div>
+										<div class="ratingBox">
+											<div class="fillDiv" data-width="0%">
+												<figure style="width: 0%"></figure>
+											</div>
+											<h4 class="fillValue">12%</h4>
+										</div>
+										<div class="ratingBox">
+											<div class="fillDiv" data-width="0%">
+												<figure style="width: 0%"></figure>
+											</div>
+											<h4 class="fillValue">2%</h4>
+										</div>
+									</div>
+								</div>
+							</section>
+
+							<section class="reviews">
+								<div class="addReviewBox">
+									<textarea name="" id="reviewComment" placeholder="Donnez votre avis..."></textarea>
+									<div class="reviewActions">
+										<select class="reviewSelect">
+											<option value="0.5">0.5</option>
+											<option value="1">1</option>
+											<option value="1.5">1.5</option>
+											<option value="2">2</option>
+											<option value="2.5">2.5</option>
+											<option value="3">3</option>
+											<option value="3.5">3.5</option>
+											<option value="4">4</option>
+											<option value="4.5">4.5</option>
+											<option value="5">5</option>
+										</select>
+										<button id="addReviewBtn" onclick="courseContentObject.manageCourseContentObject.manageCourseContentReviewsObject.manageAddReview(event)">Ajouter un avis</button>
+									</div>
+								</div>
+								<p class="reviewCount">Tous les avis sur ce Mooc (<span>5</span>).</p>
+
+								<div class="reviewContainer"></div>
+							</section>
+						</div>
+
+						<!-- questions  section-->
+						<div class="container questionsSection courseSection">
+							<section class="header">
+								<p class="sectionDescription">Voici où vous pouvez lire les retours d'autres utilisateurs ayant suivi ce Mooc. Partagez vos impressions ou répondez aux commentaires existants pour interagir avec la communauté.</p>
+							</section>
+							<section class="commentsSection">
+								<div class="addCommentBox">
+									<textarea name="" id="commentInput" placeholder="Write your a comment..."></textarea>
+									<button id="addCommentBtn" onclick="courseContentObject.manageCourseContentObject.manageCourseContentCommentsObject.manageAddComment(event)">Ajouter un commentaire</button>
+								</div>
+								<p class="commentCount">Toutes les questions de ce cours (<span>5</span>).</p>
+								<div class="commentsContainer"></div>
+							</section>
+						</div>
+
+						<!-- New Resources Section -->
+						<div id="resourcesSection" class="resourcesSection courseSection">
+							<h1 class="mainTitle">Resources</h1>
+
+							<div class="addResourceContainer">
+								<!-- <button id="addContentBtn" onclick="courseContentObject.manageCourseContentObject.manageCourseContentResourcesObject.manageShowAddResourcePopUp(event)">Ajouter</button> -->
+							
+							</div>
+
+							<div class="resourcesContainer">
+								<div class="resourceCard">
+									<div class="resourceTitle">Resource Title 1</div>
+									<div class="resourceDescription">This is a brief description of the resource. It gives an overview of what the resource provides and its relevance.</div>
+									<a href="https://example.com" class="resourceLink">Access Resource</a>
+								</div>
+
+								<div class="resourceCard">
+									<div class="resourceTitle">Resource Title 2</div>
+									<div class="resourceDescription">This is another resource description, offering insight into what users can expect from this resource.</div>
+									<a href="https://example.com" class="resourceLink">Access Resource</a>
+								</div>
+								<div class="resourceCard">
+									<div class="resourceTitle">Resource Title 3</div>
+									<div class="resourceDescription">This resource contains valuable information for users looking for in-depth knowledge on the topic.</div>
+									<a href="https://example.com" class="resourceLink">Access Resource</a>
+								</div>
+							</div>
+
+							<div class="noResources ">No resources available at the moment.</div>
+						</div>
+					</div>
+
+					<!-- Footer Section -->
+					<footer>
+						<div class="footerContainer">
+							<div class="footerContent">
+								<div class="footerColumn">
+									<h4>Sites importants</h4>
+									<ul>
+										<li><a href="https://www.men.gov.ma/Fr/Pages/Accueil.aspx" target="_blank">Ministère de l'Éducation Nationale, du Préscolaire & des Sports</a></li>
+										<li><a href="https://soutiensco.men.gov.ma/" target="_blank">Taalim Tice</a></li>
+
+										<li><a href="https://mtaess.gov.ma/fr/tourisme/metiers-et-formation/guides-de-tourisme/" target="_blank">Guides</a></li>
+									</ul>
+								</div>
+
+								<div class="footerColumn">
+									<h4>Contact</h4>
+									<ul>
+										<li><a href="https://www.men.gov.ma/Fr/Pages/DSI.aspx" target="_blank">Direction du Système d'Information</a></li>
+										<li><a href="https://www.men.gov.ma/Fr/Pages/cahier-charges-stages-CRMEF.aspx" target="_blank">Unité Centrale de la Formation des Cadres</a></li>
+										<li><a href="https://www.men.gov.ma/Fr/Pages/crmef.aspx" target="_blank">Centres Régionaux des Métiers de l'Éducation et de la Formation</a></li>
+									</ul>
+								</div>
+
+								<ul class="social">
+									<li>
+										<a href="" target="_blank">
+											<i class="fa-brands fa-facebook"></i>
+										</a>
+									</li>
+									<li>
+										<a href="" target="_blank">
+											<i class="fa-brands fa-youtube"></i>
+										</a>
+									</li>
+									<li>
+										<a href="" target="_blank">
+											<i class="fa-brands fa-instagram"></i>
+										</a>
+									</li>
+									<li><a href="" target="_blank"> </a></li>
+								</ul>
+							</div>
+						</div>
+					</footer>
+				</div>
+				<div class="rightSide">
+					<div class="header">
+						<h2>Contenu du Mooc</h2>
+						<i class="fa-solid fa-xmark controlBox" id="closePanel"></i>
+						<div id="openPanel" class="controlBox">
+							<i class="fa-solid fa-arrow-left"> </i>
+							<h4>Contenu du Mooc</h4>
+						</div>
+					</div>
+					<div id="addContentParent"></div>
+
+					<div class="videosLectureContainer"></div>
+				</div>
+			</div>
+		</section>
+
+		<section class="hint">
+			<div class="alert alert-primary">
+				<h3 class="alert-title"></h3>
+				<p class="alert-content"></p>
+			</div>
+		</section>
+		<div class="blackDrop"></div>
+		<div class="deleteContentPopup popUpBox">
+			<div class="popupContent">
+				<h2 class="popUpTitle">Supprimer Vidéo ?</h2>
+				<p>Cela supprimera <span class="popUpContentName"></span></p>
+				<div class="popupButtons">
+					<button class="popupButton popupButtonCancel">Annuler</button>
+					<button class="popupButton popupButtonDelete" onclick="courseContentObject.manageCourseContentObject.manageCourseContentEventsObject.manageCourseContentAddDeleteObject.manageDeleteContent(event)">Supprimer</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="addPopup addContentPopup popUpBox">
+			<div class="popupContent">
+				<div class="header">
+					<h2 class="popUpTitle">Ajouter Vidéo</h2>
+					<button id="closeAddContentBtn">
+						<i class="fa-solid fa-xmark" onclick="courseContentObject.manageCourseContentObject.manageCourseContentEventsObject.manageCourseContentAddDeleteObject.setDisablePopUpBoxMode(event)"></i>
+					</button>
+				</div>
+
+				<input class="contentTitleInput" placeholder="Titre de la vidéo" />
+
+				<textarea class="descriptionInput" placeholder="Description du contenu" oninput="courseContentObject.manageCourseContentObject.manageCourseContentEventsObject.manageCourseContentAddDeleteObject.manageAddContentDescriptionChange(event)"></textarea>
+				<div class="imgContainer">
+					<div class="content">
+						<h4>Choisir une vidéo</h4>
+						<img src="imgs/videoAide.png" alt="add-image" />
+					</div>
+					<input type="file" id="addVideoFile" name="video" accept="video/*" onchange="courseContentObject.manageCourseContentObject.manageCourseContentEventsObject.manageCourseContentAddDeleteObject.manageAddContentVideoFileChange(event)" />
+				</div>
+				<div class="imgContainer">
+					<div class="content">
+						<h4>Choisir une miniature</h4>
+						<img src="imgs/addPost.svg" alt="add-image" />
+					</div>
+					<input type="file" name="image" id="addThumbnailFile" accept="image/*" onchange="courseContentObject.manageCourseContentObject.manageCourseContentEventsObject.manageCourseContentAddDeleteObject.manageAddContentImgFileChange(event)" />
+				</div>
+
+				<div class="popupButtons">
+					<button class="popupButton popupButtonCancel">Annuler</button>
+					<button class="popupButton popupButtonAddContent" onclick="courseContentObject.manageCourseContentObject.manageCourseContentEventsObject.manageCourseContentAddDeleteObject.manageAddContent(event)">Ajouter</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="editContentPopup addContentPopup popUpBox">
+			<div class="popupContent">
+				<div class="header">
+					<h2 class="popUpTitle">Modifier Vidéo</h2>
+					<button id="closeAddContentBtn">
+						<i class="fa-solid fa-xmark" onclick="courseContentObject.manageCourseContentObject.manageCourseContentEventsObject.manageCourseContentEditObject.setDisablePopUpBoxMode(event)"></i>
+					</button>
+				</div>
+
+				<input class="contentTitleInput" placeholder="Titre de la vidéo" />
+
+				<textarea class="descriptionInput" placeholder="Description du contenu" oninput="courseContentObject.manageCourseContentObject.manageCourseContentEventsObject.manageCourseContentEditObject.manageEditContentDescriptionChange(event)"></textarea>
+				<div class="imgContainer" id="videoContainer">
+					<div class="content">
+						<h4>Choisir une vidéo</h4>
+						<img src="imgs/videoAide.png" alt="add-image" />
+					</div>
+					<input type="file" id="addVideoFile" name="video" accept="video/*" onchange="courseContentObject.manageCourseContentObject.manageCourseContentEventsObject.manageCourseContentEditObject.manageEditContentVideoFileChange(event)" />
+				</div>
+				<div class="imgContainer" id="imgContainer">
+					<div class="content">
+						<h4>Choisir une miniature</h4>
+						<img src="imgs/addPost.svg" alt="add-image" />
+					</div>
+					<input type="file" name="image" id="addThumbnailFile" accept="image/*" onchange="courseContentObject.manageCourseContentObject.manageCourseContentEventsObject.manageCourseContentEditObject.manageEditContentImgFileChange(event)" />
+				</div>
+
+				<div class="popupButtons">
+					<button class="popupButton popupButtonCancel">Annuler</button>
+					<button class="popupButton popupButtonAddContent" onclick="courseContentObject.manageCourseContentObject.manageCourseContentEventsObject.manageCourseContentEditObject.manageEditContent(event)">Modifier</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="deleteReplyPopup popUpBox">
+			<div class="popupContent">
+				<h2 class="popUpTitle">Supprimer Réponse</h2>
+				<p>Êtes-vous sûr de vouloir supprimer cette réponse ?</p>
+				<div class="popupButtons">
+					<button class="popupButton popupButtonCancel">Annuler</button>
+					<button class="popupButton popupButtonDelete" onclick="courseContentObject.manageCourseContentObject.manageCourseContentCommentsObject.manageDeleteReplyComment(event)">Supprimer</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="deleteCommentPopup popUpBox">
+			<div class="popupContent">
+				<h2 class="popUpTitle">Supprimer Commentaire</h2>
+				<p>Êtes-vous sûr de vouloir supprimer ce commentaire ?</p>
+				<div class="popupButtons">
+					<button class="popupButton popupButtonCancel">Annuler</button>
+					<button class="popupButton popupButtonDelete" onclick="courseContentObject.manageCourseContentObject.manageCourseContentCommentsObject.manageDeleteComment(event)">Supprimer</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="addReplyCommentPopup popUpBox">
+			<div class="popupContent">
+				<h2 class="popUpTitle">Ajouter une réponse</h2>
+				<input type="text" class="replyInput" placeholder="Écrivez votre réponse" />
+				<div class="popupButtons">
+					<button class="popupButton popupButtonCancel">Annuler</button>
+					<button class="popupButton popupButtonDelete" onclick="courseContentObject.manageCourseContentObject.manageCourseContentCommentsObject.manageAddReplyComment(event)">Ajouter</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Supprimer Review Popup -->
+		<div class="deleteReviewPopup popUpBox">
+			<div class="popupContent">
+				<h2 class="popUpTitle">Supprimer Avis</h2>
+				<p>Êtes-vous sûr de vouloir supprimer cet avis ?</p>
+				<div class="popupButtons">
+					<button class="popupButton popupButtonCancel">Annuler</button>
+					<button class="popupButton popupButtonDelete" onclick="courseContentObject.manageCourseContentObject.manageCourseContentReviewsObject.manageDeleteReview(event)">Supprimer</button>
+				</div>
+			</div>
+		</div>
+
+	
+		<div class="editResourcePopup  popUpBox">
+			<div class="popupContent">
+				<div class="header">
+					<h2 class="popUpTitle">modifier un Resource</h2>
+					<button id="closeEditResourceBtn">
+						<i class="fa-solid fa-xmark" onclick="courseContentObject.manageCourseContentObject.manageCourseContentResourcesObject.popupHandlerObject.setDisablePopUpBoxMode(event)"></i>
+					</button>
+				</div>
+		
+				<input class="resourceTitleInput" placeholder="Title du Resource" />
+				<input class="resourceLinkInput" placeholder="Lien de Resource" />
+				<textarea class="resourceDescriptionInput" placeholder="La Description de Resource" oninput="courseContentObject.manageCourseContentObject.manageCourseContentResourcesObject.manageEditResourceDescriptionChange(event)"></textarea>
+		
+				<div class="popupButtons">
+					<button class="popupButton popupButtonCancel">Annuler</button>
+					<button class="popupButton popupButtonEdit" onclick="courseContentObject.manageCourseContentObject.manageCourseContentResourcesObject.manageEditResource(event)">modifier</button>
+				</div>
+			</div>
+		</div>
+		<div class="addResourcePopup  popUpBox">
+			<div class="popupContent">
+				<div class="header">
+					<h2 class="popUpTitle">ajouter un Resource</h2>
+					<button id="closeEditResourceBtn">
+						<i class="fa-solid fa-xmark" onclick="courseContentObject.manageCourseContentObject.manageCourseContentResourcesObject.popupHandlerObject.setDisablePopUpBoxMode(event)"></i>
+					</button>
+				</div>
+		
+				<input class="resourceTitleInput" placeholder="Title du Resource" />
+				<input class="resourceLinkInput" placeholder="Lien de Resource" />
+				<textarea class="resourceDescriptionInput" placeholder="La Description de Resource" oninput="courseContentObject.manageCourseContentObject.manageCourseContentResourcesObject.manageEditResourceDescriptionChange(event)"></textarea>
+		
+				<div class="popupButtons">
+					<button class="popupButton popupButtonCancel">Annuler</button>
+					<button class="popupButton popupButtonEdit" onclick="courseContentObject.manageCourseContentObject.manageCourseContentResourcesObject.manageAddResource(event)">ajouter</button>
+				</div>
+			</div>
+		</div>
+		
+		<div class="deleteResourcePopup popUpBox">
+			<div class="popupContent">
+				<h2 class="popUpTitle">supprimer un Resource</h2>
+				<p class="description">Êtes-vous sûr de vouloir supprimer ce resource ' <span></span> ' ?</p>
+				<div class="popupButtons">
+					<button class="popupButton popupButtonCancel">Annuler</button>
+					<button class="popupButton popupButtonDelete" onclick="courseContentObject.manageCourseContentObject.manageCourseContentResourcesObject.manageDeleteResource(event)">Supprimer</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- axios library -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js" integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+		<script src="js/script.js"></script>
+
+		<script src="js/courseContent/courseContentDomVariables.js"></script>
+		<script type="module" src="js/courseContent/courseContent.js"></script>
+	</body>
+</html>
