@@ -1091,7 +1091,7 @@ body {
             }
 
             .resourcesSection {
-                display: flex;
+                
                 flex-direction: column;
                 padding: 2rem;
 
@@ -1170,7 +1170,7 @@ body {
 
                         &.editResourceStatus {
 
-                            box-shadow: 0px 0px 10px rgba(60, 98, 117, 0.354)8);
+                            box-shadow: 0px 0px 10px rgba(60, 98, 117, 0.354);
                             border-left: 6px solid var(--secondaryLightColor);
                             transform: scale(1.08);
 
