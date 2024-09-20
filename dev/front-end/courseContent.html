@@ -53,6 +53,7 @@
 							<li><a href="#reviewsSection" data-section="reviewsSection">Avis</a></li>
 							<li><a href="#questionsSection" data-section="questionsSection">Questions</a></li>
 							<li><a href="#resourcesSection" data-section="resourcesSection">Ressources</a></li>
+							<li><a href="#quizSection" data-section="quizSection">Quiz</a></li>
 						</ul>
 					</div>
 					<div class="courseInfoContainer">
@@ -162,35 +163,61 @@
 							</section>
 						</div>
 
-						<!-- New Resources Section -->
+						<!-- Resources Section -->
 						<div id="resourcesSection" class="resourcesSection courseSection">
 							<h1 class="mainTitle">Resources</h1>
 
 							<div class="addResourceContainer">
 								<!-- <button id="addContentBtn" onclick="courseContentObject.manageCourseContentObject.manageCourseContentResourcesObject.manageShowAddResourcePopUp(event)">Ajouter</button> -->
-							
 							</div>
 
 							<div class="resourcesContainer">
-								<div class="resourceCard">
+								<!-- <div class="resourceCard">
 									<div class="resourceTitle">Resource Title 1</div>
 									<div class="resourceDescription">This is a brief description of the resource. It gives an overview of what the resource provides and its relevance.</div>
 									<a href="https://example.com" class="resourceLink">Access Resource</a>
-								</div>
-
-								<div class="resourceCard">
-									<div class="resourceTitle">Resource Title 2</div>
-									<div class="resourceDescription">This is another resource description, offering insight into what users can expect from this resource.</div>
-									<a href="https://example.com" class="resourceLink">Access Resource</a>
-								</div>
-								<div class="resourceCard">
-									<div class="resourceTitle">Resource Title 3</div>
-									<div class="resourceDescription">This resource contains valuable information for users looking for in-depth knowledge on the topic.</div>
-									<a href="https://example.com" class="resourceLink">Access Resource</a>
-								</div>
+								</div> -->
 							</div>
 
-							<div class="noResources ">No resources available at the moment.</div>
+							<div class="noResources">No resources available at the moment.</div>
+						</div>
+<!-- quiz section -->
+						<div id="quizSection" class="quizSection courseSection">
+							<h1 class="mainTitle">Quiz</h1>
+
+							<div class="header">
+								<h2 class="feedBackTitle">feedBack</h2>
+								<p class="value">80%</p>
+							</div>
+
+							<div class="addQuestionContainer">
+								<button id="addContentBtn" onclick="courseContentObject.manageCourseContentObject.manageCourseContentQuizObject.manageShowAddQuestionPopUp(event)">Ajouter</button>
+							</div>
+
+							<div class="quizContainer">
+								<div class="questionsContainer">
+									<figure class="questionCard">
+										<div class="resourceTitle">Resource Title 2</div>
+
+										<select name="possibleAnswers" class="possibleAnswers">
+											<option value="possibleResponse1">possibleResponse1</option>
+											<option value="possibleResponse1">possibleResponse2</option>
+										</select>
+									</figure>
+									<figure class="questionCard">
+										<div class="resourceTitle">Resource Title 2</div>
+
+										<select name="possibleAnswers" class="possibleAnswers">
+											<option value="possibleResponse1">possibleResponse1</option>
+											<option value="possibleResponse1">possibleResponse2</option>
+										</select>
+									</figure>
+								</div>
+
+								<button>Validate answers</button>
+							</div>
+
+							<div class="noQuiz">No Quiz available at the moment.</div>
 						</div>
 					</div>
 
@@ -386,8 +413,7 @@
 			</div>
 		</div>
 
-	
-		<div class="editResourcePopup  popUpBox">
+		<div class="editResourcePopup popUpBox">
 			<div class="popupContent">
 				<div class="header">
 					<h2 class="popUpTitle">modifier un Resource</h2>
@@ -395,18 +421,18 @@
 						<i class="fa-solid fa-xmark" onclick="courseContentObject.manageCourseContentObject.manageCourseContentResourcesObject.popupHandlerObject.setDisablePopUpBoxMode(event)"></i>
 					</button>
 				</div>
-		
+
 				<input class="resourceTitleInput" placeholder="Title du Resource" />
 				<input class="resourceLinkInput" placeholder="Lien de Resource" />
 				<textarea class="resourceDescriptionInput" placeholder="La Description de Resource" oninput="courseContentObject.manageCourseContentObject.manageCourseContentResourcesObject.manageEditResourceDescriptionChange(event)"></textarea>
-		
+
 				<div class="popupButtons">
 					<button class="popupButton popupButtonCancel">Annuler</button>
 					<button class="popupButton popupButtonEdit" onclick="courseContentObject.manageCourseContentObject.manageCourseContentResourcesObject.manageEditResource(event)">modifier</button>
 				</div>
 			</div>
 		</div>
-		<div class="addResourcePopup  popUpBox">
+		<div class="addResourcePopup popUpBox">
 			<div class="popupContent">
 				<div class="header">
 					<h2 class="popUpTitle">ajouter un Resource</h2>
@@ -414,18 +440,18 @@
 						<i class="fa-solid fa-xmark" onclick="courseContentObject.manageCourseContentObject.manageCourseContentResourcesObject.popupHandlerObject.setDisablePopUpBoxMode(event)"></i>
 					</button>
 				</div>
-		
+
 				<input class="resourceTitleInput" placeholder="Title du Resource" />
 				<input class="resourceLinkInput" placeholder="Lien de Resource" />
 				<textarea class="resourceDescriptionInput" placeholder="La Description de Resource" oninput="courseContentObject.manageCourseContentObject.manageCourseContentResourcesObject.manageEditResourceDescriptionChange(event)"></textarea>
-		
+
 				<div class="popupButtons">
 					<button class="popupButton popupButtonCancel">Annuler</button>
 					<button class="popupButton popupButtonAdd" onclick="courseContentObject.manageCourseContentObject.manageCourseContentResourcesObject.manageAddResource(event)">ajouter</button>
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="deleteResourcePopup popUpBox">
 			<div class="popupContent">
 				<h2 class="popUpTitle">supprimer un Resource</h2>

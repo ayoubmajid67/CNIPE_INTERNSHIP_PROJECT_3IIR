@@ -18,7 +18,6 @@ export default class clsManageRenderCourseContent {
 	}
 
 	async init() {
-
 		await this.manageRenderCourseContent();
 	}
 
@@ -140,7 +139,7 @@ export default class clsManageRenderCourseContent {
 
 		const courseDataContainer = document.querySelector(".courseSection .courseInfo");
 		const courseDescriptionDom = document.querySelector(".courseSection .courseDescriptionContainer  .description");
-		courseDescriptionDom.textContent=courseData.description;
+		courseDescriptionDom.textContent = courseData.description;
 
 		courseDataContainer.insertAdjacentHTML("afterbegin", courseDataHtmlStructure);
 	}
@@ -154,7 +153,6 @@ export default class clsManageRenderCourseContent {
 		clsManageRenderCourseContent.reviewsInfo = courseData.reviews;
 
 		clsManageRenderCourseContent.review = courseData.review;
-		
 
 		this.fillCourseContentToDom(courseData.courseContent, trackingInfo);
 
