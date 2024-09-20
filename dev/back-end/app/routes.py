@@ -1618,6 +1618,7 @@ def update_resource(current_user, category_name, course_name, title, resource_id
         return jsonify({"error": f"Invalid fields provided: {', '.join(invalid_fields)}"}), 400
 
     try:
+        
         result = course_model.update_resource_in_course(
             category_name, course_name, title, resource_id, request_data)
         

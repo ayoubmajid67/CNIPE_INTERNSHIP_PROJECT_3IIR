@@ -93,19 +93,20 @@ def update_resource_in_course(category_name, course_name, content_title, resourc
 
     if not update_fields:
         raise ValueError("No valid fields to update")
+    
 
     result = mongo.db.formations.update_one(
         {
             'categoryName': category_name,
             'courses.courseName': course_name,
             'courses.courseContent.title': content_title,
-            'courses.courseContent.resources._id': ObjectId(resource_id)
+            'courses.courseContent.resources._id': resource_id
         },
         {'$set': update_fields},
         array_filters=[
             {"course.courseName": course_name},
             {"content.title": content_title},
-            {"resource._id": ObjectId(resource_id)}
+            {"resource._id": resource_id}
         ]
     )
 
@@ -116,6 +117,7 @@ def update_resource_in_course(category_name, course_name, content_title, resourc
     
     return {"message": "Resource updated successfully"}
 def delete_resource_from_course(category_name, course_name, content_title, resource_id):
+    print(category_name," ",course_name,"  ",content_title,"  ",resource_id)
     result = mongo.db.formations.update_one(
         {
             'categoryName': category_name,
@@ -125,7 +127,7 @@ def delete_resource_from_course(category_name, course_name, content_title, resou
         {
             '$pull': {
                 'courses.$[course].courseContent.$[content].resources': {
-                    '_id': ObjectId(resource_id)
+                    '_id': resource_id
                 }
             }
         },

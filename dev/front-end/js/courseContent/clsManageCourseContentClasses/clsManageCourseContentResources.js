@@ -25,13 +25,13 @@ export class clsManageLoadResources {
 	static activeNoResourceClass = "activeNoResources";
 	static addResourceContainerDom = document.querySelector(".resourcesSection .addResourceContainer");
 	static renderResources(resources) {
+		this.manageFillAddBtnToDom();
 		if (resources.length === 0) {
 			this.showNoResources();
 			return;
 		}
-		this.manageFillAddBtnToDom();
+
 		this.resourcesContainerDom.innerHTML = resources.map((resource) => this.getResourceCardHtml(resource)).join("");
-		console.log(this.noResourcesDom);
 		this.noResourcesDom.classList.remove(this.activeNoResourceClass);
 	}
 
@@ -58,12 +58,77 @@ export class clsManageLoadResources {
         `;
 	}
 	static manageFillAddBtnToDom() {
-		if (globalIsAdminOrOwner) console.log(this.addResourceContainerDom);
-		this.addResourceContainerDom.innerHTML = `
+		if (globalIsAdminOrOwner)
+			this.addResourceContainerDom.innerHTML = `
     
 					 <button id="addContentBtn" onclick="courseContentObject.manageCourseContentObject.manageCourseContentResourcesObject.manageShowAddResourcePopUp(event)">Ajouter</button> 
 		
     `;
+	}
+}
+class clsResourcesApi {
+	constructor(categoryName, courseName) {
+		this.categoryName = categoryName;
+		this.courseName = courseName;
+	}
+
+	#getCurrentContentTitle() {
+		const boxContainer = document.querySelector(".videosLectureContainer");
+		return boxContainer.querySelector(".currentBox .topContent .title").textContent;
+	}
+
+	async addResourceApi(resourceData) {
+		const contentTitle = this.#getCurrentContentTitle();
+		console.log(resourceData);
+		try {
+			const token = localStorage.getItem("userToken");
+
+			const response = await axios.post(`${baseUrl}/formations/${this.categoryName}/courses/${this.courseName}/content/${contentTitle}/resources`, resourceData, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+			});
+
+			const data = response.data;
+
+			return data;
+		} catch (error) {
+			// Handle error and display message
+			if (error.response && error.response.data && error.response.data.error) {
+				throw { message: error.response.data.error, type: "warning" };
+			} else {
+				// console.log(error);
+				throw { message: "Une erreur inattendue s'est produite.", type: "danger" };
+			}
+		}
+	}
+
+	async deleteResourceApi(resourceId) {
+		const contentTitle = this.#getCurrentContentTitle();
+
+		try {
+			const token = localStorage.getItem("userToken");
+
+			const response = await axios.delete(`${baseUrl}/formations/${this.categoryName}/courses/${this.courseName}/content/${contentTitle}/resources/${resourceId}`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "multipart/form-data",
+				},
+			});
+
+			const data = response.data;
+
+			return data;
+		} catch (error) {
+			// Handle error and display message
+			if (error.response && error.response.data && error.response.data.error) {
+				throw { message: error.response.data.error, type: "warning" };
+			} else {
+				// console.log(error);
+				throw { message: "Une erreur inattendue s'est produite.", type: "danger" };
+			}
+		}
 	}
 }
 
@@ -157,6 +222,62 @@ class clsPopUpHandler {
 			scrollToPositionHard(scrollTop);
 		};
 	}
+	getToDeleteResourceId() {
+		return this.deleteResourcePopUpDom.dataset["resourceid"];
+	}
+}
+class clsDeleteResourceHelper {
+	static manageDeleteTargetResourceBoxFromUI(deleteResourceBoxClass) {
+		const targetResourceToDelete = clsManageLoadResources.resourcesContainerDom.querySelector(` .${deleteResourceBoxClass}`);
+		targetResourceToDelete.remove();
+	}
+}
+
+class clsAddResourceHelper {
+	constructor(addResourcePopUpDom) {
+		this.addResourceBtn = addResourcePopUpDom.querySelector("button.popupButtonAdd");
+
+		this.titleInput = addResourcePopUpDom.querySelector(".resourceTitleInput");
+		this.linkInput = addResourcePopUpDom.querySelector(".resourceLinkInput");
+		this.descriptionInput = addResourcePopUpDom.querySelector(".resourceDescriptionInput");
+	}
+	getInputsValues() {
+		return [this.titleInput.value.trim(), this.linkInput.value.trim(), this.descriptionInput.value.trim()];
+	}
+	focusOnTitle() {
+		this.titleInput.focus();
+	}
+
+	isAllowToAddResource() {
+		return this.titleInput.value.trim() && this.linkInput.value.trim();
+	}
+	clearInputsValues() {
+		this.titleInput.value = "";
+		this.linkInput.value = "";
+		this.descriptionInput.value = "";
+	}
+
+	getJsonBodyDataToApi() {
+		const [titleValue, linkValue, descriptionValue] = this.getInputsValues();
+
+		return {
+			title: titleValue,
+			link: linkValue,
+			description: descriptionValue,
+		};
+	}
+
+	reEnableResourceButton() {
+		this.addResourceBtn = false;
+	}
+	disableResourceButton() {
+		this.addResourceBtn = true;
+	}
+	pushResourceToDom(newCommentData) {
+		const newResourceHtml = clsManageLoadResources.getResourceCardHtml(newCommentData);
+
+		clsManageLoadResources.resourcesContainerDom.insertAdjacentHTML("afterbegin", newResourceHtml);
+	}
 }
 
 export class clsManageCourseContentResources extends clsManageLoadResources {
@@ -169,19 +290,57 @@ export class clsManageCourseContentResources extends clsManageLoadResources {
 	}
 	async init() {
 		this.popupHandlerObject = new clsPopUpHandler(this.deleteResourceClass, this.editResourceClass);
+		this.resourcesApiObject = new clsResourcesApi(this.categoryName, this.courseName);
+		this.addResourceHelperObject = new clsAddResourceHelper(this.popupHandlerObject.addResourcePopUpDom);
 	}
 
 	manageShowAddResourcePopUp(event) {
-		console.log("add resource ");
 		this.popupHandlerObject.setEnableAddResourceMode(event);
+	}
+	async manageAddResource() {
+		if (!this.addResourceHelperObject.isAllowToAddResource()) {
+			alertHint("Le titre et le lien sont obligatoires.", "warning");
+			this.addResourceHelperObject.focusOnTitle();
+			return;
+		}
+
+		try {
+			const response = await this.resourcesApiObject.addResourceApi(this.addResourceHelperObject.getJsonBodyDataToApi());
+			console.log(response);
+
+			this.addResourceHelperObject.pushResourceToDom(response.resource);
+			this.popupHandlerObject.setDisablePopUpBoxMode();
+			alertHint(response.message, "success");
+		} catch (error) {
+			alertHint(error.message, error.type);
+		}
 	}
 	manageShowEditResource(event) {
 		console.log("edit resources ");
 		this.popupHandlerObject.setEnableEditResourceMode(event);
 	}
 	manageShowDeleteResource(event) {
-		console.log("delete resources : ");
 		this.popupHandlerObject.setEnableDeleteResourceMode(event);
 	}
+	async manageDeleteResource(event) {
+		const deleteBtn = event.target;
+		deleteBtn.disabled = true;
+		const deleteResourceId = this.popupHandlerObject.getToDeleteResourceId();
+
+		try {
+			const data = await this.resourcesApiObject.deleteResourceApi(deleteResourceId);
+
+			clsDeleteResourceHelper.manageDeleteTargetResourceBoxFromUI(this.deleteResourceClass);
+			alertHint(data.message, "success");
+
+			this.popupHandlerObject.setDisablePopUpBoxMode();
+		} catch (error) {
+			console.log(error);
+			await alertHint(error.message, error.type);
+		} finally {
+			deleteBtn.disabled = false;
+		}
+	}
+
 	manageEditResourceDescriptionChange(event) {}
 }
