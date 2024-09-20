@@ -79,11 +79,36 @@ class clsResourcesApi {
 
 	async addResourceApi(resourceData) {
 		const contentTitle = this.#getCurrentContentTitle();
-		console.log(resourceData);
 		try {
 			const token = localStorage.getItem("userToken");
 
 			const response = await axios.post(`${baseUrl}/formations/${this.categoryName}/courses/${this.courseName}/content/${contentTitle}/resources`, resourceData, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+			});
+
+			const data = response.data;
+
+			return data;
+		} catch (error) {
+			// Handle error and display message
+			if (error.response && error.response.data && error.response.data.error) {
+				throw { message: error.response.data.error, type: "warning" };
+			} else {
+				// console.log(error);
+				throw { message: "Une erreur inattendue s'est produite.", type: "danger" };
+			}
+		}
+	}
+	async editResourceApi(resourceData, resourceId) {
+		const contentTitle = this.#getCurrentContentTitle();
+
+		try {
+			const token = localStorage.getItem("userToken");
+
+			const response = await axios.put(`${baseUrl}/formations/${this.categoryName}/courses/${this.courseName}/content/${contentTitle}/resources/${resourceId}`, resourceData, {
 				headers: {
 					Authorization: `Bearer ${token}`,
 					"Content-Type": "application/json",
@@ -135,6 +160,7 @@ class clsResourcesApi {
 class clsPopUpHandler {
 	constructor(deleteResourceClass, editResourceClass) {
 		this.deleteResourcePopUpDom = document.querySelector(".deleteResourcePopup");
+
 		this.deletePopResourceNameDom = this.deleteResourcePopUpDom.querySelector(".description span");
 
 		this.editResourcePopUpDom = document.querySelector(".editResourcePopup");
@@ -167,9 +193,15 @@ class clsPopUpHandler {
 		this.editResourcePopUpDom.classList.remove(this.resourcePopUpActiveClass);
 		this.addResourcePopUpDom.classList.remove(this.resourcePopUpActiveClass);
 		this.blackDropDom.classList.remove(this.blackDropActiveClass);
-		const resourceBox = clsManageLoadResources.resourcesContainerDom.querySelector(` .${this.deleteResourceClass}`);
-		if (resourceBox) resourceBox.classList.remove(this.deleteResourceClass);
+		const deleteResourceBox = clsManageLoadResources.resourcesContainerDom.querySelector(` .${this.deleteResourceClass}`);
+		if (deleteResourceBox) deleteResourceBox.classList.remove(this.deleteResourceClass);
+
+		const editResourceBox = this.getTargetEditedResourceBox();
+		if (editResourceBox) editResourceBox.classList.remove(this.editResourceClass);
 		window.onscroll = function () {};
+	}
+	getTargetEditedResourceBox() {
+		return clsManageLoadResources.resourcesContainerDom.querySelector(` .${this.editResourceClass}`);
 	}
 
 	setEnableDeleteResourceMode(event) {
@@ -224,6 +256,9 @@ class clsPopUpHandler {
 	}
 	getToDeleteResourceId() {
 		return this.deleteResourcePopUpDom.dataset["resourceid"];
+	}
+	getToEditResourceId() {
+		return this.editResourcePopUpDom.dataset["resourceid"];
 	}
 }
 class clsDeleteResourceHelper {
@@ -280,6 +315,57 @@ class clsAddResourceHelper {
 	}
 }
 
+class clsEditResourceHelper {
+	constructor(editResourcePopUpDom) {
+		this.editResourceBtn = editResourcePopUpDom.querySelector("button.popupButtonEdit");
+
+		this.titleInput = editResourcePopUpDom.querySelector(".resourceTitleInput");
+		this.linkInput = editResourcePopUpDom.querySelector(".resourceLinkInput");
+		this.descriptionInput = editResourcePopUpDom.querySelector(".resourceDescriptionInput");
+	}
+	fillEditPOpupWithTarget(targetResource) {
+		this.titleInput.value = targetResource.querySelector(".resourceTitle").textContent;
+		this.linkInput.value = targetResource.querySelector(".resourceLink").getAttribute("href");
+		this.descriptionInput.value = targetResource.querySelector(".resourceDescription").textContent;
+	}
+	getInputsValues() {
+		return [this.titleInput.value.trim(), this.linkInput.value.trim(), this.descriptionInput.value.trim()];
+	}
+	focusOnTitle() {
+		this.titleInput.focus();
+	}
+
+	isAllowToEditResource() {
+		return this.titleInput.value.trim() && this.linkInput.value.trim();
+	}
+	clearInputsValues() {
+		this.titleInput.value = "";
+		this.linkInput.value = "";
+		this.descriptionInput.value = "";
+	}
+
+	getJsonBodyDataToApi() {
+		const [titleValue, linkValue, descriptionValue] = this.getInputsValues();
+
+		return {
+			title: titleValue,
+			link: linkValue,
+			description: descriptionValue,
+		};
+	}
+
+	reEnableResourceButton() {
+		this.addResourceBtn = false;
+	}
+	disableResourceButton() {
+		this.addResourceBtn = true;
+	}
+	updateResourceToDom(targetResource, newData) {
+		targetResource.querySelector(".resourceTitle").textContent = newData.title;
+		targetResource.querySelector(".resourceLink").setAttribute("href", newData.link);
+		targetResource.querySelector(".resourceDescription").textContent = newData.description;
+	}
+}
 export class clsManageCourseContentResources extends clsManageLoadResources {
 	constructor(categoryName, courseName) {
 		super();
@@ -292,6 +378,7 @@ export class clsManageCourseContentResources extends clsManageLoadResources {
 		this.popupHandlerObject = new clsPopUpHandler(this.deleteResourceClass, this.editResourceClass);
 		this.resourcesApiObject = new clsResourcesApi(this.categoryName, this.courseName);
 		this.addResourceHelperObject = new clsAddResourceHelper(this.popupHandlerObject.addResourcePopUpDom);
+		this.editResourceHelperObject = new clsEditResourceHelper(this.popupHandlerObject.editResourcePopUpDom);
 	}
 
 	manageShowAddResourcePopUp(event) {
@@ -306,18 +393,42 @@ export class clsManageCourseContentResources extends clsManageLoadResources {
 
 		try {
 			const response = await this.resourcesApiObject.addResourceApi(this.addResourceHelperObject.getJsonBodyDataToApi());
-			console.log(response);
 
 			this.addResourceHelperObject.pushResourceToDom(response.resource);
 			this.popupHandlerObject.setDisablePopUpBoxMode();
+			this.addResourceHelperObject.clearInputsValues();
 			alertHint(response.message, "success");
 		} catch (error) {
+			console.log(error);
 			alertHint(error.message, error.type);
 		}
 	}
 	manageShowEditResource(event) {
-		console.log("edit resources ");
+		const targetResource = event.target.closest(".resourceCard");
+		this.editResourceHelperObject.fillEditPOpupWithTarget(targetResource);
 		this.popupHandlerObject.setEnableEditResourceMode(event);
+	}
+	async manageEditResource() {
+		if (!this.editResourceHelperObject.isAllowToEditResource()) {
+			alertHint("Le titre et le lien sont obligatoires.", "warning");
+			this.addResourceHelperObject.focusOnTitle();
+			return;
+		}
+
+		try {
+			const targetResourceId = this.popupHandlerObject.getToEditResourceId();
+
+			const newData = this.editResourceHelperObject.getJsonBodyDataToApi();
+
+			const response = await this.resourcesApiObject.editResourceApi(newData, targetResourceId);
+
+			this.editResourceHelperObject.updateResourceToDom(this.popupHandlerObject.getTargetEditedResourceBox(), newData);
+			this.popupHandlerObject.setDisablePopUpBoxMode();
+			alertHint(response.message, "success");
+		} catch (error) {
+			console.log(error);
+			alertHint(error.message, error.type);
+		}
 	}
 	manageShowDeleteResource(event) {
 		this.popupHandlerObject.setEnableDeleteResourceMode(event);

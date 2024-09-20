@@ -1591,13 +1591,15 @@ def get_resources(current_user, category_name, course_name, title):
     category_name = file_utils.sanitize_filename(category_name.strip().lower())
     course_name = file_utils.sanitize_filename(course_name.strip().lower())
 
-    content = formation_model.get_course_content_by_title(category_name, course_name, title)
+    content = formation_model.get_course_content_by_title(
+        category_name, course_name, title)
     if not content:
         return jsonify({'error': 'Course content not found'}), 404
 
     resources = content.get('resources', [])
 
     return jsonify({'resources': resources})
+
 
 @bp.route('/formations/<category_name>/courses/<course_name>/content/<title>/resources/<resource_id>', methods=['PUT'])
 @token_required
@@ -1607,27 +1609,25 @@ def update_resource(current_user, category_name, course_name, title, resource_id
     course_name = file_utils.sanitize_filename(course_name.strip().lower())
 
     request_data = request.get_json()
-    
+
     if not request_data:
         return jsonify({"error": "No update data provided"}), 400
 
-    # Ensure only allowed fields are present
-    allowed_fields = {'title', 'description', 'link'}
-    invalid_fields = set(request_data.keys()) - allowed_fields
-    if invalid_fields:
-        return jsonify({"error": f"Invalid fields provided: {', '.join(invalid_fields)}"}), 400
+    if request_data.get("title") == "" or request_data.get("link") == "":
+        return jsonify({"error": "the title and the link should not be empty"})
 
     try:
-        
+
         result = course_model.update_resource_in_course(
             category_name, course_name, title, resource_id, request_data)
-        
+
         return jsonify(result)
 
     except ValueError as ve:
         return jsonify({"error": str(ve)}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 @bp.route('/formations/<category_name>/courses/<course_name>/content/<title>/resources/<resource_id>', methods=['DELETE'])
 @token_required
@@ -1639,7 +1639,7 @@ def delete_resource(current_user, category_name, course_name, title, resource_id
     try:
         result = course_model.delete_resource_from_course(
             category_name, course_name, title, resource_id)
-        
+
         return jsonify(result)
 
     except ValueError as ve:
