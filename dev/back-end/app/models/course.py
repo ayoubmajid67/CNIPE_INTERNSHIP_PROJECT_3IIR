@@ -2,16 +2,17 @@ from app import mongo
 from bson.objectid import ObjectId
 
 
-def add_course(course_name, category_name, created_date, course_content):
-    course = {
-        'courseName': course_name,
-        'categoryName': category_name,
-        'createdDate': created_date,
-        'courseContent': course_content,
-        'comments': [],
-        'reviews': []
-    }
-    return mongo.db.courses.insert_one(course)
+# def add_course(course_name, category_name, created_date, course_content):
+#     course = {
+#         '_id': str(ObjectId()),
+#         'courseName': course_name,
+#         'categoryName': category_name,
+#         'createdDate': created_date,
+#         'courseContent': course_content,
+#         'comments': [],
+#         'reviews': []
+#     }
+#     return mongo.db.courses.insert_one(course)
 
 
 def get_courses():
@@ -52,13 +53,9 @@ def add_resource_to_course(category_name, course_name, content_title, target_con
     return {"message": "Resource added successfully", "resource": resource_data}
 
 
-
-
-
-
 def add_resource_to_course(category_name, course_name, content_title, resource_data):
     # Generate a new resource ID
-    resource_data['_id'] =str(ObjectId())
+    resource_data['_id'] = str(ObjectId())
 
     # Update the course content by adding the new resource
     result = mongo.db.formations.update_one(
@@ -77,10 +74,9 @@ def add_resource_to_course(category_name, course_name, content_title, resource_d
     )
 
     if result.modified_count == 0:
-        raise ValueError("Failed to add the new resource to the course content.")
+        raise ValueError(
+            "Failed to add the new resource to the course content.")
     return {"message": "Resource added successfully", "resource": resource_data}
-
-
 
 
 def update_resource_in_course(category_name, course_name, content_title, resource_id, update_data):
@@ -89,11 +85,11 @@ def update_resource_in_course(category_name, course_name, content_title, resourc
     allowed_fields = ['title', 'description', 'link']
     for key, value in update_data.items():
         if key in allowed_fields:
-            update_fields[f'courses.$[course].courseContent.$[content].resources.$[resource].{key}'] = value
+            update_fields[f'courses.$[course].courseContent.$[content].resources.$[resource].{
+                key}'] = value
 
     if not update_fields:
         raise ValueError("No valid fields to update")
-    
 
     result = mongo.db.formations.update_one(
         {
@@ -114,10 +110,13 @@ def update_resource_in_course(category_name, course_name, content_title, resourc
         raise ValueError("Resource not found")
     if result.modified_count == 0:
         return {"message": "No changes were made to the resource"}
-    
+
     return {"message": "Resource updated successfully"}
+
+
 def delete_resource_from_course(category_name, course_name, content_title, resource_id):
-    print(category_name," ",course_name,"  ",content_title,"  ",resource_id)
+    print(category_name, " ", course_name, "  ",
+          content_title, "  ", resource_id)
     result = mongo.db.formations.update_one(
         {
             'categoryName': category_name,
@@ -139,5 +138,5 @@ def delete_resource_from_course(category_name, course_name, content_title, resou
 
     if result.modified_count == 0:
         raise ValueError("resource not found.")
-    
+
     return {"message": "Resource deleted successfully"}

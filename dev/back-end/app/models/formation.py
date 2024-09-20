@@ -139,6 +139,15 @@ def get_formation_by_category(category_name):
     return formation
 
 
+def get_formation_by_category_with_id(category_name):
+    # Find the formation by category name
+    formation = mongo.db.formations.find_one(
+        {'categoryName': category_name},
+        {'courses.courseContent': 0}
+    )
+    return formation
+
+
 def update_formation_by_category(old_category_name, update_fields):
     formation_thumbnail_link = ""
     formation_intro_video_link = ""
@@ -319,6 +328,7 @@ def get_course_json_Structure(category_name, course_name, description):
     thumbnail_link = f"http://{server_ip}:{server_port}/formations/{
         category_name}/courses/{course_name}/thumbnails"
     return {
+        '_id': str(ObjectId()),
         "courseName": course_name,
         "createdDate": datetime.datetime.utcnow(),
         "description": description,
@@ -426,6 +436,7 @@ def create_course_content_object(category_name, course_name, title, video_info, 
         category_name}/courses/{course_name}/thumbnails/{title}"
 
     course_content = {
+        '_id': str(ObjectId()),
         'videoLink': video_link,
         'thumbnail': thumbnail_link,
         'addedDate': datetime.datetime.utcnow().isoformat(),
@@ -540,7 +551,7 @@ def get_course_content_in_db(current_user, category_name, course_name, title):
     enrolled_course = get_enrolled_course_data(
         current_user, category_name, course_name)
 
-    if not enrolled_course and current_user['accountType'] not in ['admin','owner']:
+    if not enrolled_course and current_user['accountType'] not in ['admin', 'owner']:
         return {'error': 'User is not enrolled in this course'}, 403
 
     # Query to find the course and the content by title
@@ -863,9 +874,9 @@ def add_review_to_course(category_name, course_name, review, rating, current_use
 
     if result.modified_count == 1:
         # Recalculate the average review
-        average_rating =update_average_rating(category_name, course_name)
-        return review_object,average_rating
-    return None,None
+        average_rating = update_average_rating(category_name, course_name)
+        return review_object, average_rating
+    return None, None
 
 
 def delete_user_review(category_name, course_name, username):
@@ -881,10 +892,10 @@ def delete_user_review(category_name, course_name, username):
 
         if result.modified_count == 1:
             # Recalculate the average review
-            average_rating=update_average_rating(category_name, course_name)
+            average_rating = update_average_rating(category_name, course_name)
             print(average_rating)
-            return result,average_rating
-        else :
-            result,None
+            return result, average_rating
+        else:
+            result, None
 
-    return None,None
+    return None, None

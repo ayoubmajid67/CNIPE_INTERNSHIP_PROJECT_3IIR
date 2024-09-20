@@ -18,6 +18,7 @@ export default class clsManageRenderCourseContent {
 	}
 
 	async init() {
+
 		await this.manageRenderCourseContent();
 	}
 
@@ -58,7 +59,7 @@ export default class clsManageRenderCourseContent {
 			: "";
 		return `
           
-        <div class="contentBox ${currentBoxCase ? clsManageRenderCourseContent.predictedCurrentBoxClass : ""} ${disableCase ? clsManageRenderCourseContent.disableBoxContentClass : ""} ">
+        <div class="contentBox ${currentBoxCase ? clsManageRenderCourseContent.predictedCurrentBoxClass : ""} ${disableCase ? clsManageRenderCourseContent.disableBoxContentClass : ""} " data-contentId=${courseContentItem._id}>
 							<div class="topContent">
 								<div class="checkContainer ${checkedCase ? "checked" : ""}">
 									<i class="fa-solid fa-check"></i>
@@ -81,7 +82,7 @@ export default class clsManageRenderCourseContent {
 		if (this.isAdminOrOwner)
 			clsManageRenderCourseContent.addContentParent.innerHTML = `
     	<div class="addContentContainer">
-					<button id="addContentBtn" onclick="courseContentObject.manageCourseContentObject.manageCourseContentEventsObject.manageCourseContentResourcesObject.manageShowAddResourcePopUp(event)">Ajouter</button>
+					<button id="addContentBtn" onclick="courseContentObject.manageCourseContentObject.manageCourseContentEventsObject.manageCourseContentAddDeleteObject.manageShowAddContentPopUp(event)">Ajouter</button>
 					<div class="addIconContainer">
 						<img src="imgs/createIcon.png" alt="create domain img" />
 					</div>
@@ -153,6 +154,7 @@ export default class clsManageRenderCourseContent {
 		clsManageRenderCourseContent.reviewsInfo = courseData.reviews;
 
 		clsManageRenderCourseContent.review = courseData.review;
+		
 
 		this.fillCourseContentToDom(courseData.courseContent, trackingInfo);
 

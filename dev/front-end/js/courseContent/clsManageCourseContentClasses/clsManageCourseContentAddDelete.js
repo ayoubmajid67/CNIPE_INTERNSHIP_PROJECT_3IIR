@@ -159,7 +159,7 @@ export default class clsManageCourseContentAddDelete {
 								</div>`;
 		return `
           
-        <div class="contentBox ">
+        <div class="contentBox " data-contentId=${newCourseContentData._id}>
 							<div class="topContent">
 								<div class="checkContainer ">
 									<i class="fa-solid fa-check"></i>

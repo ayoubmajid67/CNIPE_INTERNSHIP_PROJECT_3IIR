@@ -308,9 +308,14 @@ def enroll_course(current_user, category_name, course_name):
     category_name = category_name.strip().lower()
     course_name = course_name.strip().lower()
 
+    formation = formation_model.get_formation_by_category_with_id(
+        category_name)
+    if not formation:
+        return jsonify({'error': 'Formation with this category does not exist'}), 404
     # Check if course exists
     course = formation_model.get_course_from_formation_by_name(
         category_name, course_name)
+
     if not course:
         return jsonify({'error': 'Course not found'}), 404
 
@@ -320,7 +325,7 @@ def enroll_course(current_user, category_name, course_name):
 
     # Enroll the user in the course
     enroll_result = user_model.enroll_user_in_course(
-        current_user['_id'], category_name, course_name)
+        current_user['_id'], str(formation['_id']), course["_id"])
     if not enroll_result.modified_count:
         return jsonify({'error': 'Failed to enroll in the course'}), 500
 
@@ -360,9 +365,20 @@ def check_enrollment(current_user, category_name, course_name):
     category_name = category_name.strip().lower()
     course_name = course_name.strip().lower()
 
+    formation = formation_model.get_formation_by_category_with_id(
+        category_name)
+    if not formation:
+        return jsonify({'error': 'Formation with this category does not exist'}), 404
+    # Check if course exists
+    course = formation_model.get_course_from_formation_by_name(
+        category_name, course_name)
+
+    if not course:
+        return jsonify({'error': 'Course not found'}), 404
+
     # Check if the user is enrolled in the course using the category name and course name
     is_enrolled = user_model.is_user_enrolled(
-        current_user['_id'], category_name, course_name)
+        current_user['_id'], str(formation['_id']), course['_id'])
 
     if is_enrolled:
         return jsonify({
@@ -735,6 +751,10 @@ def get_course_by_name(current_user, category_name, course_name):
     category_name = file_utils.sanitize_filename(category_name.strip().lower())
     course_name = file_utils.sanitize_filename(course_name.strip().lower())
 
+    formation = formation_model.get_formation_by_category_with_id(
+        category_name)
+    if not formation:
+        return jsonify({'error': 'Formation with this category does not exist'}), 404
     # Retrieve the course details
     course = formation_model.get_course_from_formation_by_name(
         category_name, course_name)
@@ -742,7 +762,7 @@ def get_course_by_name(current_user, category_name, course_name):
     if course:
         # Check if the current user is enrolled in the course
         tracking_info = user_model.get_enrolled_course_data(
-            current_user, category_name, course_name)
+            current_user, str(formation['_id']), course['_id'])
 
         if not tracking_info:
             tracking_info = {
@@ -1139,6 +1159,17 @@ def update_tracking_info(current_user, category_name, course_name):
     category_name = file_utils.sanitize_filename(category_name.strip().lower())
     course_name = file_utils.sanitize_filename(course_name.strip().lower())
 
+    formation = formation_model.get_formation_by_category_with_id(
+        category_name)
+    if not formation:
+        return jsonify({'error': 'Formation with this category does not exist'}), 404
+    # Check if course exists
+    course = formation_model.get_course_from_formation_by_name(
+        category_name, course_name)
+
+    if not course:
+        return jsonify({'error': 'Course not found'}), 404
+
     # Get request data
     data = request.json
     if not data:
@@ -1147,7 +1178,7 @@ def update_tracking_info(current_user, category_name, course_name):
             current_user['_id'], category_name, course_name)
 
     is_enrolled = user_model.is_user_enrolled(
-        current_user['_id'], category_name, course_name)
+        current_user['_id'], str(formation['_id']), course['_id'])
 
     if not is_enrolled:
         return jsonify({'error': 'You have to enroll the course before do this operation'}), 400
@@ -1163,12 +1194,6 @@ def update_tracking_info(current_user, category_name, course_name):
     max_content = int(max_content)
     current_duration = int(current_duration)
 
-    # Get course details to retrieve `courseContent` length
-    course = formation_model.get_course_from_formation_by_name(
-        category_name, course_name)
-    if not course:
-        return jsonify({'error': 'Course not found'}), 404
-
     # Get the length of the course content
     course_content_length = len(course.get('courseContent', []))
 
@@ -1183,11 +1208,11 @@ def update_tracking_info(current_user, category_name, course_name):
 
     # Update the tracking info within the enrolled courses
     updated_enrolled_courses = user_model.update_user_enrolled_course_tracking(
-        current_user['enrolledCourses'], category_name, course_name, current_content, max_content, current_duration)
+        current_user['enrolledCourses'], str(formation['_id']), course['_id'], current_content, max_content, current_duration)
 
     # Update the user document
     if user_model.update_user_enrolled_courses(current_user['_id'], updated_enrolled_courses):
-        return jsonify(user_model.get_enrolled_course_data(current_user, category_name, course_name)), 200
+        return jsonify(user_model.get_enrolled_course_data(current_user, str(formation['_id']),  course['_id'])), 200
     else:
         return jsonify({'error': 'Failed to update tracking information'}), 500
 
@@ -1217,26 +1242,31 @@ def get_course_tracking_info(current_user, category_name, course_name):
     category_name = file_utils.sanitize_filename(category_name.strip().lower())
     course_name = file_utils.sanitize_filename(course_name.strip().lower())
 
+    formation = formation_model.get_formation_by_category_with_id(
+        category_name)
+    if not formation:
+        return jsonify({'error': 'Formation with this category does not exist'}), 404
+
     # Retrieve the course details
     course = formation_model.get_course_from_formation_by_name(
         category_name, course_name)
 
-    if course:
+    if not course:
+        return jsonify({'error': 'Course not found'}), 404
+
         # Check if the current user is enrolled in the course
-        tracking_info = user_model.get_enrolled_course_data(
-            current_user, category_name, course_name)
+    tracking_info = user_model.get_enrolled_course_data(
+        current_user, str(formation['_id']), course['_id'])
 
-        if not tracking_info:
-            tracking_info = {
-                'categoryName': category_name,
-                'currentDuration': 0,
-                'currentContent': 0,
-                'maxContent': 0
-            }
+    if not tracking_info:
+        tracking_info = {
+            'currentDuration': 0,
+            'currentContent': 0,
+            'maxContent': 0
+        }
 
-        return jsonify(tracking_info)
+    return jsonify(tracking_info)
 
-    return jsonify({'error': 'Course not found'}), 404
 
 # Comment routes
 

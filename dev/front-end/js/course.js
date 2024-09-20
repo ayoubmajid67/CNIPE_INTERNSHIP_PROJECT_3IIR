@@ -23,7 +23,7 @@ class clsCourse {
 			clsCourse.enrolledBtn.addEventListener("click", () => {
 				this.manageEnrollCourse();
 			});
-
+if(clsCourse.goToCourseBtn)
 		clsCourse.goToCourseBtn.addEventListener("click", () => {
 			window.location = `courseContent.html?categoryName=${clsCourse.categoryName}&courseName=${clsCourse.courseName}`;
 		});
@@ -83,7 +83,7 @@ class clsCourse {
 		const enrolledCourseStat = await this.checkIsEnrolledCourseResponse();
 
 		if (enrolledCourseStat) controlSectionContent = `<button id="goToCourseBtn">Aller au Mooc</button>`;
-		else if (adminOwnerStat) controlSectionContent += f`<button id="goToCourseBtn">Aller au Mooc</button>`;
+		else if (adminOwnerStat) controlSectionContent += `<button id="goToCourseBtn">Aller au Mooc</button>`;
 
 		return `
         	<div class="thumbnailContainer">

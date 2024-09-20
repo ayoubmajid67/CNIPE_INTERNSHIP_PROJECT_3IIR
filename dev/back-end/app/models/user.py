@@ -1,3 +1,4 @@
+from bson.objectid import ObjectId
 from app import mongo
 import bcrypt
 
@@ -67,8 +68,42 @@ def get_user_by_username(username):
     return mongo.db.users.find_one({'username': username, 'accountType': 'normal'}, {'_id': 0})
 
 
+def get_formation_by_category_with_id(category_id):
+    return mongo.db.formations.find_one({'_id': ObjectId(category_id)})
+
+
+def get_course_from_formation_by_id(category_id, course_id):
+    formation = get_formation_by_category_with_id(category_id)
+    if formation and 'courses' in formation:
+        return next((course for course in formation['courses'] if str(course['_id']) == course_id), None)
+    return None
+
+
 def get_user_any_Type_by_username(username):
-    return mongo.db.users.find_one({'username': username}, {'_id': 0, 'password': 0})
+    user = mongo.db.users.find_one({'username': username}, {
+                                   '_id': 0, 'password': 0})
+
+    if user and 'enrolledCourses' in user:
+        for course in user['enrolledCourses']:
+            category_id = course['categoryId']
+            course_id = course['courseId']
+
+            # Get formation (category) name
+            formation = get_formation_by_category_with_id(str(category_id))
+            category_name = formation['categoryName'] if formation else 'Unknown Category'
+
+            # Get course name
+            course_info = get_course_from_formation_by_id(
+                category_id, str(course_id))
+            course_name = course_info['courseName'] if course_info else 'Unknown Course'
+
+            # Add new attributes to the course object
+            course['categoryName'] = category_name
+            course['courseName'] = course_name
+
+    return user
+
+# Helper functions (as
 
 
 def update_user_status(user_email, status):
@@ -162,21 +197,21 @@ def get_number_of_users():
     return mongo.db.users.count_documents({})
 
 
-def is_user_enrolled(user_id, category_name, course_name):
+def is_user_enrolled(user_id, category_id, course_id):
     user = mongo.db.users.find_one(
         {
             '_id': user_id,
-            'enrolledCourses': {'$elemMatch': {'categoryName': category_name, 'courseName': course_name}}
+            'enrolledCourses': {'$elemMatch': {'categoryId': category_id, 'courseId': course_id}}
         }
     )
     return user is not None
 
 
-def get_enrolled_course_data(current_user, category_name, course_name):
+def get_enrolled_course_data(current_user, category_id, course_id):
     # Iterate over the user's enrolled courses
     for course in current_user.get('enrolledCourses', []):
-        if course.get('categoryName', '').strip().lower() == category_name and \
-           course.get('courseName', '').strip().lower() == course_name:
+        if course.get('categoryId', '').strip().lower() == category_id and \
+           course.get('courseId', '').strip().lower() == course_id:
             # Return the found course data
             return course
 
@@ -184,14 +219,14 @@ def get_enrolled_course_data(current_user, category_name, course_name):
     return None
 
 
-def enroll_user_in_course(user_id, category_name, course_name):
+def enroll_user_in_course(user_id, category_id, course_id):
     result = mongo.db.users.update_one(
         {'_id': user_id},
         {
             '$addToSet': {
                 'enrolledCourses': {
-                    'categoryName': category_name,
-                    'courseName': course_name,
+                    'categoryId': category_id,
+                    'courseId': course_id,
                     'currentContent': 0,
                     'maxContent': 0,
                     'currentDuration': 0
@@ -202,10 +237,10 @@ def enroll_user_in_course(user_id, category_name, course_name):
     return result
 
 
-def update_user_enrolled_course_tracking(enrolled_courses, category_name, course_name, current_content, max_content, current_duration):
+def update_user_enrolled_course_tracking(enrolled_courses, category_id, course_id, current_content, max_content, current_duration):
 
     for course in enrolled_courses:
-        if course['categoryName'] == category_name and course['courseName'] == course_name:
+        if course['categoryId'] == category_id and course['courseId'] == course_id:
 
             if current_content < 0:
                 current_content = 0
