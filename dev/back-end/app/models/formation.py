@@ -443,7 +443,7 @@ def create_course_content_object(category_name, course_name, title, video_info, 
         'duration': video_info['duration'],
         'nbrOfLikes': 0,
         'title': title,
-        'description': description
+        'description': description,
     }
     return course_content
 

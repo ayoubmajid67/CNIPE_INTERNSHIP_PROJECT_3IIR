@@ -1676,3 +1676,122 @@ def delete_resource(current_user, category_name, course_name, title, resource_id
         return jsonify({"error": str(ve)}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+# started quiz sections : ----------------------------------------------
+@bp.route('/formations/<category_name>/courses/<course_name>/content/<title>/quiz/question', methods=['POST'])
+@token_required
+@admin_required
+def add_quiz_question(current_user, category_name, course_name, title):
+    category_name = file_utils.sanitize_filename(category_name.strip().lower())
+    course_name = file_utils.sanitize_filename(course_name.strip().lower())
+
+    request_data = request.get_json()
+
+    # Validate fields
+    required_fields = ['question', 'possibleAnswers']
+    missing_fields = utile.validate_fields(request_data, required_fields)
+    if missing_fields:
+        return jsonify({"error": f"Missing fields: {', '.join(missing_fields)}"}), 400
+
+    # Validate possible answers
+    if not isinstance(request_data['possibleAnswers'], list) or len(request_data['possibleAnswers']) < 2:
+        return jsonify({"error": "possibleAnswers must be a list with at least two items"}), 400
+
+    for answer in request_data['possibleAnswers']:
+        if not isinstance(answer, dict) or 'answer' not in answer or 'status' not in answer:
+            return jsonify({"error": "Each answer must be an object with 'answer' and 'status' fields"}), 400
+
+    # Check if the course content exists
+    content = formation_model.get_course_content_by_title(
+        category_name, course_name, title)
+    if not content:
+        return jsonify({'error': 'Course content not found'}), 404
+
+    try:
+        question_data = {
+            "question": request_data['question'],
+            "possibleAnswers": request_data['possibleAnswers']
+        }
+        # Call the helper function to add the question
+        result = course_model.add_quiz_question_to_course(
+            category_name, course_name, title, question_data)
+        return jsonify(result)
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@bp.route('/formations/<category_name>/courses/<course_name>/content/<title>/quiz/question/<question_id>', methods=['DELETE'])
+@token_required
+@admin_required
+def delete_question(current_user, category_name, course_name, title, question_id):
+    category_name = file_utils.sanitize_filename(category_name.strip().lower())
+    course_name = file_utils.sanitize_filename(course_name.strip().lower())
+
+    try:
+        result = course_model.delete_question_from_course(
+            category_name, course_name, title, question_id)
+
+        return jsonify(result)
+
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@bp.route('/formations/<category_name>/courses/<course_name>/content/<title>/quiz', methods=['GET'])
+@token_required
+def get_quiz(current_user, category_name, course_name, title):
+    category_name = file_utils.sanitize_filename(category_name.strip().lower())
+    course_name = file_utils.sanitize_filename(course_name.strip().lower())
+
+    content = formation_model.get_course_content_by_title(
+        category_name, course_name, title)
+    if not content:
+        return jsonify({'error': 'Course content not found'}), 404
+
+    resources = content.get('quiz', [])
+
+    return jsonify({'quiz': resources})
+
+
+@bp.route('/formations/<category_name>/courses/<course_name>/content/<title>/quiz/question/<question_id>', methods=['PUT'])
+@token_required
+@admin_required
+def update_quiz_question(current_user, category_name, course_name, title, question_id):
+    category_name = file_utils.sanitize_filename(category_name.strip().lower())
+    course_name = file_utils.sanitize_filename(course_name.strip().lower())
+
+    request_data = request.get_json()
+
+    if request_data.get("question") == "":
+        return jsonify({'error': "the question should contains a value"})
+    # Check if at least one field to update is provided
+    if not request_data.get('question') and not request_data.get('possibleAnswers'):
+        return jsonify({"error": "At least one of 'question' or 'possibleAnswers' must be provided"}), 400
+
+    # Validate possible answers if provided
+    if 'possibleAnswers' in request_data:
+        if not isinstance(request_data['possibleAnswers'], list) or len(request_data['possibleAnswers']) < 2:
+            return jsonify({"error": "possibleAnswers must be a list with at least two items"}), 400
+
+        for answer in request_data['possibleAnswers']:
+            if not isinstance(answer, dict) or 'answer' not in answer or 'status' not in answer:
+                return jsonify({"error": "Each answer must be an object with 'answer' and 'status' fields"}), 400
+
+        # Check if at least one answer is correct
+        if not any(answer['status'] for answer in request_data['possibleAnswers']):
+            return jsonify({"error": "At least one answer must be marked as correct"}), 400
+
+    try:
+        # Call the helper function to update the question
+        result = course_model.update_quiz_question_in_course(
+            category_name, course_name, title, question_id, request_data)
+        return jsonify(result)
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

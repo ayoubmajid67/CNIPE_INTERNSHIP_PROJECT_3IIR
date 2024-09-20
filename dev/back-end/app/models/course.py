@@ -140,3 +140,98 @@ def delete_resource_from_course(category_name, course_name, content_title, resou
         raise ValueError("resource not found.")
 
     return {"message": "Resource deleted successfully"}
+
+
+# started quiz sections : ----------------------------------------------
+
+
+def add_quiz_question_to_course(category_name, course_name, content_title, question_data):
+    # Validate that at least one answer is marked as correct
+    if not any(answer['status'] for answer in question_data['possibleAnswers']):
+        raise ValueError("At least one answer must be marked as correct")
+
+    # Add a unique ID to the question
+    question_data['_id'] = str(ObjectId())
+
+    # Update the document
+    result = mongo.db.formations.update_one(
+        {
+            'categoryName': category_name,
+            'courses.courseName': course_name,
+            'courses.courseContent.title': content_title
+        },
+        {
+            '$push': {'courses.$[course].courseContent.$[content].quiz': question_data}
+        },
+        array_filters=[
+            {'course.courseName': course_name},
+            {'content.title': content_title}
+        ]
+    )
+
+    if result.modified_count == 0:
+        raise ValueError(
+            "Failed to add the question. Course content might not exist.")
+
+    return {"message": "Quiz question added successfully", "question": question_data}
+
+
+def delete_question_from_course(category_name, course_name, content_title, question_id):
+    print(category_name, " ", course_name, "  ",
+          content_title, "  ", question_id)
+    result = mongo.db.formations.update_one(
+        {
+            'categoryName': category_name,
+            'courses.courseName': course_name,
+            'courses.courseContent.title': content_title
+        },
+        {
+            '$pull': {
+                'courses.$[course].courseContent.$[content].quiz': {
+                    '_id': question_id
+                }
+            }
+        },
+        array_filters=[
+            {"course.courseName": course_name},
+            {"content.title": content_title}
+        ]
+    )
+
+    if result.modified_count == 0:
+        raise ValueError("Question not found.")
+
+    return {"message": "Question deleted successfully"}
+
+
+def update_quiz_question_in_course(category_name, course_name, content_title, question_id, update_data):
+    # Prepare the update operation
+    update_fields = {}
+    if 'question' in update_data:
+        update_fields['courses.$[course].courseContent.$[content].quiz.$[question].question'] = update_data['question']
+    if 'possibleAnswers' in update_data:
+        update_fields['courses.$[course].courseContent.$[content].quiz.$[question].possibleAnswers'] = update_data['possibleAnswers']
+
+    # Update the document
+    result = mongo.db.formations.update_one(
+        {
+            'categoryName': category_name,
+            'courses.courseName': course_name,
+            'courses.courseContent.title': content_title,
+            'courses.courseContent.quiz._id': question_id
+        },
+        {'$set': update_fields},
+        array_filters=[
+            {'course.courseName': course_name},
+            {'content.title': content_title},
+            {'question._id': question_id}
+        ]
+    )
+
+    if result.matched_count == 0:
+        raise ValueError(
+            "Question not found. Make sure the category, course, content, and question ID are correct.")
+    elif result.modified_count == 0:
+        return {"message": "No changes were made to the question"}
+    else:
+        return {"message": "Quiz question updated successfully", "updated_fields": list(update_fields.keys())}
