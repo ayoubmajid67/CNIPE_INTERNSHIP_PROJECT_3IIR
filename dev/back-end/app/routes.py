@@ -1711,7 +1711,8 @@ def add_quiz_question(current_user, category_name, course_name, title):
     try:
         question_data = {
             "question": request_data['question'],
-            "possibleAnswers": request_data['possibleAnswers']
+            "possibleAnswers": request_data['possibleAnswers'],
+            "questionMark":1
         }
         # Call the helper function to add the question
         result = course_model.add_quiz_question_to_course(
