@@ -1300,17 +1300,20 @@ body {
                         background-color: rgba(237, 115, 29, 0.1);
                         padding: 5px 10px;
                         border-radius: 4px;
-                       
+
                     }
                 }
 
-                .adminControls {
+                .control {
                     margin: 20px 0;
                     text-align: right;
-                    
+                          padding-left:10px ;
+                    &.userControl{
+                        text-align: left;
+                        margin-bottom: 0px;
+                    }
 
-                    .btnPrimary {
-                        background-color: var(--primaryColor);
+                    .btn {
                         color: white;
                         padding: 10px 20px;
                         border: none;
@@ -1318,92 +1321,117 @@ body {
                         font-weight: bold;
                         transition: background-color var(--mainTransitionDuration);
 
-                        &:hover {
-                            background-color: darken(var(--primaryColor), 10%);
+                        &.btnPrimary {
+                            background-color: var(--primaryColor);
+    
+    
+    
+                            &:hover {
+                                background-color: var(--secondaryLightColor);
+                            }
+                        }
+    
+                        &.btnSecondary {
+                            background-color: var(--secondaryLightColor);
+    
+    
+    
                         }
                     }
+
+                   
                 }
-                .quizForm{
-               
+
+                .quizForm {
+
                     box-shadow: none;
                     border: none;
 
-                    .questionsList{
+                    .questionsList {
                         display: flex;
                         flex-direction: column;
-                         gap: 20px;
+                        gap: 20px;
 
-                          .questionItem{
+                        .questionItem {
                             display: flex;
                             flex-direction: column;
-                            gap:10px; 
+                            gap: 10px;
                             padding: 20px;
-                           justify-content: center;
-                            h4{
-                                font-weight:500; 
-                            }
-                            .optionsContainer{
-                                .option{
-                                    
-                                    width: 100%;
-                                  display: flex;
-                                  padding : 5px; 
-                                  align-items: center;
-                                  justify-content: flex-start;
+                            justify-content: center;
 
-                                  gap: 10px;
-                                  input{
-                                    width: fit-content;
-                                  }
-                                 
-                               
-                                     
+                            h4 {
+                                font-weight: 500;
+                            }
+
+                            .optionsContainer {
+                                .option {
+
+                                    width: 100%;
+                                    display: flex;
+                                    padding: 5px;
+                                    align-items: center;
+                                    justify-content: flex-start;
+
+                                    gap: 10px;
+
+                                    input {
+                                        width: fit-content;
+                                    }
+
+
+
                                 }
 
                             }
-                           
-                          }
 
-                          .messageContainer{
+                        }
+
+                        .messageContainer {
                             margin-left: 10px;
-                           width: 60%;
-                           min-width: 300px;
-                           box-shadow:0px 0px 10px rgba(0, 0, 0, 0.085);
-                           padding:10px 15px; 
-                           display: flex;
-                           flex-direction: column;
-                           gap: 10px;
-                           justify-content: center;
-                           .title{
-                            font-weight: bold;
-                           }
-                           &.success{
-                            background-color: #e1f1e976;
-                            .title{
-                          
-                                color: #28a746;
+                            width: 60%;
+                            min-width: 300px;
+                            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.085);
+                            padding: 10px 15px;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 10px;
+                            justify-content: center;
+
+                            .title {
+                                font-weight: bold;
                             }
-                           }
-                           &.error{
-                            background-color: #fff2f2;
-                            .title{
-                                color: #fa3538;
+
+                            &.success {
+                                background-color: #e1f1e976;
+
+                                .title {
+
+                                    color: #28a746;
+                                }
                             }
-                           }
-                           .header{
-                            display :flex; 
-                            align-items: center;
-                            gap:10px; 
-                           }
-                         
-                         
-                          }
-                         
+
+                            &.error {
+                                background-color: #fff2f2;
+
+                                .title {
+                                    color: #fa3538;
+                                }
+                            }
+
+                            .header {
+                                display: flex;
+                                align-items: center;
+                                gap: 10px;
+                            }
+
+
+                        }
+
                     }
 
-                    button{
-                        &.submitQuiz{
-                            background-color:var(--secondaryLightColor);
+                    button {
+                        &.submitQuiz {
+                            background-color: var(--secondaryLightColor);
                             font-weight: bold;
                         }
                     }
