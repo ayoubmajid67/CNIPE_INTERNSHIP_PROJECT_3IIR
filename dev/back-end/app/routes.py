@@ -1094,7 +1094,7 @@ def delete_course_content(current_user, category_name, course_name, title):
         category_name = file_utils.sanitize_filename(
             category_name.strip().lower())
         course_name = file_utils.sanitize_filename(course_name.strip().lower())
-        title = file_utils.sanitize_filename(title.lower().strip())
+        title = file_utils.sanitize_filename(title.strip().lower())
 
         course_content = formation_model.get_course_content_by_title(
             category_name, course_name, title)
@@ -1565,6 +1565,7 @@ def delete_review(current_user, category_name, course_name):
 def add_resource(current_user, category_name, course_name, title):
     category_name = file_utils.sanitize_filename(category_name.strip().lower())
     course_name = file_utils.sanitize_filename(course_name.strip().lower())
+    title = file_utils.sanitize_filename(title.strip().lower())
 
     required_fields = ['title', 'link']
     request_data = request.get_json()
@@ -1603,6 +1604,7 @@ def add_resource(current_user, category_name, course_name, title):
 def get_resources(current_user, category_name, course_name, title):
     category_name = file_utils.sanitize_filename(category_name.strip().lower())
     course_name = file_utils.sanitize_filename(course_name.strip().lower())
+    title = file_utils.sanitize_filename(title.strip().lower())
 
     content = formation_model.get_course_content_by_title(
         category_name, course_name, title)
@@ -1620,6 +1622,7 @@ def get_resources(current_user, category_name, course_name, title):
 def update_resource(current_user, category_name, course_name, title, resource_id):
     category_name = file_utils.sanitize_filename(category_name.strip().lower())
     course_name = file_utils.sanitize_filename(course_name.strip().lower())
+    title = file_utils.sanitize_filename(title.strip().lower())
 
     request_data = request.get_json()
 
@@ -1648,6 +1651,7 @@ def update_resource(current_user, category_name, course_name, title, resource_id
 def delete_resource(current_user, category_name, course_name, title, resource_id):
     category_name = file_utils.sanitize_filename(category_name.strip().lower())
     course_name = file_utils.sanitize_filename(course_name.strip().lower())
+    title = file_utils.sanitize_filename(title.strip().lower())
 
     try:
         result = course_model.delete_resource_from_course(
@@ -1668,6 +1672,7 @@ def delete_resource(current_user, category_name, course_name, title, resource_id
 def add_quiz_question(current_user, category_name, course_name, title):
     category_name = file_utils.sanitize_filename(category_name.strip().lower())
     course_name = file_utils.sanitize_filename(course_name.strip().lower())
+    title = file_utils.sanitize_filename(title.strip().lower())
 
     formation = formation_model.get_formation_by_category_with_id(
         category_name)
@@ -1733,6 +1738,7 @@ def add_quiz_question(current_user, category_name, course_name, title):
 def delete_question(current_user, category_name, course_name, title, question_id):
     category_name = file_utils.sanitize_filename(category_name.strip().lower())
     course_name = file_utils.sanitize_filename(course_name.strip().lower())
+    title = file_utils.sanitize_filename(title.strip().lower())
 
     formation = formation_model.get_formation_by_category_with_id(
         category_name)
@@ -1773,6 +1779,7 @@ def delete_question(current_user, category_name, course_name, title, question_id
 def get_quiz(current_user, category_name, course_name, title):
     category_name = file_utils.sanitize_filename(category_name.strip().lower())
     course_name = file_utils.sanitize_filename(course_name.strip().lower())
+    title = file_utils.sanitize_filename(title.strip().lower())
 
     content = formation_model.get_course_content_by_title(
         category_name, course_name, title)
@@ -1834,7 +1841,6 @@ def update_quiz_question(current_user, category_name, course_name, title, questi
 
     try:
         # Call the helper function to update the question
-
         result = course_model.update_quiz_question_in_course(
             category_name, course_name, title, question_id, request_data)
         if "updated_fields" in result:
@@ -1847,6 +1853,29 @@ def update_quiz_question(current_user, category_name, course_name, title, questi
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@bp.route('/formations/<category_name>/courses/<course_name>/content/<title>/quiz/question/<question_id>', methods=['GET'])
+@token_required
+@admin_required
+def get_quiz_question_by_id(current_user, category_name, course_name, title, question_id):
+
+    category_name = file_utils.sanitize_filename(category_name.strip().lower())
+    course_name = file_utils.sanitize_filename(course_name.strip().lower())
+    title = file_utils.sanitize_filename(title.strip().lower())
+
+
+    content = formation_model.get_course_content_by_title(category_name, course_name, title)
+    if not content:
+        return jsonify({'error': 'Course content not found'}), 404
+
+   
+    quiz = content.get('quiz', [])
+    question = next((q for q in quiz if q['_id'] == question_id), None)
+
+    if not question:
+        return jsonify({'error': 'Question not found'}), 404
+
+
+    return jsonify({'question': question}), 200
 
 @bp.route('/formations/<category_name>/courses/<course_name>/content/<title>/quiz/feedback', methods=['POST'])
 @token_required
@@ -1854,6 +1883,7 @@ def get_quiz_feedback(current_user, category_name, course_name, title):
     # Step 1: Sanitize input
     category_name = file_utils.sanitize_filename(category_name.strip().lower())
     course_name = file_utils.sanitize_filename(course_name.strip().lower())
+    title = file_utils.sanitize_filename(title.strip().lower())
 
     # Step 2: Retrieve formation, course, and content
     formation = formation_model.get_formation_by_category_with_id(

@@ -179,14 +179,14 @@
 								</div> -->
 							</div>
 
-							<div class="noResources">No resources available at the moment.</div>
+							<div class="noResources">Aucune ressource disponible pour le moment.</div>
 						</div>
 						<!-- quiz section -->
 						<div id="quizSection" class="quizSection courseSection">
 							<h1 class="mainTitle">Quiz</h1>
 
 							<div class="quizHeader">
-								<h3 class="feedbackTitle">Feedback</h3>
+								<h3 class="feedbackTitle">Retour</h3>
 								<p class="feedbackValue" aria-label="Quiz score"></p>
 							  </div>
 							 <div class="userControl control">
@@ -237,7 +237,7 @@
 								
 								  </ol>
 								  <div class="submitAnswerContainer">
-									<button type="submit" class="btn submitQuiz" onclick="courseContentObject.manageCourseContentObject.manageCourseContentQuizObject.manageSubmitQuiz(event)">Submit Answers</button>
+									<button type="submit" class="btn submitQuiz" onclick="courseContentObject.manageCourseContentObject.manageCourseContentQuizObject.manageSubmitQuiz(event)">soumettez vos réponses</button>
 								  </div>
 
 								</form>
@@ -245,7 +245,7 @@
 								
 							</form>
 
-							<div class="noQuiz ">No Quiz available at the moment.</div>
+							<div class="noQuiz ">Aucun quiz disponible pour le moment.</div>
 						</div>
 					</div>
 
@@ -492,6 +492,8 @@
 		</div>
 
 		<!-- quiz section popup -->
+
+		 <!-- delete question popUp -->
 		<div class="deleteQuestionPopup popUpBox">
 			<div class="popupContent">
 				<h2 class="popUpTitle">supprimer un Question</h2>
@@ -503,6 +505,71 @@
 			</div>
 		</div>
 
+		<!-- add question popup -->
+
+		<div class="addQuestionPopup popUpBox">
+			<div class="popupContent">
+				<div class="header">
+					<h2 class="popUpTitle">ajouter une Question</h2>
+					<button id="closeEditResourceBtn">
+						<i class="fa-solid fa-xmark" onclick="courseContentObject.manageCourseContentObject.manageCourseContentQuizObject.popUpHandlerObject.setDisablePopUpBoxMode(event)"></i>
+					</button>
+				</div>
+
+				<input class="questionInput" placeholder="La question" />
+				<div class="controlContainer">
+				 <button  class="addAnswerBtn">+</button>
+				 <button  class="removeAnswerBtn">-</button>
+				</div>
+				 <div class="answersList">
+					<figure class="answerItem">
+					 <div class="controlQuestionItemContainer">
+						 
+						
+					 </div>
+                       <input type="text" placeholder="la reponse">
+					   <select name="answerStatus" class="answerStatus" >
+						 <option value="1">True</option>
+						 <option value="0">False</option>
+					   </select>
+					</figure>
+					<figure class="answerItem">
+                       <input type="text" class="answerResponse" placeholder="la reponse">
+					   <select name="answerStatus" class="answerStatus" >
+						 <option value="1">True</option>
+						 <option value="0">False</option>
+					   </select>
+					</figure>
+				 </div>
+				<div class="popupButtons">
+					<button class="popupButton popupButtonCancel">Annuler</button>
+					<button class="popupButton popupButtonAdd" onclick="courseContentObject.manageCourseContentObject.manageCourseContentQuizObject.manageAddQuestion(event)">ajouter</button>
+				</div>
+			</div>
+		</div>
+		<div class="editQuestionPopup popUpBox">
+			<div class="popupContent">
+				<div class="header">
+					<h2 class="popUpTitle">modifier une Question</h2>
+					<button id="closeEditResourceBtn">
+						<i class="fa-solid fa-xmark" onclick="courseContentObject.manageCourseContentObject.manageCourseContentQuizObject.popUpHandlerObject.setDisablePopUpBoxMode(event)"></i>
+					</button>
+				</div>
+
+				<input class="questionInput" placeholder="La question" />
+				<div class="controlContainer">
+				 <button  class="addAnswerBtn">+</button>
+				 <button  class="removeAnswerBtn">-</button>
+				</div>
+				 <div class="answersList">
+				
+				 </div>
+				<div class="popupButtons">
+					<button class="popupButton popupButtonCancel">Annuler</button>
+					<button class="popupButton popupButtonAdd" onclick="courseContentObject.manageCourseContentObject.manageCourseContentQuizObject.manageEditQuestion(event)">modifier</button>
+				</div>
+			</div>
+		</div>
 		<!-- axios library -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js" integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 

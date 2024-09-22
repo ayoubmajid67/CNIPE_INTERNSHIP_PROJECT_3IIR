@@ -147,7 +147,6 @@ export default class clsManageCourseContentSwitch {
 
 			clsManageLoadQuiz.renderQuiz(courseContent.quiz || []);
 			const tempManageCourseContentQuizObject = new clsManageCourseContentQuiz(this.categoryName, this.courseName);
-			tempManageCourseContentQuizObject.init();
 			tempManageCourseContentQuizObject.manageLoadQuizFeedBack();
 		} catch (error) {
 			console.log(error);
