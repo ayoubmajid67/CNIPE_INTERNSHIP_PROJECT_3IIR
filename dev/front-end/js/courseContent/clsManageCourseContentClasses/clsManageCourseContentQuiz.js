@@ -11,6 +11,7 @@ class clsQuizDom {
 	static quizFormDom = document.getElementById("quizForm");
 	static disabledFormClass = "disabledQuizForm";
 	static addQuestionContainerDom = document.querySelector(".quizSection .adminControls");
+	static deleteQuestionClass = "deleteQuestionStatus";
 }
 class clsUtile {
 	static getCurrentContentTitle() {
@@ -56,6 +57,42 @@ export class clsQuizApi {
 			},
 		});
 		return response.data.feedback;
+	}
+
+	// Add Quiz
+	static async addQuizQuestionAPI(categoryName, courseName, questionData) {
+		const currentContent = clsUtile.getCurrentContentTitle();
+		const token = localStorage.getItem("userToken");
+		const response = await axios.post(`${baseUrl}/formations/${categoryName}/courses/${courseName}/content/${currentContent}/quiz/question`, questionData, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
+		return response.data;
+	}
+
+	// Update Quiz
+	static async updateQuizQuestionAPI(categoryName, courseName, questionId, questionData) {
+		const currentContent = clsUtile.getCurrentContentTitle();
+		const token = localStorage.getItem("userToken");
+		const response = await axios.put(`${baseUrl}/formations/${categoryName}/courses/${courseName}/content/${currentContent}/quiz/question/${questionId}`, questionData, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
+		return response.data;
+	}
+
+	// Delete Quiz
+	static async deleteQuizQuestionAPI(categoryName, courseName, questionId) {
+		const currentContent = clsUtile.getCurrentContentTitle();
+		const token = localStorage.getItem("userToken");
+		const response = await axios.delete(`${baseUrl}/formations/${categoryName}/courses/${courseName}/content/${currentContent}/quiz/question/${questionId}`, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
+		return response.data;
 	}
 }
 export class clsManageLoadQuiz {
@@ -293,6 +330,66 @@ class clsManageSubmitQuiz {
 		return answers;
 	}
 }
+class clsPopUpHandler {
+	constructor() {
+		this.deleteQuestionPopUpDom = document.querySelector(".deleteQuestionPopup");
+
+		this.deletePopQuestionNameDom = this.deleteQuestionPopUpDom.querySelector(".description span");
+		this.blackDropDom = document.querySelector(".blackDrop");
+		this.blackDropActiveClass = "activeBlackDrop";
+		this.questionPopUpActiveClass = "activePopUp";
+		this.cancelPopUpClass = "popupButtonCancel";
+
+		this.init();
+	}
+
+	async init() {
+		this.addDisablePopUpEvent();
+	}
+
+	addDisablePopUpEvent() {
+		document.addEventListener("click", (event) => {
+			const isCancelBtn = event.target.classList.contains(this.cancelPopUpClass);
+			if (event.target == this.blackDropDom || isCancelBtn) {
+				this.setDisablePopUpBoxMode(isCancelBtn);
+				window.onscroll = function () {};
+			}
+		});
+	}
+	setDisablePopUpBoxMode() {
+		this.deleteQuestionPopUpDom.classList.remove(this.questionPopUpActiveClass);
+		this.blackDropDom.classList.remove(this.blackDropActiveClass);
+		const deleteQuestionBox = clsQuizDom.quizContainerDom.querySelector(` .${clsQuizDom.deleteQuestionClass}`);
+		if (deleteQuestionBox) deleteQuestionBox.classList.remove(clsQuizDom.deleteQuestionClass);
+
+		window.onscroll = function () {};
+	}
+
+	setEnableDeleteQuestionMode(event) {
+		const deleteBtn = event.target;
+		const targetQuestionBox = deleteBtn.closest(".questionItem");
+
+		targetQuestionBox.classList.add(clsQuizDom.deleteQuestionClass);
+		const targetQuestionQuestion = targetQuestionBox.querySelector(".questionText").textContent;
+
+		const questionId = targetQuestionBox.dataset["questionid"];
+
+		this.blackDropDom.classList.add(this.blackDropActiveClass);
+		this.deleteQuestionPopUpDom.classList.add(this.questionPopUpActiveClass);
+
+		this.deleteQuestionPopUpDom.setAttribute("data-questionId", questionId);
+		this.deletePopQuestionNameDom.textContent = targetQuestionQuestion;
+
+		let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+		window.onscroll = function () {
+			scrollToPositionHard(scrollTop);
+		};
+	}
+
+	getToDeleteQuestionId() {
+		return this.deleteQuestionPopUpDom.dataset["questionid"];
+	}
+}
 
 export class clsManageCourseContentQuiz extends clsManageLoadQuiz {
 	constructor(categoryName, courseName) {
@@ -302,6 +399,7 @@ export class clsManageCourseContentQuiz extends clsManageLoadQuiz {
 	}
 	async init() {
 		this.manageSubmitQuizObject = new clsManageSubmitQuiz(this.categoryName, this.courseName);
+		this.popUpHandlerObject = new clsPopUpHandler(this.categoryName, this.courseName);
 	}
 
 	async manageSubmitQuiz(event) {
@@ -343,8 +441,35 @@ export class clsManageCourseContentQuiz extends clsManageLoadQuiz {
 		console.log("edit question ");
 	}
 
+	// delete question logic :
 	manageShowDeleteQuestion(event) {
 		event.preventDefault();
-		console.log("delete question ");
+		this.popUpHandlerObject.setEnableDeleteQuestionMode(event);
+	}
+	async manageDeleteQuestion(event) {
+		const deleteBtn = event.target;
+		deleteBtn.disabled = true;
+		const deleteQuestionId = this.popUpHandlerObject.getToDeleteQuestionId();
+
+		try {
+			const data = await clsQuizApi.deleteQuizQuestionAPI(this.categoryName, this.courseName, deleteQuestionId);
+
+			clsDeleteQuestionHelper.manageDeleteTargetQuestionBoxFromUI();
+			alertHint(data.message, "success");
+
+			this.popUpHandlerObject.setDisablePopUpBoxMode();
+		} catch (error) {
+			console.log(error);
+			await alertHint(error.message, error.type);
+		} finally {
+			deleteBtn.disabled = false;
+		}
+	}
+}
+
+class clsDeleteQuestionHelper {
+	static manageDeleteTargetQuestionBoxFromUI() {
+		const targetQuizToDelete = clsQuizDom.quizContainerDom.querySelector(` .${clsQuizDom.deleteQuestionClass}`);
+		targetQuizToDelete.remove();
 	}
 }
