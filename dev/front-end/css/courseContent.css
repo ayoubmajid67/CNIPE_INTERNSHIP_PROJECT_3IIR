@@ -25,7 +25,7 @@ body {
 
 
         flex-grow: 1;
-        max-height: calc(100vh - 105px);
+        max-height: calc(100vh - 110px);
         overflow: hidden;
 
 
@@ -1373,14 +1373,15 @@ body {
                             gap: 10px;
                             padding: 20px;
                             justify-content: center;
+
                             .controlContainer {
 
-                                 z-index: 1;
+                                z-index: 1;
                                 display: flex;
                                 justify-content: flex-end;
                                 gap: 10px;
                                 align-items: center;
-    
+
                                 button {
                                     width: 100px;
                                     padding: 5px 10px;
@@ -1391,24 +1392,24 @@ body {
                                     transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
                                     font-weight: 600;
                                 }
-    
+
                                 button.cancel,
                                 button.add,
                                 button.edit {
                                     background: var(--secondaryLightColor);
                                 }
-    
+
                                 button.save {
                                     background-color: var(--cancelBg);
-    
+
                                 }
-    
+
                                 button.save:disabled {
                                     background: var(--sectionBg);
                                     opacity: 0.8;
                                     cursor: not-allowed;
                                 }
-    
+
                                 button.delete {
                                     background: var(--primaryColor);
                                 }
@@ -1550,7 +1551,9 @@ body {
 
             .header {
 
-                padding: 20px 10px;
+
+                padding: 20px 15px;
+                padding-top: 30px;
                 border-bottom: 1px solid #77777752;
                 position: relative;
 

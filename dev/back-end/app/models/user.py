@@ -293,7 +293,8 @@ def process_quiz_feedback(quiz, request_data):
 
     for question in quiz:
         question_id = question['_id']
-        correct_answers = [i for i, ans in enumerate(question['possibleAnswers']) if ans['status']]
+        correct_answers = [i for i, ans in enumerate(
+            question['possibleAnswers']) if ans['status']]
         user_answers = request_data.get(question_id, [])
 
         if not user_answers:
@@ -337,7 +338,8 @@ def update_user_feedback(current_user, formation_id, course_id, content_id, new_
             break
 
     if not target_course:
-        raise Exception('User is not enrolled in this course')  # You can adjust error handling as needed
+        # You can adjust error handling as needed
+        raise Exception('User is not enrolled in this course')
 
     user_feedbacks = target_course.get('userFeedBacks', [])
     existing_feedback = None
@@ -366,6 +368,26 @@ def update_user_feedback(current_user, formation_id, course_id, content_id, new_
     current_user['enrolledCourses'] = enrolled_courses
 
     return current_user
+
+
+def remove_feedback_from_all_users(category_id,course_id, content_id):
+    query = {
+        "enrolledCourses.categoryId": category_id,
+        "enrolledCourses.courseId": course_id,
+        "enrolledCourses.userFeedBacks.contentId": content_id
+    }
+
+    # Use $pull to remove the specific feedback from the matching users
+    update_operation = {
+        "$pull": {
+            "enrolledCourses.$.userFeedBacks": {"contentId": content_id}
+        }
+    }
+
+    result = mongo.db.users.update_many(query, update_operation)
+
+
+    return result.modified_count
 
 # add_owner("youbista","ayoubmajjid@gmail.com","MajjidDev2024")
 # add_owner("dnau","dnau@gmail.com","dnauDev2024")

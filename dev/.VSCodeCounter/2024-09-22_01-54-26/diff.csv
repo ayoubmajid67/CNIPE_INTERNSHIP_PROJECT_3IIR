@@ -1,0 +1,11 @@
+"filename", "language", "JavaScript", "HTML", "CSS", "Python", "comment", "blank", "total"
+"c:\vs code\GitHub\CNIPE_INTERNSHIP_PROJECT_3IIR\dev\back-end\app\models\course.py", "Python", 0, 0, 0, 10, 0, 4, 14
+"c:\vs code\GitHub\CNIPE_INTERNSHIP_PROJECT_3IIR\dev\back-end\app\models\user.py", "Python", 0, 0, 0, 65, 5, 15, 85
+"c:\vs code\GitHub\CNIPE_INTERNSHIP_PROJECT_3IIR\dev\back-end\app\routes.py", "Python", 0, 0, 0, 72, 13, 19, 104
+"c:\vs code\GitHub\CNIPE_INTERNSHIP_PROJECT_3IIR\dev\front-end\courseContent.html", "HTML", 0, -38, 0, 0, 0, 1, -37
+"c:\vs code\GitHub\CNIPE_INTERNSHIP_PROJECT_3IIR\dev\front-end\css\courseContent.css", "CSS", 0, 0, 79, 0, -1, 37, 115
+"c:\vs code\GitHub\CNIPE_INTERNSHIP_PROJECT_3IIR\dev\front-end\js\courseContent\clsManageCourseContent.js", "JavaScript", 3, 0, 0, 0, 0, -1, 2
+"c:\vs code\GitHub\CNIPE_INTERNSHIP_PROJECT_3IIR\dev\front-end\js\courseContent\clsManageCourseContentClasses\clsManageCourseContentQuiz.js", "JavaScript", 305, 0, 0, 0, 9, 37, 351
+"c:\vs code\GitHub\CNIPE_INTERNSHIP_PROJECT_3IIR\dev\front-end\js\courseContent\clsManageCourseContentClasses\clsManageCourseContentSwitch.js", "JavaScript", 8, 0, 0, 0, 0, -10, -2
+"c:\vs code\GitHub\CNIPE_INTERNSHIP_PROJECT_3IIR\dev\front-end\js\courseContent\courseContent.js", "JavaScript", 0, 0, 0, 0, 0, -2, -2
+"Total", "-", 316, -38, 79, 147, 26, 100, 630

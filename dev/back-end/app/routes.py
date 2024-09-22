@@ -31,6 +31,9 @@ def token_required(f):
             data = jwt.decode(
                 token, current_app.config['SECRET_KEY'], algorithms=["HS256"])
             current_user = user_model.get_All_by_email(data['email'])
+            if current_user.get("status", "inactive") == 'inactive':
+                return jsonify({'error': 'contact you admin to activate you account!'}), 404
+
             if not current_user:
                 return jsonify({'error': 'User not found!'}), 404
         except jwt.ExpiredSignatureError:
@@ -119,8 +122,6 @@ def get_current_user_profile(current_user):
     if not user:
         return jsonify({'error': 'User not found'}), 404
 
-    print("the current user : ", user)
-
     return jsonify({'user': user}), 200
 
 
@@ -174,6 +175,9 @@ def login():
     user = user_model.get_All_by_email(email)
     if not user or not bcrypt.checkpw(password.encode('utf-8'), user['password']):
         return jsonify({'error': 'Invalid credentials'}), 401
+
+    if user.get("status", "inactive") == 'inactive':
+        return jsonify({'error': 'contact you admin to activate you account!'}), 404
 
     token = utile.generate_token(email)
     username = user["username"]
@@ -863,7 +867,6 @@ def add_course_content(current_user, category_name, course_name):
 
     result = formation_model.create_course_content(
         category_name, course_name, course_content)
-    print(result)
 
     if result.modified_count:
         target_content = formation_model.get_course_content_in_db(
@@ -1423,7 +1426,7 @@ def pull_up_reply_comment(current_user, category_name, course_name, root_comment
 
     if not is_enrolled and not utile.check_admin_or_owner(current_user):
         return jsonify({'error': 'You have to enroll the course before do this operation'}), 400
-    print("reply comment :", comment_id)
+
     comment = formation_model.get_reply_comment_by_id(
         category_name, course_name, root_comment_id, comment_id)
     if not comment:
@@ -1666,6 +1669,24 @@ def add_quiz_question(current_user, category_name, course_name, title):
     category_name = file_utils.sanitize_filename(category_name.strip().lower())
     course_name = file_utils.sanitize_filename(course_name.strip().lower())
 
+    formation = formation_model.get_formation_by_category_with_id(
+        category_name)
+    if not formation:
+        return jsonify({'error': 'Formation with this category does not exist'}), 404
+
+    course = formation_model.get_course_from_formation_by_name(
+        category_name, course_name)
+    if not course:
+        return jsonify({'error': 'Course not found'}), 404
+
+    content = formation_model.get_course_content_by_title(
+        category_name, course_name, title)
+    if not content:
+        return jsonify({'error': 'Course content not found'}), 404
+
+    content_id = content['_id']
+    course_id = course['_id']
+    formation_id = str(formation["_id"])
     request_data = request.get_json()
 
     # Validate fields
@@ -1695,6 +1716,8 @@ def add_quiz_question(current_user, category_name, course_name, title):
             "questionMark": 1
         }
         # Call the helper function to add the question
+        user_model.remove_feedback_from_all_users(
+            formation_id, course_id, content_id)
         result = course_model.add_quiz_question_to_course(
             category_name, course_name, title, question_data)
         return jsonify(result)
@@ -1711,9 +1734,31 @@ def delete_question(current_user, category_name, course_name, title, question_id
     category_name = file_utils.sanitize_filename(category_name.strip().lower())
     course_name = file_utils.sanitize_filename(course_name.strip().lower())
 
+    formation = formation_model.get_formation_by_category_with_id(
+        category_name)
+    if not formation:
+        return jsonify({'error': 'Formation with this category does not exist'}), 404
+
+    course = formation_model.get_course_from_formation_by_name(
+        category_name, course_name)
+    if not course:
+        return jsonify({'error': 'Course not found'}), 404
+
+    content = formation_model.get_course_content_by_title(
+        category_name, course_name, title)
+    if not content:
+        return jsonify({'error': 'Course content not found'}), 404
+
+    content_id = content['_id']
+    course_id = course['_id']
+    formation_id = str(formation["_id"])
+
     try:
         result = course_model.delete_question_from_course(
             category_name, course_name, title, question_id)
+
+        user_model.remove_feedback_from_all_users(
+            formation_id, course_id, content_id)
 
         return jsonify(result)
 
@@ -1746,6 +1791,24 @@ def update_quiz_question(current_user, category_name, course_name, title, questi
     category_name = file_utils.sanitize_filename(category_name.strip().lower())
     course_name = file_utils.sanitize_filename(course_name.strip().lower())
 
+    formation = formation_model.get_formation_by_category_with_id(
+        category_name)
+    if not formation:
+        return jsonify({'error': 'Formation with this category does not exist'}), 404
+
+    course = formation_model.get_course_from_formation_by_name(
+        category_name, course_name)
+    if not course:
+        return jsonify({'error': 'Course not found'}), 404
+
+    content = formation_model.get_course_content_by_title(
+        category_name, course_name, title)
+    if not content:
+        return jsonify({'error': 'Course content not found'}), 404
+
+    content_id = content['_id']
+    course_id = course['_id']
+    formation_id = str(formation["_id"])
     request_data = request.get_json()
 
     if request_data.get("question") == "":
@@ -1771,8 +1834,13 @@ def update_quiz_question(current_user, category_name, course_name, title, questi
 
     try:
         # Call the helper function to update the question
+
         result = course_model.update_quiz_question_in_course(
             category_name, course_name, title, question_id, request_data)
+        if "updated_fields" in result:
+            user_model.remove_feedback_from_all_users(
+                formation_id, course_id, content_id)
+
         return jsonify(result)
     except ValueError as ve:
         return jsonify({"error": str(ve)}), 400
@@ -1897,6 +1965,6 @@ def get_user_feedback_for_content(current_user, category_name, course_name, titl
         return jsonify({'feedback': feedback_for_content}), 200
     else:
         return jsonify({'feedback': {
-        "feedBack": [],
-        "isPassed": True,
-    }}), 200
+            "feedBack": [],
+            "isPassed": True,
+        }}), 200
