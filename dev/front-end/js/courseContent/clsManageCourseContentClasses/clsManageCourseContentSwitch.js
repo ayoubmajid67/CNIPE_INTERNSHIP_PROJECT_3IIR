@@ -1,6 +1,8 @@
-
 import clsManageRenderCourseContent from "./clsManageRenderCourseContent.js";
-import { clsManageLoadResources } from './clsManageCourseContentResources.js';
+import { clsManageLoadResources } from "./clsManageCourseContentResources.js";
+import { clsManageLoadQuiz } from "./clsManageCourseContentQuiz.js";
+import { clsManageCourseContentQuiz } from "./clsManageCourseContentQuiz.js";
+import { clsQuizApi } from "./clsManageCourseContentQuiz.js";
 export default class clsManageCourseContentSwitch {
 	constructor(categoryName, courseName, currentContentVideoDom, courseContentDescription, leftIconSwitchDom, rightIconSwitchDom) {
 		this.categoryName = categoryName;
@@ -18,8 +20,7 @@ export default class clsManageCourseContentSwitch {
 		this.#addContentBoxesClickEvent();
 		this.isAdminOrOwner = await isAdminOrOwner();
 		this.#manageAddLeftRightContentClickEvent();
-		if(globalIsEnroll)
-		this.#trackVideoDuration();
+		if (globalIsEnroll) this.#trackVideoDuration();
 	}
 
 	#manageAddLeftRightContentClickEvent() {
@@ -125,34 +126,33 @@ export default class clsManageCourseContentSwitch {
 		}
 	}
 	async manageFillContentItem(targetBox, boxContainer, currentDuration) {
-		
 		const titleDom = targetBox.querySelector(".title");
-            
+
 		const titleValue = titleDom.textContent;
-	       
-		try{
+
+		try {
 			let courseContent = await this.getCourseContentItemResponse(titleValue);
-	 
-	
-                        
 
 			const previousCurrentBox = boxContainer.querySelector(".currentBox");
 			this.currentContentVideoDom.src = courseContent.videoLink;
-	
+
 			this.currentContentVideoDom.setAttribute("poster", courseContent.thumbnail);
 			this.currentContentDescription.textContent = courseContent.description;
-           
+
 			if (previousCurrentBox) previousCurrentBox.classList.remove(clsManageRenderCourseContent.currentBoxContentClass);
 			else this.currentContentVideoDom.currentTime = currentDuration;
 			targetBox.classList.add(clsManageRenderCourseContent.currentBoxContentClass);
 
 			clsManageLoadResources.renderResources(courseContent.resources || []);
 
-		}catch(error){
-			console.log(error)
-			throw {error}
+			clsManageLoadQuiz.renderQuiz(courseContent.quiz || []);
+			const tempManageCourseContentQuizObject = new clsManageCourseContentQuiz(this.categoryName, this.courseName);
+			tempManageCourseContentQuizObject.init();
+			tempManageCourseContentQuizObject.manageLoadQuizFeedBack();
+		} catch (error) {
+			console.log(error);
+			throw { error };
 		}
-
 	}
 
 	async manageContentBoxClick(event) {
@@ -163,8 +163,6 @@ export default class clsManageCourseContentSwitch {
 
 		const currentContent = Array.from(boxContainer.children).indexOf(targetBox);
 		const trackingInfo = clsManageRenderCourseContent.trackingInfo;
-	
-
 
 		// && currentContent != trackingInfo.currentContent
 
@@ -172,16 +170,13 @@ export default class clsManageCourseContentSwitch {
 			try {
 				const previousCurrentBox = boxContainer.querySelector(".currentBox");
 
-				if ( globalIsEnroll &&  previousCurrentBox) {
-					
+				if (globalIsEnroll && previousCurrentBox) {
 					const response = await this.updateCourseContentTrackingInfoResponse(currentContent);
 				}
-				
 
 				await this.manageFillContentItem(targetBox, boxContainer, trackingInfo.currentDuration);
 			} catch (error) {
-
-			         console.log(error)
+				console.log(error);
 				await alertHint(error.message, error.type);
 			}
 		} else {
@@ -198,10 +193,13 @@ export default class clsManageCourseContentSwitch {
 		for (let i = 0; i < currentContentIndex; i++) {
 			if (!boxContainer.children[i].querySelector(".topContent >div.checked")) previousBoxesChecked = false;
 		}
-		
-		isNext= isNext && previousBoxesChecked;
+
+		isNext = isNext && previousBoxesChecked;
 		try {
-			 
+			const userFeedBack = await clsQuizApi.fetchUserFeedbackAPI(this.categoryName, this.courseName);
+
+			isNext = isNext && Boolean(userFeedBack.isPassed);
+
 			clsManageRenderCourseContent.trackingInfo = await this.updateCourseContentTrackingInfoResponse(currentContentIndex, isNext ? currentContentIndex + 1 : -1);
 
 			if (isNext) {

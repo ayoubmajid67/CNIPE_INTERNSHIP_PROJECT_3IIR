@@ -7,12 +7,11 @@ class clsManageAccessCourseContent {
 		this.courseName = courseName;
 	}
 
-
 	async isEnrolCourseResponse() {
 		try {
 			const token = localStorage.getItem("userToken");
 
-			const response = await axios.get(`${baseUrl}/formations/${this.categoryName}/courses/${this.courseName}/enroll`, {
+			const response = await axios.get(`${baseUrl}/formations/${this.categoryName}/courses/${this.courseName}/enrolled`, {
 				headers: {
 					Authorization: `Bearer ${token}`,
 				},
@@ -20,7 +19,7 @@ class clsManageAccessCourseContent {
 
 			const data = response.data;
 
-			return data.isEnroll;
+			return data.enrolled;
 		} catch (error) {
 			// Handle error and display message
 			if (error.response && error.response.data && error.response.data.error) {
@@ -33,11 +32,10 @@ class clsManageAccessCourseContent {
 	}
 	async managePreventAccessCourseContentEnrolled() {
 		try {
-			
-			globalIsAdminOrOwner = await isAdminOrOwner();  
+			globalIsAdminOrOwner = await isAdminOrOwner();
 			globalIsEnroll = await this.isEnrolCourseResponse();
-	
-			if (!globalIsEnroll && !globalIsAdminOrOwner ) {
+
+			if (!globalIsEnroll && !globalIsAdminOrOwner) {
 				await alertHint("Tu dois t'inscrire dans le Mooc avant de consulter le contenu.", "warning");
 				window.location = `course.html?categoryName=${this.categoryName}&courseName=${this.courseName}`;
 			}

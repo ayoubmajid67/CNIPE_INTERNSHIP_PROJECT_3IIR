@@ -8,7 +8,8 @@ import { clsManageCourseContentComments } from "./clsManageCourseContentClasses/
 
 import { clsManageCourseContentReviews } from "./clsManageCourseContentClasses/clsManageCourseContentReviews.js";
 
-import { clsManageCourseContentResources } from './clsManageCourseContentClasses/clsManageCourseContentResources.js';
+import { clsManageCourseContentResources } from "./clsManageCourseContentClasses/clsManageCourseContentResources.js";
+import { clsManageCourseContentQuiz } from "./clsManageCourseContentClasses/clsManageCourseContentQuiz.js";
 class clsManageCourseContentEvents {
 	static currentContentVideoDom = document.querySelector("#currentVideo");
 	static courseContentDescriptionDom = document.querySelector(".overviewSection .currentContentInfo .description");
@@ -52,7 +53,8 @@ export default class clsManageCourseContent {
 		this.manageCourseContentEventsObject = new clsManageCourseContentEvents(categoryName, courseName);
 		this.manageCourseContentCommentsObject = new clsManageCourseContentComments(categoryName, courseName);
 		this.manageCourseContentReviewsObject = new clsManageCourseContentReviews(categoryName, courseName);
-		this.manageCourseContentResourcesObject= new clsManageCourseContentResources(categoryName,courseName);
+		this.manageCourseContentResourcesObject = new clsManageCourseContentResources(categoryName, courseName);
+		this.manageCourseContentQuizObject = new clsManageCourseContentQuiz(categoryName, courseName);
 	}
 
 	async init() {
@@ -60,7 +62,7 @@ export default class clsManageCourseContent {
 		await this.manageCourseContentEventsObject.init();
 		await this.manageCourseContentCommentsObject.init();
 		await this.manageCourseContentReviewsObject.init();
-		await this.manageCourseContentResourcesObject.init(); 
-	
+		await this.manageCourseContentResourcesObject.init();
+		await this.manageCourseContentQuizObject.init();
 	}
 }

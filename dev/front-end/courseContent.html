@@ -187,17 +187,18 @@
 
 							<div class="quizHeader">
 								<h3 class="feedbackTitle">Feedback</h3>
-								<p class="feedbackValue" aria-label="Quiz score">80%</p>
+								<p class="feedbackValue" aria-label="Quiz score"></p>
 							  </div>
 							 <div class="userControl control">
-								<button class="btn btnSecondary">Try</button>
+								<div class="retryBtnContainer">
+
+								</div>
+								
 							 </div>
 							  <div class="adminControls control">
-								<button id="addQuestionBtn" class="btn btnPrimary" onclick="courseContentObject.manageCourseContentObject.manageCourseContentQuizObject.manageShowAddQuestionPopUp(event)">
-								  <i class="fas fa-plus" aria-hidden="true"></i> Add Question
-								</button>
+								
 							  </div>
-							<form class="quizForm">
+							<form id="quizForm" class="">
 								<hr>
 								<ol class="questionsList">
 								
@@ -218,73 +219,33 @@
 										 <h4>Jupiter</h4> 	
 										  </label>
 										</div>
-										<figure class="messageContainer error">
-											<div class="header">
-												<i class="fa-solid fa-check"></i>
-												<h3 class="title">Error</h3>
-											</div>
-										
-											<p class="meessageContent">
-												Please select at least one answer for question
-											</p>
-										</figure >
-									</li>
-									<li class="questionItem">
-									 
-										<h4 class="questionText"><span>2-</span> Which planet is known as the Red Planet?</h4>
-										<div class="optionsContainer">
-										  <label class="option">
-											<input type="radio" name="q2" value="mars" required>
-											<h4>Mars</h4> 
-										  </label>
-										  <label class="option">
-											<input type="radio" name="q2" value="venus">
-											<h4>Venus</h4> 
-										  </label>
-										  <label class="option">
-											<input type="radio" name="q2" value="jupiter">
-										 <h4>Jupiter</h4> 	
-										  </label>
+										<div class="feedBack">
+											<figure class="messageContainer error">
+												<div class="header">
+													<i class="fa-solid fa-check"></i>
+													<h3 class="title">Error</h3>
+												</div>
+											
+												<p class="meessageContent">
+													Please select at least one answer for question
+												</p>
+											</figure >
 										</div>
-									
-									</li>
-									<li class="questionItem">
-									 
-										<h4 class="questionText"><span>2-</span> Which of the following are programming languages? </h4>
-										<div class="optionsContainer">
-										  <label class="option">
-											<input type="checkbox" name="q3" value="python" required>
-											<h4>python</h4> 
-										  </label>
-										  <label class="option">
-											<input type="checkbox" name="q3" value="java">
-											<h4>java</h4> 
-										  </label>
-										  <label class="option">
-											<input type="checkbox" name="q3" value="html">
-										 <h4>html</h4> 	
-										  </label>
-										</div>
-										<figure class="messageContainer success">
-											<div class="header">
-												<i class="fa-solid fa-check"></i>
-												<h3 class="title">Success</h3>
-											</div>
 										
-											<p class="meessageContent">
-												right answer
-											</p>
-										</figure >
-									
 									</li>
+								
+								
 								  </ol>
-								  <button type="submit" class="btn submitQuiz">Submit Answers</button>
+								  <div class="submitAnswerContainer">
+									<button type="submit" class="btn submitQuiz" onclick="courseContentObject.manageCourseContentObject.manageCourseContentQuizObject.manageSubmitQuiz(event)">Submit Answers</button>
+								  </div>
+
 								</form>
 
 								
 							</form>
 
-							<div class="noQuiz">No Quiz available at the moment.</div>
+							<div class="noQuiz ">No Quiz available at the moment.</div>
 						</div>
 					</div>
 

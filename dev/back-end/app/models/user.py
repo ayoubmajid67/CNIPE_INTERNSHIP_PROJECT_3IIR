@@ -282,5 +282,90 @@ def get_users_enrolled_a_course(category_name, course_name, includeIsStat=False)
     return users
 
 
+def process_quiz_feedback(quiz, request_data):
+    """
+    Processes the quiz and calculates feedback and final mark.
+    Returns the feedback array, final mark, and total marks.
+    """
+    feedback = []
+    final_mark = 0
+    total_marks = 0
+
+    for question in quiz:
+        question_id = question['_id']
+        correct_answers = [i for i, ans in enumerate(question['possibleAnswers']) if ans['status']]
+        user_answers = request_data.get(question_id, [])
+
+        if not user_answers:
+            feedback.append({
+                "questionId": question_id,
+                "isCorrect": False,
+                "message": "No answer provided."
+            })
+            continue
+
+        is_correct = set(user_answers) == set(correct_answers)
+        total_marks += question['questionMark']
+        if is_correct:
+            final_mark += question['questionMark']
+
+        feedback.append({
+            "questionId": question_id,
+            "isCorrect": is_correct,
+            "message": "Correct answer" if is_correct else "Wrong answer",
+            'usersAnswersIndexes': user_answers,
+            "correctAnswersIndexes": correct_answers,
+            'questionMark': question['questionMark'],
+        })
+
+    return feedback, final_mark, total_marks
+
+
+def update_user_feedback(current_user, formation_id, course_id, content_id, new_feedback):
+    """
+    Updates the user feedback based on the new feedback received.
+    If feedback for the content already exists, compares and keeps the higher score.
+    Saves the feedback back into the user's enrolled course.
+    """
+    enrolled_courses = current_user.get('enrolledCourses', [])
+    target_course = None
+
+    # Find the course and feedback for the user
+    for course in enrolled_courses:
+        if course['categoryId'] == formation_id and course['courseId'] == course_id:
+            target_course = course
+            break
+
+    if not target_course:
+        raise Exception('User is not enrolled in this course')  # You can adjust error handling as needed
+
+    user_feedbacks = target_course.get('userFeedBacks', [])
+    existing_feedback = None
+
+    # Check if feedback already exists for the content
+    for feedback in user_feedbacks:
+        if feedback['contentId'] == content_id:
+            existing_feedback = feedback
+            break
+
+    # If feedback exists, update it with the greater score
+    if existing_feedback:
+        old_score = existing_feedback['finalMark']
+        new_score = new_feedback['finalMark']
+        if new_score > old_score:
+            existing_feedback.update(new_feedback)
+    else:
+        # If no feedback exists, create new feedback for this content
+        user_feedbacks.append({
+            'contentId': content_id,
+            **new_feedback
+        })
+
+    # Update the user feedback array in the course
+    target_course['userFeedBacks'] = user_feedbacks
+    current_user['enrolledCourses'] = enrolled_courses
+
+    return current_user
+
 # add_owner("youbista","ayoubmajjid@gmail.com","MajjidDev2024")
 # add_owner("dnau","dnau@gmail.com","dnauDev2024")

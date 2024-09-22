@@ -338,26 +338,6 @@ def enroll_course(current_user, category_name, course_name):
     return jsonify({'message': f'User {current_user["username"]} successfully enrolled in {course_name}'}), 200
 
 
-@bp.route('/formations/<category_name>/courses/<course_name>/enroll', methods=['GET'])
-@token_required
-def is_enroll_course(current_user, category_name, course_name):
-    # Sanitize inputs
-    category_name = category_name.strip().lower()
-    course_name = course_name.strip().lower()
-
-    # Check if course exists
-    course = formation_model.get_course_from_formation_by_name(
-        category_name, course_name)
-    if not course:
-        return jsonify({'error': 'Course not found'}), 404
-
-    # Check if the user is already enrolled in the course
-    if user_model.is_user_enrolled(current_user['_id'], category_name, course_name):
-        return jsonify({'isEnroll': True}), 200
-    else:
-        return jsonify({'isEnroll': False}), 200
-
-
 @bp.route('/formations/<category_name>/courses/<course_name>/enrolled', methods=['GET'])
 @token_required
 def check_enrollment(current_user, category_name, course_name):
@@ -1712,7 +1692,7 @@ def add_quiz_question(current_user, category_name, course_name, title):
         question_data = {
             "question": request_data['question'],
             "possibleAnswers": request_data['possibleAnswers'],
-            "questionMark":1
+            "questionMark": 1
         }
         # Call the helper function to add the question
         result = course_model.add_quiz_question_to_course(
@@ -1786,6 +1766,8 @@ def update_quiz_question(current_user, category_name, course_name, title, questi
         # Check if at least one answer is correct
         if not any(answer['status'] for answer in request_data['possibleAnswers']):
             return jsonify({"error": "At least one answer must be marked as correct"}), 400
+        request_data['isMultipleAnswers'] = course_model.isMultipleAnswersQuestion(
+            request_data)
 
     try:
         # Call the helper function to update the question
@@ -1796,3 +1778,125 @@ def update_quiz_question(current_user, category_name, course_name, title, questi
         return jsonify({"error": str(ve)}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+@bp.route('/formations/<category_name>/courses/<course_name>/content/<title>/quiz/feedback', methods=['POST'])
+@token_required
+def get_quiz_feedback(current_user, category_name, course_name, title):
+    # Step 1: Sanitize input
+    category_name = file_utils.sanitize_filename(category_name.strip().lower())
+    course_name = file_utils.sanitize_filename(course_name.strip().lower())
+
+    # Step 2: Retrieve formation, course, and content
+    formation = formation_model.get_formation_by_category_with_id(
+        category_name)
+    if not formation:
+        return jsonify({'error': 'Formation with this category does not exist'}), 404
+
+    course = formation_model.get_course_from_formation_by_name(
+        category_name, course_name)
+    if not course:
+        return jsonify({'error': 'Course not found'}), 404
+
+    content = formation_model.get_course_content_by_title(
+        category_name, course_name, title)
+    if not content:
+        return jsonify({'error': 'Course content not found'}), 404
+
+    # Step 3: Extract IDs for formation, course, and content
+    content_id = content['_id']
+    course_id = course['_id']
+    formation_id = str(formation["_id"])
+
+    # Step 4: Validate request data
+    request_data = request.get_json()
+    if not isinstance(request_data, dict):
+        return jsonify({"error": "Invalid input format. Expected a dictionary."}), 400
+
+    # Step 5: Process quiz and calculate feedback
+    feedback, final_mark, total_marks = user_model.process_quiz_feedback(
+        content['quiz'], request_data)
+
+    # Step 6: Calculate final score as a percentage
+    if total_marks == 0:
+        total_marks = 1
+    final_mark = int((final_mark / total_marks) * 100)
+    result = {
+        'feedBack': feedback,
+        "finalMark": final_mark,
+        "isPassed": final_mark >= 50,
+    }
+
+    # Step 7: Update user feedback and save to the database
+    updated_user = user_model.update_user_feedback(
+        current_user, formation_id, course_id, content_id, result)
+
+    # Save the updated user data back to the database using the provided update function
+    user_model.update_user_enrolled_courses(
+        updated_user["_id"], updated_user["enrolledCourses"])
+
+    return jsonify(result)
+
+
+@bp.route('/formations/<category_name>/courses/<course_name>/content/<title>/quiz/feedback', methods=['GET'])
+@token_required
+def get_user_feedback_for_content(current_user, category_name, course_name, title):
+    # Sanitize inputs
+    category_name = file_utils.sanitize_filename(category_name.strip().lower())
+    course_name = file_utils.sanitize_filename(course_name.strip().lower())
+    title = file_utils.sanitize_filename(title.strip().lower())
+
+    # Find the corresponding formation (category)
+    formation = formation_model.get_formation_by_category_with_id(
+        category_name)
+    if not formation:
+        return jsonify({'error': 'Formation with this category does not exist'}), 404
+
+    # Find the course in the formation
+    course = formation_model.get_course_from_formation_by_name(
+        category_name, course_name)
+    if not course:
+        return jsonify({'error': 'Course not found'}), 404
+
+    # Find the specific content in the course
+    content = formation_model.get_course_content_by_title(
+        category_name, course_name, title)
+    if not content:
+        return jsonify({'error': 'Course content not found'}), 404
+
+    content_id = content['_id']
+    course_id = course['_id']
+    formation_id = str(formation["_id"])
+
+    # Check if the user is enrolled in this course
+    enrolled_courses = current_user.get('enrolledCourses', [])
+    target_course = None
+    for course in enrolled_courses:
+        if course['courseId'] == course_id and course['categoryId'] == str(formation_id):
+            target_course = course
+            break
+
+    if not target_course:
+        return jsonify({'feedback': []}), 200
+
+    # Get the user feedbacks for the course
+    user_feedbacks = target_course.get('userFeedBacks', {
+        "feedBack": [],
+        "isPassed": True,
+    })
+
+    # Find the feedback for the specific content (by content_id)
+    feedback_for_content = next(
+        (feedback for feedback in user_feedbacks if feedback['contentId'] == str(
+            content_id)),
+        None
+    )
+
+    # If feedback exists, return it; otherwise, return an empty message
+    if feedback_for_content:
+        return jsonify({'feedback': feedback_for_content}), 200
+    else:
+        return jsonify({'feedback': {
+        "feedBack": [],
+        "isPassed": True,
+    }}), 200

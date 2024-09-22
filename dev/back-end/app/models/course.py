@@ -145,10 +145,23 @@ def delete_resource_from_course(category_name, course_name, content_title, resou
 # started quiz sections : ----------------------------------------------
 
 
+def isMultipleAnswersQuestion(question_data):
+    trueAnswersCounter = 0
+    for answer in question_data['possibleAnswers']:
+        if (answer['status']):
+            trueAnswersCounter = trueAnswersCounter + 1
+
+    print("the number of true answers is : ", trueAnswersCounter)
+    return trueAnswersCounter >= 2
+
+
 def add_quiz_question_to_course(category_name, course_name, content_title, question_data):
     # Validate that at least one answer is marked as correct
     if not any(answer['status'] for answer in question_data['possibleAnswers']):
         raise ValueError("At least one answer must be marked as correct")
+
+    question_data['isMultipleAnswers'] = isMultipleAnswersQuestion(
+        question_data)
 
     # Add a unique ID to the question
     question_data['_id'] = str(ObjectId())
@@ -211,6 +224,7 @@ def update_quiz_question_in_course(category_name, course_name, content_title, qu
         update_fields['courses.$[course].courseContent.$[content].quiz.$[question].question'] = update_data['question']
     if 'possibleAnswers' in update_data:
         update_fields['courses.$[course].courseContent.$[content].quiz.$[question].possibleAnswers'] = update_data['possibleAnswers']
+        update_fields['courses.$[course].courseContent.$[content].quiz.$[question].isMultipleAnswers'] = update_data['isMultipleAnswers']
 
     # Update the document
     result = mongo.db.formations.update_one(
