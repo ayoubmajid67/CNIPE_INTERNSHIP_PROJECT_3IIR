@@ -93,6 +93,10 @@ html {
 
 
     scale: 0.9;
+
+    .domainName{
+        text-transform: capitalize;
+    }
 }
 
 .domainContent .card *:not(.controlContainer) {

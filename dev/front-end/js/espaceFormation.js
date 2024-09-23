@@ -496,6 +496,7 @@ async function addFormation(event) {
 
 			pushCourseToDom(formationData);
 			scrollToPositionSmooth(webContainer.scrollHeight - 50);
+			clearAddPopUpValue()
 		} catch (error) {
 			await alertHint(error.message, error.type);
 		}

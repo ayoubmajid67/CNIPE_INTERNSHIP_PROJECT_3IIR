@@ -323,8 +323,10 @@ def enroll_course(current_user, category_name, course_name):
     if not course:
         return jsonify({'error': 'Course not found'}), 404
 
+    course_id = course['_id']
+    formation_id = str(formation["_id"])
     # Check if the user is already enrolled in the course
-    if user_model.is_user_enrolled(current_user['_id'], category_name, course_name):
+    if user_model.is_user_enrolled(current_user['_id'], formation_id, course_id):
         return jsonify({'error': 'User is already enrolled in this course'}), 400
 
     # Enroll the user in the course
@@ -583,10 +585,20 @@ def delete_intro_video_to_formation(current_user, category_name):
     if not formation:
         return jsonify({'error': 'Formation not found'}), 404
 
-    file_utils.delete_category_intro_video(category_name)
+    try:
+        # Attempt to delete the intro video file
+        file_utils.delete_category_intro_video(category_name)
 
-    formation_model.update_formation_by_category(
-        category_name, {'introVideo': None})
+        # Update the formation's intro video field to None
+        formation_model.update_formation_by_category(category_name, {'introVideo': None})
+
+    except OSError as e:
+        # Handle file deletion errors (e.g., file is locked or in use)
+        return jsonify({'error': f'Error deleting intro video: {str(e)}'}), 500
+
+    except Exception as e:
+        # Catch all other exceptions that might occur (e.g., database update failure)
+        return jsonify({'error': f'An error occurred: {str(e)}'}), 500
 
     return jsonify({'message': 'Intro video deleted successfully'}), 200
 
@@ -884,12 +896,31 @@ def like_course_content(current_user, category_name, course_name, title):
     """
     category_name = file_utils.sanitize_filename(category_name.strip().lower())
     course_name = file_utils.sanitize_filename(course_name.strip().lower())
+    title = file_utils.sanitize_filename(title.strip().lower())
 
-    # Check if the course content (video) exists
+    formation = formation_model.get_formation_by_category_with_id(
+        category_name)
+    if not formation:
+        return jsonify({'error': 'Formation with this category does not exist'}), 404
+
+    course = formation_model.get_course_from_formation_by_name(
+        category_name, course_name)
+    if not course:
+        return jsonify({'error': 'Course not found'}), 404
+
     content = formation_model.get_course_content_by_title(
         category_name, course_name, title)
     if not content:
         return jsonify({'error': 'Course content not found'}), 404
+
+    course_id = course['_id']
+    formation_id = str(formation["_id"])
+
+    is_enrolled = user_model.is_user_enrolled(
+        current_user['_id'], str(formation["_id"]), course['_id'])
+
+    if not is_enrolled and not utile.check_admin_or_owner(current_user):
+        return jsonify({'error': 'You have to enroll the course before do this operation'}), 400
 
     # Increment the number of likes on the course content (video)
     content_like_result = formation_model.increment_content_likes(
@@ -1158,7 +1189,7 @@ def update_tracking_info(current_user, category_name, course_name):
     if not data:
         return jsonify({'error': 'No data provided'}), 400
         is_enrolled = user_model.is_user_enrolled(
-            current_user['_id'], category_name, course_name)
+            current_user['_id'], str(formation['_id']), course['_id'])
 
     is_enrolled = user_model.is_user_enrolled(
         current_user['_id'], str(formation['_id']), course['_id'])
@@ -1264,8 +1295,19 @@ def create_comment(current_user, category_name, course_name):
 
     category_name = file_utils.sanitize_filename(category_name.strip().lower())
     course_name = file_utils.sanitize_filename(course_name.strip().lower())
+    # Find the corresponding formation (category)
+    formation = formation_model.get_formation_by_category_with_id(
+        category_name)
+    if not formation:
+        return jsonify({'error': 'Formation with this category does not exist'}), 404
+
+    # Find the course in the formation
+    course = formation_model.get_course_from_formation_by_name(
+        category_name, course_name)
+    if not course:
+        return jsonify({'error': 'Course not found'}), 404
     is_enrolled = user_model.is_user_enrolled(
-        current_user['_id'], category_name, course_name)
+        current_user['_id'], str(formation["_id"]), course['_id'])
 
     if not is_enrolled and not utile.check_admin_or_owner(current_user):
         return jsonify({'error': 'You have to enroll the course before do this operation'}), 400
@@ -1346,8 +1388,20 @@ def pull_up_comment(current_user, category_name, course_name, comment_id):
     category_name = file_utils.sanitize_filename(category_name.strip().lower())
     course_name = file_utils.sanitize_filename(course_name.strip().lower())
 
+    # Find the corresponding formation (category)
+    formation = formation_model.get_formation_by_category_with_id(
+        category_name)
+    if not formation:
+        return jsonify({'error': 'Formation with this category does not exist'}), 404
+
+    # Find the course in the formation
+    course = formation_model.get_course_from_formation_by_name(
+        category_name, course_name)
+    if not course:
+        return jsonify({'error': 'Course not found'}), 404
+
     is_enrolled = user_model.is_user_enrolled(
-        current_user['_id'], category_name, course_name)
+        current_user['_id'], str(formation["_id"]), course['_id'])
 
     if not is_enrolled and not utile.check_admin_or_owner(current_user):
         return jsonify({'error': 'You have to enroll the course before do this operation'}), 400
@@ -1386,12 +1440,24 @@ def create_reply_comment(current_user, category_name, course_name, comment_id):
     category_name = file_utils.sanitize_filename(category_name.strip().lower())
     course_name = file_utils.sanitize_filename(course_name.strip().lower())
 
+    # Find the corresponding formation (category)
+    formation = formation_model.get_formation_by_category_with_id(
+        category_name)
+    if not formation:
+        return jsonify({'error': 'Formation with this category does not exist'}), 404
+
+    # Find the course in the formation
+    course = formation_model.get_course_from_formation_by_name(
+        category_name, course_name)
+    if not course:
+        return jsonify({'error': 'Course not found'}), 404
     data = request.get_json() or {}
     missing_fields = utile.validate_fields(data, ['message'])
     if missing_fields:
         return jsonify({'error': f'Missing fields: {", ".join(missing_fields)}'}), 400
+
     is_enrolled = user_model.is_user_enrolled(
-        current_user['_id'], category_name, course_name)
+        current_user['_id'], str(formation["_id"]), course['_id'])
 
     if not is_enrolled and not utile.check_admin_or_owner(current_user):
         return jsonify({'error': 'You have to enroll the course before do this operation'}), 400
@@ -1421,8 +1487,19 @@ def pull_up_reply_comment(current_user, category_name, course_name, root_comment
     category_name = file_utils.sanitize_filename(category_name.strip().lower())
     course_name = file_utils.sanitize_filename(course_name.strip().lower())
 
+    # Find the corresponding formation (category)
+    formation = formation_model.get_formation_by_category_with_id(
+        category_name)
+    if not formation:
+        return jsonify({'error': 'Formation with this category does not exist'}), 404
+
+    # Find the course in the formation
+    course = formation_model.get_course_from_formation_by_name(
+        category_name, course_name)
+    if not course:
+        return jsonify({'error': 'Course not found'}), 404
     is_enrolled = user_model.is_user_enrolled(
-        current_user['_id'], category_name, course_name)
+        current_user['_id'], str(formation["_id"]), course['_id'])
 
     if not is_enrolled and not utile.check_admin_or_owner(current_user):
         return jsonify({'error': 'You have to enroll the course before do this operation'}), 400
@@ -1508,11 +1585,26 @@ def create_review(current_user, category_name, course_name):
     missing_fields = utile.validate_fields(data, ['rating'])
     if missing_fields:
         return jsonify({'error': f'Missing fields: {", ".join(missing_fields)}'}), 400
+
+    # Find the corresponding formation (category)
+    formation = formation_model.get_formation_by_category_with_id(
+        category_name)
+    if not formation:
+        return jsonify({'error': 'Formation with this category does not exist'}), 404
+
+    # Find the course in the formation
+    course = formation_model.get_course_from_formation_by_name(
+        category_name, course_name)
+    if not course:
+        return jsonify({'error': 'Course not found'}), 404
+
+    course_id = course['_id']
+    formation_id = str(formation["_id"])
     is_enrolled = user_model.is_user_enrolled(
-        current_user['_id'], category_name, course_name)
+        current_user['_id'], formation_id, course_id)
 
     if not is_enrolled:
-        return jsonify({'error': 'You have to enroll the course before do this operation'}), 400
+        return jsonify({'error': 'You have to  enroll the course before do this operation'}), 400
 
     review = str(data.get('review', "")).strip()
     if not utile.is_numeric(data.get('rating', 0)):
@@ -1853,6 +1945,7 @@ def update_quiz_question(current_user, category_name, course_name, title, questi
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
 @bp.route('/formations/<category_name>/courses/<course_name>/content/<title>/quiz/question/<question_id>', methods=['GET'])
 @token_required
 @admin_required
@@ -1862,24 +1955,23 @@ def get_quiz_question_by_id(current_user, category_name, course_name, title, que
     course_name = file_utils.sanitize_filename(course_name.strip().lower())
     title = file_utils.sanitize_filename(title.strip().lower())
 
-
-    content = formation_model.get_course_content_by_title(category_name, course_name, title)
+    content = formation_model.get_course_content_by_title(
+        category_name, course_name, title)
     if not content:
         return jsonify({'error': 'Course content not found'}), 404
 
-   
     quiz = content.get('quiz', [])
     question = next((q for q in quiz if q['_id'] == question_id), None)
 
     if not question:
         return jsonify({'error': 'Question not found'}), 404
 
-
     return jsonify({'question': question}), 200
+
 
 @bp.route('/formations/<category_name>/courses/<course_name>/content/<title>/quiz/feedback', methods=['POST'])
 @token_required
-def get_quiz_feedback(current_user, category_name, course_name, title):
+def pass_quiz_feedback(current_user, category_name, course_name, title):
     # Step 1: Sanitize input
     category_name = file_utils.sanitize_filename(category_name.strip().lower())
     course_name = file_utils.sanitize_filename(course_name.strip().lower())
@@ -1906,6 +1998,12 @@ def get_quiz_feedback(current_user, category_name, course_name, title):
     course_id = course['_id']
     formation_id = str(formation["_id"])
 
+    is_enrolled = user_model.is_user_enrolled(
+        current_user['_id'], str(formation["_id"]), course['_id'])
+
+    if not is_enrolled and not utile.check_admin_or_owner(current_user):
+        return jsonify({'error': 'You have to enroll the course before do this operation'}), 400
+
     # Step 4: Validate request data
     request_data = request.get_json()
     if not isinstance(request_data, dict):
@@ -1926,12 +2024,13 @@ def get_quiz_feedback(current_user, category_name, course_name, title):
     }
 
     # Step 7: Update user feedback and save to the database
-    updated_user = user_model.update_user_feedback(
-        current_user, formation_id, course_id, content_id, result)
+    if is_enrolled:
+        updated_user = user_model.update_user_feedback(
+            current_user, formation_id, course_id, content_id, result)
 
-    # Save the updated user data back to the database using the provided update function
-    user_model.update_user_enrolled_courses(
-        updated_user["_id"], updated_user["enrolledCourses"])
+        # Save the updated user data back to the database using the provided update function
+        user_model.update_user_enrolled_courses(
+            updated_user["_id"], updated_user["enrolledCourses"])
 
     return jsonify(result)
 
@@ -1998,3 +2097,5 @@ def get_user_feedback_for_content(current_user, category_name, course_name, titl
             "feedBack": [],
             "isPassed": True,
         }}), 200
+
+

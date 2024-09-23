@@ -17,6 +17,8 @@ function setDisablePopUpBoxMode() {
 	cardBox = webContainer.querySelector(".card.deleteStatus");
 	if (cardBox) cardBox.classList.remove("deleteStatus");
 	window.onscroll = function () {};
+
+	
 }
 
 function setEnableDeleteMode(cardBox) {
@@ -31,6 +33,7 @@ function setEnableDeleteMode(cardBox) {
 }
 
 function setEnableAddDomainMode() {
+	
 	blackDrop.classList.add(boxModeClass);
 	addPopUpBox.classList.add(boxModeClass);
 
@@ -47,6 +50,10 @@ window.addEventListener("click", function (event) {
 	if (event.target == blackDrop || event.target.classList.contains("popupButtonCancel")) {
 		setDisablePopUpBoxMode();
 		window.onscroll = function () {};
+
+		if(event.target.classList.contains("popupButtonCancel")){
+			clearAddPopUpValue()
+		}
 	}
 });
 
@@ -55,4 +62,9 @@ function setUpDeleteBoxToShow(domainName,courseName) {
 	if(courseName)
 	deletePopUpBox.setAttribute("courseName", courseName);
 	deleteDomainNameBox.textContent = domainName;
+}
+function clearAddPopUpValue() {
+	addPopUpNameInput.value = "";
+	addPopUpDescriptionInput.value = "";
+	addPopUpFileInput.value = "";
 }

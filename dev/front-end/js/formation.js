@@ -451,11 +451,7 @@ async function addCourseResponse(inputsData, categoryName) {
 	}
 }
 
-function clearAddPopUpValue() {
-	addPopUpNameInput.value = "";
-	addPopUpDescriptionInput.value = "";
-	addPopUpFileInput.value = "";
-}
+
 async function addCourse(event) {
 	event.target.disabled = true;
 

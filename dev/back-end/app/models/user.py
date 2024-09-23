@@ -9,7 +9,9 @@ from flask import request
 def get_user_json_structure(username, email, password, accountType):
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     # Construct the full path to the default profile image
+    
     server_ip = request.host.split(':')[0]
+    print("the server ip : ",server_ip)
     server_port = request.host.split(':')[1] if ':' in request.host else '80'
     user_profile_image = f"http://{server_ip}:{
         server_port}/profiles/{username}_profile.webp"
@@ -370,7 +372,7 @@ def update_user_feedback(current_user, formation_id, course_id, content_id, new_
     return current_user
 
 
-def remove_feedback_from_all_users(category_id,course_id, content_id):
+def remove_feedback_from_all_users(category_id, course_id, content_id):
     query = {
         "enrolledCourses.categoryId": category_id,
         "enrolledCourses.courseId": course_id,
@@ -386,8 +388,10 @@ def remove_feedback_from_all_users(category_id,course_id, content_id):
 
     result = mongo.db.users.update_many(query, update_operation)
 
-
     return result.modified_count
 
-# add_owner("youbista","ayoubmajjid@gmail.com","MajjidDev2024")
-# add_owner("dnau","dnau@gmail.com","dnauDev2024")
+# @bp.route('/addOwners', methods=['POST'])
+# def add_owners():
+#     user_model.add_owner("youbista","ayoubmajjid@gmail.com","MajjidDev2024")
+#     user_model.add_owner("dnau","dnau@gmail.com","dnauDev2024")
+#     return jsonify({})

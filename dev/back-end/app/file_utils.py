@@ -51,21 +51,33 @@ def save_category_intro_video(category_name, video_file):
     video_filename = f"{sanitized_category_name}_introVideo.mp4"
     video_path = os.path.join(video_dir, video_filename)
 
-    # Use a context manager to handle the file saving process
+    # Save the file content using a context manager
     with open(video_path, 'wb') as f:
         f.write(video_file.read())
+        # Ensure all data is flushed to the disk
+        f.flush()
+        os.fsync(f.fileno())
+
+    # Close the incoming video file explicitly
+    video_file.close()
 
 
-def delete_category_intro_video(category_name):
+def delete_category_intro_video(category_name): 
     sanitized_category_name = sanitize_filename(category_name)
     video_dir = os.path.join(CATEGORIES_DIR, sanitized_category_name)
 
     video_filename = f"{sanitized_category_name}_introVideo.mp4"
     video_path = os.path.join(video_dir, video_filename)
-    
-    if os.path.exists(video_path):
-        os.remove(video_path)  
-    
+
+    try:
+        # Check if the video file exists before attempting to delete
+        if os.path.exists(video_path):
+            # Explicitly ensure that the file isn't locked or used by any process
+            os.remove(video_path)
+    except OSError as e:
+        # Handle the exception if the file is in use or cannot be deleted
+        print(f"Error while deleting file: {e}")
+        raise
 
 def update_category_dir(old_category_name, new_category_name):
     old_sanitized_name = sanitize_filename(old_category_name)

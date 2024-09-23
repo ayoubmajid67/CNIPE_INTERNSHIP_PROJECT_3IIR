@@ -39,6 +39,10 @@ export class clsManageLoadResources {
 		this.resourcesContainerDom.innerHTML = "";
 		this.noResourcesDom.classList.add(this.activeNoResourceClass);
 	}
+	static hideNoResources() {
+	
+		this.noResourcesDom.classList.remove(this.activeNoResourceClass);
+	}
 	static getResourceCardHtml(resource) {
 		let controlContent = globalIsAdminOrOwner
 			? `	<div class="controlContainer">
@@ -398,6 +402,7 @@ export class clsManageCourseContentResources extends clsManageLoadResources {
 			this.popupHandlerObject.setDisablePopUpBoxMode();
 			this.addResourceHelperObject.clearInputsValues();
 			alertHint(response.message, "success");
+			clsManageLoadResources.hideNoResources();
 		} catch (error) {
 			console.log(error);
 			alertHint(error.message, error.type);
@@ -440,8 +445,9 @@ export class clsManageCourseContentResources extends clsManageLoadResources {
 
 		try {
 			const data = await this.resourcesApiObject.deleteResourceApi(deleteResourceId);
-
+          
 			clsDeleteResourceHelper.manageDeleteTargetResourceBoxFromUI(this.deleteResourceClass);
+			if(clsManageLoadResources.resourcesContainerDom.querySelectorAll(".resourceCard").length==0) clsManageLoadResources.showNoResources();
 			alertHint(data.message, "success");
 
 			this.popupHandlerObject.setDisablePopUpBoxMode();

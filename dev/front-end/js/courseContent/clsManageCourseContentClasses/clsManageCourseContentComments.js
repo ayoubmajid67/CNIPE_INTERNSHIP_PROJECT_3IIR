@@ -436,7 +436,7 @@ class clsAddReplyCommentHelper {
 
 		const newCommentHtml = loadCommentsObject.getReplyCommentHtmlStructure(newCommentData, targetRouteCommentId);
 
-		const replyContainer = targetCommentBoxToReply.querySelector(".repliesSection");
+		let replyContainer = targetCommentBoxToReply.querySelector(".repliesSection");
 
 		if (replyContainer) {
 			replyContainer.insertAdjacentHTML("afterbegin", newCommentHtml);
@@ -444,9 +444,10 @@ class clsAddReplyCommentHelper {
 		} else {
 			let replyContainerContent = `<details class="repliesSection"><summary>Voir les réponses</summary>${newCommentHtml}</details>`;
 			targetCommentBoxToReply.insertAdjacentHTML("beforeend", replyContainerContent);
-
-			replyContainer.insertAdjacentHTML("afterbegin", newCommentHtml);
-			const replyContainer = targetCommentBoxToReply.querySelector(".repliesSection");
+			
+			replyContainer = targetCommentBoxToReply.querySelector(".repliesSection");
+	
+			
 			clsCommentsUtile.openDetails(replyContainer);
 		}
 	}

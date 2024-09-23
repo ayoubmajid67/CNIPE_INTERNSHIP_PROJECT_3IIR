@@ -3,7 +3,11 @@ const navBar = document.querySelector("header ul");
 const passwordPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*().?/])[a-zA-Z0-9!@#$%^&*().?/]{6,}$/;
 const emailPattern = /^[\w\.-]+@[\w\.-]+\.\w+$/;
 
-const baseUrl = "http://127.0.0.1:5000";
+const baseUrls={
+	local :"http://127.0.0.1:5000",
+	host :"http://192.168.0.100:5000"
+}
+const baseUrl = baseUrls.host;
 const headerUlDom = document.querySelector("header ul");
 
 if (toggleMenu) {
