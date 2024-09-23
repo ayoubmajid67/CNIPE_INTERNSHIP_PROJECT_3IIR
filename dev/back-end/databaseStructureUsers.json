@@ -1,32 +1,57 @@
-[
-	{
-		"username": "youbista",
-		"email": "ayoubmajjid@gmail.com",
-		"password": {
-			"$binary": {
-				"base64": "JDJiJDEyJENZdTFTSW00RGFmV2lhRlo2OWlBLnU5VnJXV2p0WEE1WTU3V01KRndKTTc2WG9wZVBjTzRL",
-				"subType": "00"
-			}
-		},
-		"accountType": "owner",
-		"status": ["active", "inactive"],
-		"profileImg": "http://127.0.0.1:5000/profiles/youbista_profile.webp",
-		"canComment": [true, false],
-		"enrolledCourses": [
-			{
-				"categoryName": "imgs",
-				"courseName": "course 1",
-				"currentContent": 0,
-				"maxContent": 4,
-				"currentDuration": 114
-			},
-			{
-				"categoryName": "production",
-				"courseName": "image",
-				"currentContent": 0,
-				"maxContent": 0,
-				"currentDuration": 0
-			}
+{
+	"_id": {
+	  "$oid": "66f0ac89b8c114fcb19397be"
+	},
+	"username": "youbista",
+	"email": "ayoubmajjid@gmail.com",
+	"password": {
+	  "$binary": {
+		"base64": "JDJiJDEyJFBWNHhIVXYzZlFxdWNnbU1rOVB1OHViYWNJZW9rZWtidjBlN1hYY0EuU3locHNsSnJoMDFT",
+		"subType": "00"
+	  }
+	},
+	"accountType": "owner",
+	"status": "active",
+	"profileImg": "http://192.168.0.100:5000/profiles/youbista_profile.webp",
+	"canComment": true,
+	  "enrolledCourses":[]
+	
+  }
+
+  "enrolledCourses": [
+	  {
+		"categoryId": "66f09b7d2fdf27e3f53202f1",
+		"courseId": "66f09d9e2fdf27e3f5320305",
+		"currentContent": 0,
+		"maxContent": 0,
+		"currentDuration": 0,
+		"userFeedBacks":[]
+	  }
+	]
+
+"userFeedBacks": [
+		  {
+			"contentId": "66f0c726a1e2a5ffc6c210ec",
+			"feedBack": [
+			  {
+				"questionId": "66f0c7cea1e2a5ffc6c210ed",
+				"isCorrect": true,
+				"message": "Correct answer",
+				"usersAnswersIndexes": [
+				  0
+				],
+				"correctAnswersIndexes": [
+				  0
+				],
+				"questionMark": 1
+			  },
+			  {
+				"questionId": "66f0c810a1e2a5ffc6c210ee",
+				"isCorrect": false,
+				"message": "No answer provided."
+			  }
+			],
+			"finalMark": 100,
+			"isPassed": true
+		  }
 		]
-	}
-]

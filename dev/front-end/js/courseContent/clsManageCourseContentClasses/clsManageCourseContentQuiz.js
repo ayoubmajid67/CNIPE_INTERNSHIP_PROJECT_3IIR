@@ -390,6 +390,7 @@ class clsManageSubmitQuiz {
 				feedbackElement.innerHTML = this.getFeedBack(question.message, "success");
 			} else {
 				const targetLiDom = feedbackElement.closest(".questionItem");
+
 				this.loadRightOptions(targetLiDom, question.correctAnswersIndexes);
 
 				feedbackElement.innerHTML = this.getFeedBack(question.message, "error");

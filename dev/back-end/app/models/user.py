@@ -299,13 +299,6 @@ def process_quiz_feedback(quiz, request_data):
             question['possibleAnswers']) if ans['status']]
         user_answers = request_data.get(question_id, [])
 
-        if not user_answers:
-            feedback.append({
-                "questionId": question_id,
-                "isCorrect": False,
-                "message": "No answer provided."
-            })
-            continue
 
         is_correct = set(user_answers) == set(correct_answers)
         total_marks += question['questionMark']
@@ -392,6 +385,6 @@ def remove_feedback_from_all_users(category_id, course_id, content_id):
 
 # @bp.route('/addOwners', methods=['POST'])
 # def add_owners():
-#     user_model.add_owner("youbista","ayoubmajjid@gmail.com","MajjidDev2024")
-#     user_model.add_owner("dnau","dnau@gmail.com","dnauDev2024")
+#     user_model.add_owner("youbista","ayoubmajjid@gmail.com","MajjidDev2024@")
+#     user_model.add_owner("dnau","dnau@gmail.com","dnauDev2024@")
 #     return jsonify({})

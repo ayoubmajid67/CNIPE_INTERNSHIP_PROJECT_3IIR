@@ -142,6 +142,9 @@ function isProfilePage() {
 function goToHome() {
 	if (location.pathname != "/index.html" && location.pathname != "/") location.href = "/";
 }
+function clickTargetAnchor(event){
+	event.target.querySelector('a').click();
+}
 function setUiGuestStat() {
 	let signOutBtn = document.getElementById("signOutBtn");
 	dropUserFromLocalSt();

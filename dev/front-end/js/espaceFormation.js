@@ -21,7 +21,7 @@ async function getCourseHtmlStructure(formation) {
 					<article categoryName=${formation.categoryName} class="card">
 ${adminContent}            
 			<div class="imgContainer" >
-						<img src=${formation.thumbnail}  type="image/webp"  />
+						<img src="${formation.thumbnail}"  type="image/webp"  />
 								<div class="beforeContent" categoryName=${formation.categoryName}>
                                     <h4 class="beforeContentChild beforeContentCategoryName">${formation.categoryName}</h4>
 								</div>
@@ -191,8 +191,9 @@ function setUpEditCardUi(card) {
 `;
 		beforeEditInfo.title = cardTitleBox.textContent;
 		beforeEditInfo.description = cardDescriptionBox.textContent;
+		console.log(beforeEditInfo.title)
 
-		cardTitleBox.innerHTML = `<input type="text" class="domainNameInput" placeholder="le nom de la catégorie"   value=${beforeEditInfo.title} onInput="manageDomainNameChange(event)">`;
+		cardTitleBox.innerHTML = `<input type="text" class="domainNameInput" placeholder="le nom de la catégorie"   value="${beforeEditInfo.title}" onInput="manageDomainNameChange(event)">`;
 		cardDescriptionBox.innerHTML = `<textarea class="descriptionInput" placeholder="description de la catégorie" oninput="manageDescriptionChange(event)" >${beforeEditInfo.description}</textarea>`;
 
 		autoResize(document.querySelector(".card .descriptionInput"));

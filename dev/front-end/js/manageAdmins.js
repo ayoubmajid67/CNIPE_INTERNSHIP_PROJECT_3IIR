@@ -58,7 +58,9 @@ class clsTable {
 			basicWindowWidth: 1000,
 			basicFontSize: 16,
 		};
-		const newFontSize = Math.floor((WidthRole.basicFontSize * window.innerWidth) / WidthRole.basicWindowWidth);
+		let newFontSize = Math.floor((WidthRole.basicFontSize * window.innerWidth) / WidthRole.basicWindowWidth);
+		if(newFontSize > 16) newFontSize=16
+			
 		this.userTable.style.fontSize = `${newFontSize}px`;
 	}
 
@@ -444,7 +446,7 @@ class clsAddUserForm {
 		// Check if password and confirm password match
 		const password = this.passwordInputDom.value;
 		const confirmPassword = this.confirmPasswordInputDom.value;
-		console.log(password === confirmPassword && checkIfIsAValidPassword(password));
+
 		return password === confirmPassword && checkIfIsAValidPassword(password);
 	}
 	#ValidateInputs() {

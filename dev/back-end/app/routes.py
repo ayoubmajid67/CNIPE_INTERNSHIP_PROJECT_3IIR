@@ -152,6 +152,26 @@ def register_Admin(current_user):
 
     if user_model.get_All_by_username(username):
         return jsonify({'error': 'Admin already exists'}), 400
+    
+     # Define the directory to store the profile images
+    profiles_dir = os.path.abspath(os.path.join(
+        current_app.root_path, '..', 'data', 'profiles'))
+
+    # Path to the default profile image
+    default_profile_img = os.path.join(profiles_dir, 'default_profile.webp')
+
+    # Path for the new profile image, save it without extension as {username}_profile
+    profile_img_filename = f"{username}_profile.webp"
+    new_profile_img_path = os.path.join(profiles_dir, profile_img_filename)
+
+    try:
+        # Copy the default profile image to the new user profile image
+        shutil.copy(default_profile_img, new_profile_img_path)
+        # Create user in the database with the profile image URL
+        result = user_model.add_user(username, email, password)
+
+    except Exception as e:
+        return jsonify({'error': 'Error copying profile image', 'details': str(e)}),
 
     result = user_model.add_admin(username, email, password)
     targetAdmin = user_model.get_admin_by_username(username)
@@ -486,15 +506,15 @@ def update_profile(current_user):
         new_profile_img_path = os.path.join(
             profiles_dir, new_profile_img_filename)
 
-    try:
-        # Open the uploaded image
-        img = Image.open(profile_img)
+        try:
+            # Open the uploaded image
+            img = Image.open(profile_img)
 
-        # Convert the image to 'webp' format and save it
-        img.save(new_profile_img_path, format='webp')
+            # Convert the image to 'webp' format and save it
+            img.save(new_profile_img_path, format='webp')
 
-    except Exception as e:
-        return jsonify({'error': 'Error processing image', 'details': str(e)}), 500
+        except Exception as e:
+            return jsonify({'error': 'Error processing image', 'details': str(e)}), 500
 
     # Save the updated user info to the database
     return user_model.update_user(user)
@@ -590,7 +610,8 @@ def delete_intro_video_to_formation(current_user, category_name):
         file_utils.delete_category_intro_video(category_name)
 
         # Update the formation's intro video field to None
-        formation_model.update_formation_by_category(category_name, {'introVideo': None})
+        formation_model.update_formation_by_category(
+            category_name, {'introVideo': None})
 
     except OSError as e:
         # Handle file deletion errors (e.g., file is locked or in use)
@@ -2097,5 +2118,3 @@ def get_user_feedback_for_content(current_user, category_name, course_name, titl
             "feedBack": [],
             "isPassed": True,
         }}), 200
-
-
