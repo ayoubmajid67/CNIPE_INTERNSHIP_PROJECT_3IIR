@@ -1,5 +1,4 @@
 
-```markdown
 # CNIPE Internship Project
 
 ![Project Logo](./dev/front-end/imgs/logo.jpg)
