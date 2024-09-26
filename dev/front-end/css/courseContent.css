@@ -679,6 +679,7 @@ body {
                                 font-size: 0.87em;
                                 color: #333;
                                 margin-bottom: 15px;
+                    
                             }
 
 
@@ -972,6 +973,10 @@ body {
                                 color: #333;
                                 margin-bottom: 15px;
                                 width: 85%;
+                                overflow: hidden;
+                   
+                      
+                                 
 
                                 input {
                                     border-left: 2px solid rgba(0, 0, 0, 0.129);

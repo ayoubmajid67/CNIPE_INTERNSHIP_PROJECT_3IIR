@@ -5,9 +5,10 @@ const emailPattern = /^[\w\.-]+@[\w\.-]+\.\w+$/;
 
 const baseUrls={
 	local :"http://127.0.0.1:5000",
-	host :"http://192.168.0.100:5000"
+	hostHome :"http://192.168.0.100:5000",
+	hostTemp : "http://192.168.1.12:5000"
 }
-const baseUrl = baseUrls.host;
+const baseUrl = baseUrls.local;
 const headerUlDom = document.querySelector("header ul");
 
 if (toggleMenu) {

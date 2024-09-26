@@ -26,20 +26,20 @@ def token_required(f):
         if 'Authorization' in request.headers:
             token = request.headers['Authorization'].replace('Bearer ', '')
         if not token:
-            return jsonify({'message': 'Token is missing!'}), 401
+            return jsonify({'message': 'Le jeton est manquant!'}), 401
         try:
             data = jwt.decode(
                 token, current_app.config['SECRET_KEY'], algorithms=["HS256"])
             current_user = user_model.get_All_by_email(data['email'])
             if current_user.get("status", "inactive") == 'inactive':
-                return jsonify({'error': 'contact you admin to activate you account!'}), 404
+                return jsonify({'error': 'Contactez votre administrateur pour activer votre compte!'}), 404
 
             if not current_user:
-                return jsonify({'error': 'User not found!'}), 404
+                return jsonify({'error': 'Utilisateur non trouvé!'}), 404
         except jwt.ExpiredSignatureError:
-            return jsonify({'error': 'Token has expired!'}), 401
+            return jsonify({'error': 'Le jeton a expiré!'}), 401
         except jwt.InvalidTokenError:
-            return jsonify({'error': 'Token is invalid!'}), 401
+            return jsonify({'error': 'Le jeton est invalide!'}), 401
         return f(current_user, *args, **kwargs)
     return decorated
 
@@ -48,7 +48,7 @@ def admin_required(f):
     @wraps(f)
     def decorated(current_user, *args, **kwargs):
         if current_user['accountType'] not in ['admin', 'owner']:
-            return jsonify({'error': 'Admin access required!'}), 403
+            return jsonify({'error': 'Accès administrateur requis !'}), 403
         return f(current_user, *args, **kwargs)
     return decorated
 
@@ -57,7 +57,7 @@ def owner_required(f):
     @wraps(f)
     def decorated(current_user, *args, **kwargs):
         if current_user['accountType'] != 'owner':
-            return jsonify({'error': 'Owner access required!'}), 403
+            return jsonify({'error': 'Accès propriétaire requis!'}), 403
         return f(current_user, *args, **kwargs)
     return decorated
 
@@ -72,23 +72,23 @@ def register():
         field for field in required_fields if field not in data or not data[field]]
 
     if missing_fields:
-        return jsonify({'error': f'Missing fields: {", ".join(missing_fields)}'}), 400
+        return jsonify({'error': f'Champs manquants: {", ".join(missing_fields)}'}), 400
 
     email = str(data['email']).strip().lower()
     password = str(data['password']).strip()
     username = str(data['username']).strip()
 
     if not utile.validate_email(email):
-        return jsonify({'error': 'Invalid email format'}), 400
+        return jsonify({'error': 'Format de courriel invalide'}), 400
 
     if not utile.validate_password(password):
-        return jsonify({'error': 'Invalid password format'}), 400
+        return jsonify({'error': 'Format de mot de passe invalide'}), 400
 
     if user_model.get_user_by_email(email):
-        return jsonify({'error': 'User already exists'}), 400
+        return jsonify({'error': "L'utilisateur existe déjà"}), 400
 
     if user_model.get_user_by_username(username):
-        return jsonify({'error': 'User already exists'}), 400
+        return jsonify({'error': "L'utilisateur existe déjà"}), 400
 
  # Define the directory to store the profile images
     profiles_dir = os.path.abspath(os.path.join(
@@ -108,9 +108,9 @@ def register():
         result = user_model.add_user(username, email, password)
 
     except Exception as e:
-        return jsonify({'error': 'Error copying profile image', 'details': str(e)}), 500
+        return jsonify({'error': "Erreur lors de la copie de l'image de profil", 'details': str(e)}), 500
 
-    return jsonify({'message': 'User registered successfully'}), 201
+    return jsonify({'message': "Utilisateur enregistré avec succès"}), 201
 
 
 @bp.route('/profile', methods=['GET'])
@@ -120,7 +120,7 @@ def get_current_user_profile(current_user):
     user = user_model.get_user_any_Type_by_username(current_user['username'])
 
     if not user:
-        return jsonify({'error': 'User not found'}), 404
+        return jsonify({'error': "Utilisateur non trouvé"}), 404
 
     return jsonify({'user': user}), 200
 
@@ -142,17 +142,17 @@ def register_Admin(current_user):
     username = str(data['username']).strip()
 
     if not utile.validate_email(email):
-        return jsonify({'error': 'Invalid email format'}), 400
+        return jsonify({'error': "Format de courriel invalide"}), 400
 
     if not utile.validate_password(password):
-        return jsonify({'error': 'Invalid password format'}), 400
+        return jsonify({'error': "Format de mot de passe invalide"}), 400
 
     if user_model.get_All_by_email(email):
-        return jsonify({'error': 'Admin already exists'}), 400
+        return jsonify({'error': "Administrateur déjà existant"}), 400
 
     if user_model.get_All_by_username(username):
-        return jsonify({'error': 'Admin already exists'}), 400
-    
+        return jsonify({'error':  "Administrateur déjà existant"}), 400
+
      # Define the directory to store the profile images
     profiles_dir = os.path.abspath(os.path.join(
         current_app.root_path, '..', 'data', 'profiles'))
@@ -171,12 +171,12 @@ def register_Admin(current_user):
         result = user_model.add_user(username, email, password)
 
     except Exception as e:
-        return jsonify({'error': 'Error copying profile image', 'details': str(e)}),
+        return jsonify({'error': "Erreur lors de la copie de l'image de profil", 'details': str(e)}),
 
     result = user_model.add_admin(username, email, password)
     targetAdmin = user_model.get_admin_by_username(username)
 
-    return jsonify({'message': 'Admin registered successfully', 'user': targetAdmin}), 201
+    return jsonify({'message': "Administrateur enregistré avec succès", 'user': targetAdmin}), 201
 
 
 @bp.route('/login', methods=['POST'])
@@ -187,22 +187,22 @@ def login():
         field for field in required_fields if field not in data or not data[field]]
 
     if missing_fields:
-        return jsonify({'error': f'Missing fields: {", ".join(missing_fields)}'}), 400
+        return jsonify({'error': f'Champs manquants: {", ".join(missing_fields)}'}), 400
 
     email = str(data.get('email')).strip().lower()
     password = str(data.get('password')).strip()
 
     user = user_model.get_All_by_email(email)
     if not user or not bcrypt.checkpw(password.encode('utf-8'), user['password']):
-        return jsonify({'error': 'Invalid credentials'}), 401
+        return jsonify({'error': 'Identifiants invalides'}), 401
 
     if user.get("status", "inactive") == 'inactive':
-        return jsonify({'error': 'contact you admin to activate you account!'}), 404
+        return jsonify({'error': "Contactez votre administrateur pour activer votre compte !"}), 404
 
     token = utile.generate_token(email)
     username = user["username"]
     profileImg = user["profileImg"]
-    return jsonify({'message': "User login successfully", 'token': token, 'username': username, 'profileImg': profileImg})
+    return jsonify({'message': "Utilisateur connecté avec succès", 'token': token, 'username': username, 'profileImg': profileImg})
 
 
 @bp.route('/dropUser', methods=['DELETE'])
@@ -213,14 +213,14 @@ def drop_user(current_user):
     email = data.get('email')
 
     if not email:
-        return jsonify({'error': 'Email is required to drop a user'}), 400
+        return jsonify({'error': "Courriel requis pour supprimer un utilisateur"}), 400
 
     user = user_model.get_user_by_email(email)
     if not user:
-        return jsonify({'error': 'User not found'}), 404
+        return jsonify({'error': "Utilisateur non trouvé"}), 404
 
     user_model.delete_user(email)
-    return jsonify({'message': 'User deleted successfully'}), 200
+    return jsonify({'message': 'Utilisateur supprimé avec succès'}), 200
 
 
 @bp.route('/admins/<username>', methods=['DELETE'])
@@ -229,10 +229,10 @@ def drop_user(current_user):
 def drop_admin(current_user, username):
     admin = user_model.get_admin_by_username(username)
     if not admin:
-        return jsonify({'error': 'Admin not found'}), 404
+        return jsonify({'error': 'Administrateur non trouvé'}), 404
 
     user_model.delete_admin(username)
-    return jsonify({'message': 'Admin deleted successfully'}), 200
+    return jsonify({'message': 'Administrateur supprimé avec succès'}), 200
 
 
 @bp.route('/admins/<username>', methods=['PUT'])
@@ -257,47 +257,47 @@ def update_admin(current_user, username):
     # Email validation
     if email:
         if not utile.validate_email(email):
-            return jsonify({"error": "Invalid email format"}), 400
+            return jsonify({"error": "Format de courriel non valide"}), 400
         updated_fields['email'] = email
 
     # Password validation
     if password:
         if not utile.validate_password(password):
-            return jsonify({"error": "Invalid password format. [6 characters, 1 number, and 1 special character]"}), 400
+            return jsonify({"error": "Format de mot de passe invalide. [6 caractères, 1 chiffre et 1 caractère spécial]"}), 400
         updated_fields['password'] = hashed_password = bcrypt.hashpw(
             password.encode('utf-8'), bcrypt.gensalt())
 
     # Role validation
     if role:
         if role not in allowed_roles:
-            return jsonify({"error": "Invalid role. Allowed values: 'admin', 'normal'"}), 400
+            return jsonify({"error": "Rôle non valide. Valeurs autorisées: 'admin', 'normal"}), 400
         updated_fields['accountType'] = role
 
     # Status validation
     if status:
         if status not in allowed_statuses:
-            return jsonify({"error": "Invalid status. Allowed values: 'active', 'inactive'"}), 400
+            return jsonify({"error": "Statut invalide. Valeurs autorisées: 'active', 'inactive'"}), 400
         updated_fields['status'] = status
 
     # canComment validation
     if can_comment is not None:
         if can_comment not in allowed_can_comment:
-            return jsonify({"error": "Invalid canComment value. Allowed values: true, false"}), 400
+            return jsonify({"error": "Valeur de canComment non valide. Valeurs autorisées: true, false"}), 400
         updated_fields['canComment'] = can_comment
 
     if not updated_fields:
-        return jsonify({"error": "No fields to update"}), 400
+        return jsonify({"error": "Aucun champ à mettre à jour"}), 400
 
     try:
         admin = user_model.get_admin_by_username(username)
         if not admin:
-            return jsonify({'message': 'Admin not found!'}), 404
+            return jsonify({'message': 'Admin non trouvé!'}), 404
 
         user_model.update_admin(username, updated_fields)
-        return jsonify({'message': 'Admin updated successfully!'}), 200
+        return jsonify({'message': 'Admin mis à jour avec succès!'}), 200
 
     except Exception as e:
-        return jsonify({'message': 'Failed to update Admin details', 'detail': str(e)}), 500
+        return jsonify({'message': "Impossible de mettre à jour les renseignements sur l'administrateur", 'detail': str(e)}), 500
 
 
 @bp.route('/getUsers', methods=['GET'])
@@ -335,33 +335,33 @@ def enroll_course(current_user, category_name, course_name):
     formation = formation_model.get_formation_by_category_with_id(
         category_name)
     if not formation:
-        return jsonify({'error': 'Formation with this category does not exist'}), 404
+        return jsonify({'error': "Formation avec cette catégorie n'existe pas"}), 404
     # Check if course exists
     course = formation_model.get_course_from_formation_by_name(
         category_name, course_name)
 
     if not course:
-        return jsonify({'error': 'Course not found'}), 404
+        return jsonify({'error': 'Cours non trouvé'}), 404
 
     course_id = course['_id']
     formation_id = str(formation["_id"])
     # Check if the user is already enrolled in the course
     if user_model.is_user_enrolled(current_user['_id'], formation_id, course_id):
-        return jsonify({'error': 'User is already enrolled in this course'}), 400
+        return jsonify({'error': "L'utilisateur est déjà inscrit à ce cours"}), 400
 
     # Enroll the user in the course
     enroll_result = user_model.enroll_user_in_course(
         current_user['_id'], str(formation['_id']), course["_id"])
     if not enroll_result.modified_count:
-        return jsonify({'error': 'Failed to enroll in the course'}), 500
+        return jsonify({'error': "Échec de la mise à jour du nombre d'utilisateurs du cours"}), 500
 
     # Increment the number of users in the course
     increment_result = formation_model.increment_number_of_users(
         category_name, course_name)
     if not increment_result.modified_count:
-        return jsonify({'error': 'Failed to update course user count'}), 500
+        return jsonify({'error': ""}), 500
 
-    return jsonify({'message': f'User {current_user["username"]} successfully enrolled in {course_name}'}), 200
+    return jsonify({'message': f'L\'utilisateur {current_user["username"]} nscrit avec succès à  {course_name}'}), 200
 
 
 @bp.route('/formations/<category_name>/courses/<course_name>/enrolled', methods=['GET'])
@@ -374,13 +374,13 @@ def check_enrollment(current_user, category_name, course_name):
     formation = formation_model.get_formation_by_category_with_id(
         category_name)
     if not formation:
-        return jsonify({'error': 'Formation with this category does not exist'}), 404
+        return jsonify({'error': "Formation avec cette catégorie n'existe pas"}), 404
     # Check if course exists
     course = formation_model.get_course_from_formation_by_name(
         category_name, course_name)
 
     if not course:
-        return jsonify({'error': 'Course not found'}), 404
+        return jsonify({'error': 'Cours non trouvé'}), 404
 
     # Check if the user is enrolled in the course using the category name and course name
     is_enrolled = user_model.is_user_enrolled(
@@ -432,7 +432,7 @@ def get_stats():
 def get_user_role(current_user):
     user_role = current_user.get('accountType')
     if not user_role:
-        return jsonify({"error": "invalid user type"})
+        return jsonify({"error": "type utilisateur non valide"})
     return jsonify({"role": user_role}), 200
 
 
@@ -456,12 +456,12 @@ def uploaded_file(filename):
         # Check if file exists
         file_path = os.path.join(profile_directory, safe_filename)
         if not os.path.exists(file_path):
-            return jsonify({'error': 'File not found'}), 404
+            return jsonify({'error': 'fichier introuvable'}), 404
 
         # Serve the file from the specified directory
         return send_from_directory(profile_directory, safe_filename)
     except Exception as e:
-        return jsonify({'error': 'Error serving file', 'details': str(e)}), 500
+        return jsonify({'error': "Fichier de diffusion d'erreurs.", 'details': str(e)}), 500
 
 
 @bp.route('/profile', methods=['PUT'])
@@ -474,14 +474,14 @@ def update_profile(current_user):
     user = current_user
 
     if not data.get('password') and not files.get('profileImg'):
-        return jsonify({'error': 'You should update at least one on field [password,profileImg]'}), 400
+        return jsonify({'error': 'Vous devez mettre à jour au moins un champ [mot de passe,profileImg]'}), 400
 
     # Update password if provided
     if 'password' in data and data['password']:
         password = data['password'].strip()
 
         if not utile.validate_password(password):
-            return jsonify({'error': 'Invalid password format'}), 400
+            return jsonify({'error': 'Format de mot de passe invalide'}), 400
 
         hashed_password = bcrypt.hashpw(
             password.encode('utf-8'), bcrypt.gensalt())
@@ -491,7 +491,7 @@ def update_profile(current_user):
     if 'profileImg' in files and files['profileImg']:
         profile_img = files['profileImg']
         if profile_img and not utile.allowed_file_img(profile_img.filename):
-            return jsonify({'error': f'invalid thumbnail file extension format allowed : {current_app.config["ALLOWED_IMG_EXTENSIONS"]} '}), 400
+            return jsonify({'error': f'Utiliser un format d\'extension de fichier miniature non valide est strictement interdit: {current_app.config["ALLOWED_IMG_EXTENSIONS"]} '}), 400
 
         # Define the directory to store the profile images
         profiles_dir = os.path.abspath(os.path.join(
@@ -514,7 +514,7 @@ def update_profile(current_user):
             img.save(new_profile_img_path, format='webp')
 
         except Exception as e:
-            return jsonify({'error': 'Error processing image', 'details': str(e)}), 500
+            return jsonify({'error': 'Erreur de traitement d\'image', 'details': str(e)}), 500
 
     # Save the updated user info to the database
     return user_model.update_user(user)
@@ -537,7 +537,7 @@ def create_formation(current_user):
     missing_fields = utile.validate_fields(
         data, ['categoryName', "description"])
     if missing_fields:
-        return jsonify({'error': f'Missing fields: {", ".join(missing_fields)}'}), 400
+        return jsonify({'error': f'Champs manquants:: {", ".join(missing_fields)}'}), 400
 
     categoryName = str(data["categoryName"]).strip().lower()
 
@@ -545,17 +545,17 @@ def create_formation(current_user):
     description = str(data["description"]).strip()
     thumbnail_file = request.files.get('thumbnail')
     if thumbnail_file and not utile.allowed_file_img(thumbnail_file.filename):
-        return jsonify({'error': f'invalid thumbnail file extension format allowed : {current_app.config["ALLOWED_IMG_EXTENSIONS"]} '}), 400
+        return jsonify({'error': f'iUtiliser un format d\'extension de fichier miniature non valide est strictement interdit : {current_app.config["ALLOWED_IMG_EXTENSIONS"]} '}), 400
 
     if formation_model.get_formation_by_category(sanitized_categoryName):
-        return jsonify({'error': 'Formation with this category already exists'}), 400
+        return jsonify({'error': 'La Formation avec cette catégorie existe déjà'}), 400
 
     file_utils.create_category_dir(sanitized_categoryName)
     file_utils.save_category_thumbnail(sanitized_categoryName, thumbnail_file)
     formation = formation_model.add_formation(
         sanitized_categoryName, description)
 
-    return jsonify({'message': f'Formation created successfully :', 'formationData': formation}), 201
+    return jsonify({'message': f'Formation créée avec succès :', 'formationData': formation}), 201
 
 
 @bp.route('/formations/<category_name>/introVideo', methods=['POST'])
@@ -566,15 +566,15 @@ def add_intro_video_to_formation(current_user, category_name):
     formation = formation_model.get_formation_by_category(category_name)
 
     if not formation:
-        return jsonify({'error': 'Formation not found'}), 404
+        return jsonify({'error': 'La formation avec cette catégorie n’existe pas'}), 404
 
     intro_video = request.files.get('introVideo')
 
     if not intro_video:
-        return jsonify({'error': 'Missing intro video file'}), 400
+        return jsonify({'error': 'Fichier vidéo d\'introduction manquant.'}), 400
 
     if not utile.allowed_file_video(intro_video.filename):
-        return jsonify({'error': f'invalid intro video file extension format allowed : {current_app.config["ALLOWED_VIDEO_EXTENSIONS"]} '}), 400
+        return jsonify({'error': f'Le format d\'extension de fichier vidéo  non valide n\'est pas autorisé.: {current_app.config["ALLOWED_VIDEO_EXTENSIONS"]} '}), 400
 
     file_utils.save_category_intro_video(category_name, intro_video)
     video_link = file_utils.get_intro_video_link(category_name)
@@ -582,7 +582,7 @@ def add_intro_video_to_formation(current_user, category_name):
     formation_model.update_formation_by_category(
         category_name, {'introVideo': video_link})
 
-    return jsonify({'message': 'Intro video added successfully', 'introVideo': video_link}), 200
+    return jsonify({'message': 'La vidéo d\'introduction a été ajoutée avec succès.', 'introVideo': video_link}), 200
 
 
 @bp.route('/formations/<category_name>/introVideo/', methods=['GET'])
@@ -592,7 +592,7 @@ def get_category_intro_video(category_name):
     if os.path.exists(f"{category_dir}/{category_name}_introVideo.mp4"):
         return send_from_directory(category_dir, f"{category_name}_introVideo.mp4")
     else:
-        return jsonify({"error": "intro video not found"}), 404
+        return jsonify({"error": "La vidéo d'introduction n'a pas été trouvée."}), 404
 
 
 @bp.route('/formations/<category_name>/introVideo', methods=['DELETE'])
@@ -603,7 +603,7 @@ def delete_intro_video_to_formation(current_user, category_name):
     formation = formation_model.get_formation_by_category(category_name)
 
     if not formation:
-        return jsonify({'error': 'Formation not found'}), 404
+        return jsonify({'error': 'Formation non trouvée'}), 404
 
     try:
         # Attempt to delete the intro video file
@@ -615,13 +615,13 @@ def delete_intro_video_to_formation(current_user, category_name):
 
     except OSError as e:
         # Handle file deletion errors (e.g., file is locked or in use)
-        return jsonify({'error': f'Error deleting intro video: {str(e)}'}), 500
+        return jsonify({'error': f'Il y a eu une erreur lors de la suppression de la vidéo d\'introduction.: {str(e)}'}), 500
 
     except Exception as e:
         # Catch all other exceptions that might occur (e.g., database update failure)
-        return jsonify({'error': f'An error occurred: {str(e)}'}), 500
+        return jsonify({'error': f'une erreur s\'est produite: {str(e)}'}), 500
 
-    return jsonify({'message': 'Intro video deleted successfully'}), 200
+    return jsonify({'message': 'La vidéo d\'introduction a été supprimée avec succès.'}), 200
 
 
 @bp.route('/formations/<category_name>/thumbnails/', methods=['GET'])
@@ -646,7 +646,7 @@ def get_single_formation_by_category(category_name):
         sanitized_category_name)
     if formation:
         return jsonify(formation)
-    return jsonify({'error': 'Formation not found'}), 404
+    return jsonify({'error': 'formation non trouvée'}), 404
 
 
 @bp.route('/formations/<category_name>', methods=['PUT'])
@@ -660,7 +660,7 @@ def update_single_formation_category(current_user, category_name):
     formation = formation_model.get_formation_by_category(
         sanitized_category_name)
     if not formation:
-        return jsonify({'error': 'Formation not found'}), 404
+        return jsonify({'error': 'formation non trouvée'}), 404
 
     new_category_name = str(data.get('newCategoryName', '')).strip().lower()
     sanitized_new_category_name = file_utils.sanitize_filename(
@@ -669,13 +669,13 @@ def update_single_formation_category(current_user, category_name):
     thumbnail_file = request.files.get('thumbnail')
 
     if not new_category_name and not new_description and not thumbnail_file:
-        return jsonify({'error': 'Either newCategoryName or newDescription  or thumbnail must be provided'}), 400
+        return jsonify({'error': 'Un nouveau nom de catégorie, une nouvelle description ou une nouvelle miniature doit être fourni'}), 400
 
     if new_category_name and formation_model.get_formation_by_category(sanitized_new_category_name):
-        return jsonify({'error': 'Category name already exists'}), 400
+        return jsonify({'error': 'Le nom de la catégorie est déjà présent.'}), 400
 
     if thumbnail_file and not utile.allowed_file_img(thumbnail_file.filename):
-        return jsonify({'error': f'invalid thumbnail file extension format allowed : {current_app.config["ALLOWED_IMG_EXTENSIONS"]} '}), 400
+        return jsonify({'error': f'Le format d\'extension du fichier miniature n\'est pas autorisé. : {current_app.config["ALLOWED_IMG_EXTENSIONS"]} '}), 400
 
     if thumbnail_file:
         file_utils.save_category_thumbnail(category_name, thumbnail_file)
@@ -694,8 +694,8 @@ def update_single_formation_category(current_user, category_name):
         sanitized_category_name, update_fields)
 
     if new_category_name:
-        return jsonify({'message': 'Formation updated successfully', "thumbnail": updated_dir_data["thumbnail"], "introVideo": updated_dir_data["introVideo"]})
-    return jsonify({'message': 'Formation updated successfully'})
+        return jsonify({'message': 'La formation a été mise à jour avec succès', "thumbnail": updated_dir_data["thumbnail"], "introVideo": updated_dir_data["introVideo"]})
+    return jsonify({'message': 'La formation a été mise à jour avec succès'})
 
 
 @bp.route('/formations/<category_name>', methods=['DELETE'])
@@ -708,8 +708,8 @@ def delete_single_formation_by_category(current_user, category_name):
         sanitized_category_name)
     if result.deleted_count:
         file_utils.delete_category_dir(sanitized_category_name)
-        return jsonify({'message': 'Formation deleted successfully'})
-    return jsonify({'error': 'Formation not found'}), 404
+        return jsonify({'message': 'la formation supprimée avec succès'})
+    return jsonify({'error': 'la formation n\'a pas été trouvée'}), 404
 
 
 # Course routes
@@ -723,7 +723,7 @@ def create_course(current_user, category_name):
         str(data.get('courseName', '')).strip().lower())
 
     if formation_model.get_course_from_formation_by_name(category_name, course_name):
-        return jsonify({'error': f'Formation with {category_name} category already contains {course_name} course'}), 404
+        return jsonify({'error': f'La formation avec le catégorie {category_name}  contient déjà le  Mooc {course_name} '}), 404
 
     missing_fields = utile.validate_fields(data, ['courseName', 'description'])
     if missing_fields:
@@ -732,11 +732,11 @@ def create_course(current_user, category_name):
     course_description = str(data.get('description', '')).strip().lower()
 
     if not formation_model.get_formation_by_category(category_name):
-        return jsonify({'error': 'Formation with this category does not exist'}), 404
+        return jsonify({'error': 'la Formation avec cette catégorie n\'existe pas'}), 404
     thumbnail_file = request.files.get('thumbnail')
 
     if thumbnail_file and not utile.allowed_file_img(thumbnail_file.filename):
-        return jsonify({'error': f'invalid thumbnail file extension format allowed : {current_app.config["ALLOWED_IMG_EXTENSIONS"]} '}), 400
+        return jsonify({'error': f'Le format d\'extension du fichier miniature n\'est pas autorisé. : {current_app.config["ALLOWED_IMG_EXTENSIONS"]} '}), 400
 
     file_utils.create_course_dir(category_name, course_name)
     file_utils.save_course_thumbnail(
@@ -748,7 +748,7 @@ def create_course(current_user, category_name):
     course_data = formation_model.get_course_from_formation_by_name(
         category_name, course_name)
 
-    return jsonify({'message': 'Course created successfully', 'courseData': course_data}), 201
+    return jsonify({'message': 'le Mooc a été créé avec succès', 'courseData': course_data}), 201
 
 
 @bp.route('/formations/<category_name>/courses/<course_name>/thumbnails/', methods=['GET'])
@@ -771,7 +771,7 @@ def get_course_by_name(current_user, category_name, course_name):
     formation = formation_model.get_formation_by_category_with_id(
         category_name)
     if not formation:
-        return jsonify({'error': 'Formation with this category does not exist'}), 404
+        return jsonify({'error': 'la Formation avec cette catégorie n\'existe pas'}), 404
     # Retrieve the course details
     course = formation_model.get_course_from_formation_by_name(
         category_name, course_name)
@@ -796,7 +796,7 @@ def get_course_by_name(current_user, category_name, course_name):
 
         return jsonify(response)
 
-    return jsonify({'error': 'Course not found'}), 404
+    return jsonify({'error': 'Le Mooc n\'a pas été trouvé'}), 404
 
 
 @bp.route('/formations/<category_name>/courses/<course_name>', methods=['PUT'])
@@ -807,12 +807,12 @@ def update_course_route(current_user, category_name, course_name):
     course_name = file_utils.sanitize_filename(course_name.lower().strip())
 
     if not formation_model.get_course_from_formation_by_name(category_name, course_name):
-        return jsonify({'error': f'Formation with {category_name} category does not contain {course_name} course'}), 404
+        return jsonify({'error': f'La formation avec  la catégorie {category_name}  ne contient pas  Le Mooc {course_name}'}), 404
 
     data = {**request.form.to_dict(), **request.files.to_dict()}
 
     if not (data.get('courseName') or data.get('description') or data.get('thumbnail')):
-        return jsonify({'error': 'At least one field (courseName or description or thumbnail) is required'}), 400
+        return jsonify({'error': 'Au moins un champ (description du nom du Mooc ou miniature) est requis'}), 400
 
     new_course_name = file_utils.sanitize_filename(
         str(data.get('courseName', '')).strip().lower())
@@ -827,7 +827,7 @@ def update_course_route(current_user, category_name, course_name):
     thumbnail_file = request.files.get('thumbnail')
     if thumbnail_file:
         if not utile.allowed_file_img(thumbnail_file.filename):
-            return jsonify({'error': f'invalid thumbnail file extension format allowed : {current_app.config["ALLOWED_IMG_EXTENSIONS"]} '}), 400
+            return jsonify({'error': f'Utiliser un format d\'extension de fichier miniature non valide est strictement interdit: {current_app.config["ALLOWED_IMG_EXTENSIONS"]} '}), 400
 
         file_utils.save_course_thumbnail(
             category_name, course_name, thumbnail_file)
@@ -844,7 +844,7 @@ def update_course_route(current_user, category_name, course_name):
     formation_model.update_course_in_formation(
         category_name, course_name, update_fields)
 
-    return jsonify({'message': 'Course updated successfully'})
+    return jsonify({'message': 'Le Mooc a été mis à jour avec succès'})
 
 
 @bp.route('/formations/<category_name>/courses/<course_name>', methods=['DELETE'])
@@ -859,7 +859,7 @@ def delete_course_route(current_user, category_name, course_name):
     if result.modified_count:
         file_utils.delete_course_dir(category_name, course_name)
         return jsonify({'message': 'Course deleted successfully'})
-    return jsonify({'error': 'Course not found'}), 404
+    return jsonify({'error': 'Le Mocc n\'est pas trouvé'}), 404
 
 
 def add_course_content(current_user, category_name, course_name):
@@ -867,30 +867,29 @@ def add_course_content(current_user, category_name, course_name):
     course_name = course_name.strip().lower()
 
     if 'video' not in request.files:
-        return jsonify({'error': 'Video file is required'}), 400
+        return jsonify({'error': 'Le fichier vidéo est requis'}), 400
 
     video_file = request.files['video']
     if not utile.allowed_file_video(video_file.filename):
-        return jsonify({'error': f'invalid intro video file extension format allowed : {current_app.config["ALLOWED_VIDEO_EXTENSIONS"]} '}), 400
-
+        return jsonify({'error': f'Le format d\'extension de fichier vidéo  non valide n\'est pas autorisé.: {current_app.config["ALLOWED_VIDEO_EXTENSIONS"]} '}), 400
     title = file_utils.sanitize_filename(
         str(request.form.get('title', '')).strip().lower())
     description = str(request.form.get('description', '')).strip()
     thumbnail = request.files.get('thumbnail')
 
     if thumbnail and not utile.allowed_file_img(thumbnail.filename):
-        return jsonify({'error': f'invalid thumbnail file extension format allowed : {current_app.config["ALLOWED_IMG_EXTENSIONS"]} '}), 400
+        return jsonify({'error': f'Le format d\'extension du fichier miniature n\'est pas autorisé. : {current_app.config["ALLOWED_IMG_EXTENSIONS"]} '}), 400
 
     if not title:
-        return jsonify({'error': 'Title is required'}), 400
+        return jsonify({'error': 'Le titre est requisd'}), 400
 
     if not formation_model.get_course_from_formation_by_name(category_name, course_name):
-        return jsonify({'error': 'Course not found'}), 404
+        return jsonify({'error': 'Le Mooc n\'a pas été trouvé'}), 404
 
     existing_content = formation_model.get_course_content_by_title(
         category_name, course_name, title)
     if existing_content:
-        return jsonify({'error': 'Course content with the same title already exists'}), 400
+        return jsonify({'error': 'Le contenu du Mooc avec le même titre existe déjà'}), 400
 
     video_info = file_utils.save_video_and_thumbnail(
         category_name, course_name, title, video_file, thumbnail)
@@ -905,8 +904,8 @@ def add_course_content(current_user, category_name, course_name):
         target_content = formation_model.get_course_content_in_db(
             current_user, category_name, course_name, title)
 
-        return jsonify({'message': 'Course content added successfully', 'contentDetails': target_content}), 201
-    return jsonify({'error': 'Failed to add course content'}), 500
+        return jsonify({'message': 'Le contenu du Mooc a été ajouté avec succès', 'contentDetails': target_content}), 201
+    return jsonify({'error': 'Impossible d\'ajouter le contenu du Mooc'}), 500
 
 
 @bp.route('/formations/<category_name>/courses/<course_name>/content/<title>/like', methods=['POST'])
@@ -922,17 +921,17 @@ def like_course_content(current_user, category_name, course_name, title):
     formation = formation_model.get_formation_by_category_with_id(
         category_name)
     if not formation:
-        return jsonify({'error': 'Formation with this category does not exist'}), 404
+        return jsonify({'error': 'la Formation avec cette catégorie n\'existe pas'}), 404
 
     course = formation_model.get_course_from_formation_by_name(
         category_name, course_name)
     if not course:
-        return jsonify({'error': 'Course not found'}), 404
+        return jsonify({'error': 'Le Mooc n\'a pas été trouvé'}), 404
 
     content = formation_model.get_course_content_by_title(
         category_name, course_name, title)
     if not content:
-        return jsonify({'error': 'Course content not found'}), 404
+        return jsonify({'error': 'le contenu du Mooc n\'a pas été trouvé'}), 404
 
     course_id = course['_id']
     formation_id = str(formation["_id"])
@@ -941,7 +940,7 @@ def like_course_content(current_user, category_name, course_name, title):
         current_user['_id'], str(formation["_id"]), course['_id'])
 
     if not is_enrolled and not utile.check_admin_or_owner(current_user):
-        return jsonify({'error': 'You have to enroll the course before do this operation'}), 400
+        return jsonify({'error': 'Vous devez vous inscrire au Mooc avant de faire cette opération'}), 400
 
     # Increment the number of likes on the course content (video)
     content_like_result = formation_model.increment_content_likes(
@@ -952,9 +951,9 @@ def like_course_content(current_user, category_name, course_name, title):
         category_name, course_name)
 
     if content_like_result.modified_count > 0 and course_like_result.modified_count > 0:
-        return jsonify({'message': 'Content liked and course like incremented successfully'})
+        return jsonify({'message': 'le contenu a été aimé avec succès'})
 
-    return jsonify({'error': 'Failed to like content or increment course likes'}), 500
+    return jsonify({'error': 'Le contenu n\'a pas été aimé '}), 500
 
 
 @bp.route('/formations/<category_name>/courses/<course_name>/content', methods=['POST'])
@@ -990,7 +989,7 @@ def get_thumbnail(category_name, course_name, filename):
 def update_course_content(current_user, category_name, course_name, title):
 
     if 'video' not in request.files and 'thumbnail' not in request.files and 'title' not in request.form and 'description' not in request.form:
-        return jsonify({"error": "No video, thumbnail, ,description, or title provided"}), 400
+        return jsonify({"error": "Aucune vidéo, miniature, description ou titre fournis"}), 400
 
     # Find the course content to be deleted
     title = file_utils.sanitize_filename(title.lower().strip())
@@ -998,7 +997,7 @@ def update_course_content(current_user, category_name, course_name, title):
         category_name, course_name, title)
 
     if not course_content:
-        return jsonify({"error": 'Course content not found'}), 404
+        return jsonify({"error": 'le contenu du cours n\'a pas été trouvé'}), 404
 
     video_file = request.files.get('video')
     thumbnail_file = request.files.get('thumbnail')
@@ -1007,15 +1006,16 @@ def update_course_content(current_user, category_name, course_name, title):
     new_description = str(request.form.get("description", "")).strip()
 
     if thumbnail_file and not utile.allowed_file_img(thumbnail_file.filename):
-        return jsonify({'error': f'invalid thumbnail file extension format allowed : {current_app.config["ALLOWED_IMG_EXTENSIONS"]} '}), 400
+        jsonify({'error': f'Le format d\'extension du fichier miniature n\'est pas autorisé. : {
+                current_app.config["ALLOWED_IMG_EXTENSIONS"]} '}), 400
 
     if video_file and not utile.allowed_file_video(video_file.filename):
-        return jsonify({'error': f'invalid intro video file extension format allowed : {current_app.config["ALLOWED_VIDEO_EXTENSIONS"]} '}), 400
+        return jsonify({'error': f'Le format d\'extension de fichier vidéo  non valide n\'est pas autorisé.: {current_app.config["ALLOWED_VIDEO_EXTENSIONS"]} '}), 400
 
     new_title = file_utils.sanitize_filename(new_title)
 
     if new_title and formation_model.get_course_content_by_title(category_name, course_name, new_title):
-        return jsonify({'error': ' video Title already exists'}), 400
+        return jsonify({'error': ' Le titre de la vidéo existe déjà'}), 400
 
     update_data = {}
 
@@ -1049,7 +1049,7 @@ def update_course_content(current_user, category_name, course_name, title):
         course_content = formation_model.get_course_content_by_title(
             category_name, course_name, title)
 
-    return jsonify({"message": 'Course content updated successfully', "courseContent": course_content}), 200
+    return jsonify({"message": 'Le contenu du Mooc a été mis à jour avec succès', "courseContent": course_content}), 200
 
 
 def update_users_progress(current_user, category_name, course_name, deleted_content_index):
@@ -1067,10 +1067,10 @@ def update_users_progress(current_user, category_name, course_name, deleted_cont
         current_max_content = len(course_content)
 
         if not course:
-            return jsonify({'error': 'Course not found'}), 404
+            return jsonify({'error': 'Le Mocc n\'est pas trouvé'}), 404
 
         if deleted_content_index < 0 or deleted_content_index >= current_max_content:
-            return jsonify({'error': f'invalid courseContent index [{deleted_content_index}]'})
+            return jsonify({'error': f'Index de contenu du Mooc non valide [{deleted_content_index}]'})
 
          # Iterate over all users enrolled in this course
         users = user_model.get_users_enrolled_a_course(
@@ -1124,8 +1124,8 @@ def update_users_progress(current_user, category_name, course_name, deleted_cont
         users = user_model.get_users_enrolled_a_course(
             category_name, course_name)
         return {
-            'message': 'Course content deleted successfully',
-            'messageSecondary': 'User progress updated successfully.',
+            'message': 'le contenu du Mooc a été supprimé avec succès',
+            'messageSecondary': 'la progression de l\'utilisateur a été mise à jour avec succès.',
             'updated_users_count': updated_users_count,
             'users': users,
         }
@@ -1152,7 +1152,7 @@ def delete_course_content(current_user, category_name, course_name, title):
             category_name, course_name, title)
 
         if not course_content:
-            return jsonify({"error": 'Course content not found'}), 404
+            return jsonify({"error": 'le contenu du Mooc n\'a pas été trouvé'}), 404
             # Find the index of the content by its title
 
         # Fetch the target course by categoryName and courseName
@@ -1187,6 +1187,8 @@ def delete_course_content(current_user, category_name, course_name, title):
         return jsonify({'error': str(e)}), 500
 
 
+
+
 @bp.route('/formations/<category_name>/courses/<course_name>/tracking', methods=['PUT'])
 @token_required
 def update_tracking_info(current_user, category_name, course_name):
@@ -1197,33 +1199,31 @@ def update_tracking_info(current_user, category_name, course_name):
     formation = formation_model.get_formation_by_category_with_id(
         category_name)
     if not formation:
-        return jsonify({'error': 'Formation with this category does not exist'}), 404
+        return jsonify({'error': 'la Formation avec cette catégorie n\'existe pas'}), 404
     # Check if course exists
     course = formation_model.get_course_from_formation_by_name(
         category_name, course_name)
 
     if not course:
-        return jsonify({'error': 'Course not found'}), 404
+        return jsonify({'error': 'Le cours n\'a pas été trouvé'}), 404
 
     # Get request data
     data = request.json
     if not data:
-        return jsonify({'error': 'No data provided'}), 400
-        is_enrolled = user_model.is_user_enrolled(
-            current_user['_id'], str(formation['_id']), course['_id'])
+        return jsonify({'error': 'aucune donnée fournie'}), 400
 
     is_enrolled = user_model.is_user_enrolled(
         current_user['_id'], str(formation['_id']), course['_id'])
 
     if not is_enrolled:
-        return jsonify({'error': 'You have to enroll the course before do this operation'}), 400
+        return jsonify({'error': 'Vous devez vous inscrire au Mooc avant de faire cette opération'}), 400
 
     current_content = data.get('currentContent')
     max_content = data.get('maxContent', -1)
     current_duration = data.get('currentDuration', 0)
     # Validate content values
     if not utile.validate_content_values(current_content, max_content, current_duration):
-        return jsonify({'error': 'Invalid content values'}), 400
+        return jsonify({'error': 'Valeurs de contenu invalides'}), 400
 
     current_content = int(current_content)
     max_content = int(max_content)
@@ -1237,7 +1237,7 @@ def update_tracking_info(current_user, category_name, course_name):
         max_content = course_content_length
     if current_content >= course_content_length:
         return jsonify({
-            'error': 'Tracking info exceeds course content length',
+            'error': 'Les renseignements de suivi dépassent la longueur du contenu du Mooc',
             'courseContentLength': course_content_length
         }), 400
 
@@ -1249,7 +1249,7 @@ def update_tracking_info(current_user, category_name, course_name):
     if user_model.update_user_enrolled_courses(current_user['_id'], updated_enrolled_courses):
         return jsonify(user_model.get_enrolled_course_data(current_user, str(formation['_id']),  course['_id'])), 200
     else:
-        return jsonify({'error': 'Failed to update tracking information'}), 500
+        return jsonify({'error': 'Impossible de mettre à jour les informations de suivi'}), 500
 
 
 @bp.route('/formations/<category_name>/courses/<course_name>/content/<content_title>', methods=['GET'])
@@ -1268,7 +1268,7 @@ def get_course_content_by_title_endpoint(current_user, category_name, course_nam
     if target_content:
         return target_content
     else:
-        return jsonify({'error': 'Content not found'}), 404
+        return jsonify({'error': 'contenu non trouvé'}), 404
 
 
 @bp.route('/formations/<category_name>/courses/<course_name>/tracking', methods=['GET'])
@@ -1280,14 +1280,14 @@ def get_course_tracking_info(current_user, category_name, course_name):
     formation = formation_model.get_formation_by_category_with_id(
         category_name)
     if not formation:
-        return jsonify({'error': 'Formation with this category does not exist'}), 404
+        return jsonify({'error': 'la Formation avec cette catégorie nexiste pas'}), 404
 
     # Retrieve the course details
     course = formation_model.get_course_from_formation_by_name(
         category_name, course_name)
 
     if not course:
-        return jsonify({'error': 'Course not found'}), 404
+        return jsonify({'error': 'Le Mooc n\'a pas été trouvé'}), 404
 
         # Check if the current user is enrolled in the course
     tracking_info = user_model.get_enrolled_course_data(
@@ -1309,10 +1309,13 @@ def get_course_tracking_info(current_user, category_name, course_name):
 @bp.route('/formations/<category_name>/courses/<course_name>/comments', methods=['POST'])
 @token_required
 def create_comment(current_user, category_name, course_name):
+
+    if not current_user.get("canComment", False):
+        return jsonify({"error": "vous n'êtes pas autorisé à ajouter un commentaire : "})
     data = request.get_json() or {}
     missing_fields = utile.validate_fields(data, ['message'])
     if missing_fields:
-        return jsonify({'error': f'Missing fields: {", ".join(missing_fields)}'}), 400
+        return jsonify({'error': f'Champs manquants: {", ".join(missing_fields)}'}), 400
 
     category_name = file_utils.sanitize_filename(category_name.strip().lower())
     course_name = file_utils.sanitize_filename(course_name.strip().lower())
@@ -1320,7 +1323,7 @@ def create_comment(current_user, category_name, course_name):
     formation = formation_model.get_formation_by_category_with_id(
         category_name)
     if not formation:
-        return jsonify({'error': 'Formation with this category does not exist'}), 404
+        return jsonify({'error': ' la Formation avec cette catégorie n\'existe pas'}), 404
 
     # Find the course in the formation
     course = formation_model.get_course_from_formation_by_name(
@@ -1331,17 +1334,17 @@ def create_comment(current_user, category_name, course_name):
         current_user['_id'], str(formation["_id"]), course['_id'])
 
     if not is_enrolled and not utile.check_admin_or_owner(current_user):
-        return jsonify({'error': 'You have to enroll the course before do this operation'}), 400
+        return jsonify({'error': 'Vous devez vous sinscrire au cours avant de faire cette opération'}), 400
 
     if not formation_model.get_course_from_formation_by_name(category_name, course_name):
-        return jsonify({'error': 'Course not found'}), 404
+        return jsonify({'error': 'Le cours n\'a pas été trouvé'}), 404
 
     message = str(data['message']).strip()
 
     comment = formation_model.add_comment_to_course_by_name(
         category_name, course_name, message, current_user)
 
-    return jsonify({'message': 'Comment added successfully', 'comment': comment})
+    return jsonify({'message': 'Le commentaire a été ajouté avec succès', 'comment': comment})
 
 
 @bp.route('/formations/<category_name>/courses/<course_name>/comments/<comment_id>', methods=['PUT'])
@@ -1352,27 +1355,27 @@ def update_comment(current_user, category_name, course_name, comment_id):
     data = request.get_json() or {}
     message = str(data.get('message', "")).strip()
     if 'message' not in data or not message:
-        return jsonify({'error': 'Message field is required'}), 400
+        return jsonify({'error': 'Champ de message requis'}), 400
 
     course = formation_model.get_course_from_formation_by_name(
         category_name, course_name)
     if not course:
-        return jsonify({'error': 'Course not found'}), 404
+        return jsonify({'error': 'Le Mooc n\'a pas été trouvé '}), 404
 
     comment = next((c for c in course.get('comments', [])
                    if str(c['_id']) == comment_id), None)
     if not comment:
-        return jsonify({'error': 'Comment not found'}), 404
+        return jsonify({'error': ' Commentaire non trouvé'}), 404
 
     if comment['username'] == current_user['username']:
         result = formation_model.update_comment_message(
             category_name, course_name, comment_id, message)
         if result.modified_count == 1:
-            return jsonify({'message': 'Comment updated successfully'})
+            return jsonify({'message': 'Le commentaire a été mis à jour avec succes'})
         else:
-            return jsonify({'error': 'Failed to update comment'}), 500
+            return jsonify({'error': 'Impossible de mettre à jour le commentaire'}), 500
     else:
-        return jsonify({'error': 'Permission denied'}), 403
+        return jsonify({'error': 'La permission refusée'}), 403
 
 
 @bp.route('/formations/<category_name>/courses/<course_name>/comments/<comment_id>', methods=['DELETE'])
@@ -1384,23 +1387,23 @@ def delete_comment(current_user, category_name, course_name, comment_id):
     course = formation_model.get_course_from_formation_by_name(
         category_name, course_name)
     if not course:
-        return jsonify({'error': 'Course not found'}), 404
+        return jsonify({'error': 'Le Mooc n\'a pas été trouvé'}), 404
 
     comment = next((c for c in course.get('comments', [])
                    if str(c['_id']) == comment_id), None)
 
     if not comment:
-        return jsonify({'error': 'Comment not found'}), 404
+        return jsonify({'error': 'Le commentaire n\'a pas été trouvé'}), 404
 
     if utile.check_admin_or_owner(current_user) or comment['email'] == current_user['email']:
         result = formation_model.delete_comment_from_course_by_name(
             category_name, course_name, comment_id)
         if result.modified_count == 1:
-            return jsonify({'message': 'Comment deleted successfully'})
+            return jsonify({'message': 'le commentaire a été supprimé avec succès'})
         else:
-            return jsonify({'error': 'Failed to delete comment'}), 500
+            return jsonify({'error': 'Impossible de supprimer le commentaire'}), 500
     else:
-        return jsonify({'error': 'Permission denied'}), 403
+        return jsonify({'error': 'La permission refusée'}), 403
 
 
 @bp.route('/formations/<category_name>/courses/<course_name>/comments/pullUp/<comment_id>', methods=['PATCH'])
@@ -1413,29 +1416,29 @@ def pull_up_comment(current_user, category_name, course_name, comment_id):
     formation = formation_model.get_formation_by_category_with_id(
         category_name)
     if not formation:
-        return jsonify({'error': 'Formation with this category does not exist'}), 404
+        return jsonify({'error': 'la Formation avec cette catégorie n\'existe past'}), 404
 
     # Find the course in the formation
     course = formation_model.get_course_from_formation_by_name(
         category_name, course_name)
     if not course:
-        return jsonify({'error': 'Course not found'}), 404
+        return jsonify({'error': 'Le Mooc n\'a pas été trouvé'}), 404
 
     is_enrolled = user_model.is_user_enrolled(
         current_user['_id'], str(formation["_id"]), course['_id'])
 
     if not is_enrolled and not utile.check_admin_or_owner(current_user):
-        return jsonify({'error': 'You have to enroll the course before do this operation'}), 400
+        return jsonify({'error': 'Vous devez vous inscrire au Mooc avant de faire cette opération'}), 400
 
     course = formation_model.get_course_from_formation_by_name(
         category_name, course_name)
     if not course:
-        return jsonify({'error': 'Course not found'}), 404
+        return jsonify({'error': 'Le Mooc n\'a pas été trouvé'}), 404
 
     comment = next((c for c in course.get('comments', [])
                    if str(c['_id']) == comment_id), None)
     if not comment:
-        return jsonify({'error': 'Comment not found'}), 404
+        return jsonify({'error': 'Le commentaire n\'a pas été trouvé'}), 404
     pull_down_status = False
     if current_user['username'] in comment.get('usersPullUpList', []):
         pull_down_status = True
@@ -1444,12 +1447,12 @@ def pull_up_comment(current_user, category_name, course_name, comment_id):
         if (pull_down_status):
             formation_model.pull_down_comment(
                 category_name, course_name, comment_id, current_user)
-            return jsonify({'message': 'Comment pulled down successfully', 'comment': {'pullDownStatus': pull_down_status, 'nbrPullUp': comment.get('nbrPullUp', 0)-1}})
+            return jsonify({'message': 'Le commentaire a été retiré avec succès', 'comment': {'pullDownStatus': pull_down_status, 'nbrPullUp': comment.get('nbrPullUp', 0)-1}})
         else:
             formation_model.pull_up_comment(
                 category_name, course_name, comment_id, current_user)
 
-            return jsonify({'message': 'Comment pulled up successfully',  'comment': {'pullDownStatus': pull_down_status, 'nbrPullUp': comment.get('nbrPullUp', 0) + 1}})
+            return jsonify({'message': 'Le commentaire a été tiré avec succès',  'comment': {'pullDownStatus': pull_down_status, 'nbrPullUp': comment.get('nbrPullUp', 0) + 1}})
 
     else:
         return jsonify({'error': 'Permission denied'}), 403
@@ -1465,41 +1468,41 @@ def create_reply_comment(current_user, category_name, course_name, comment_id):
     formation = formation_model.get_formation_by_category_with_id(
         category_name)
     if not formation:
-        return jsonify({'error': 'Formation with this category does not exist'}), 404
+        return jsonify({'error': 'la Formation avec cette catégorie n\'existe pas'}), 404
 
     # Find the course in the formation
     course = formation_model.get_course_from_formation_by_name(
         category_name, course_name)
     if not course:
-        return jsonify({'error': 'Course not found'}), 404
+        return jsonify({'error': 'Le Mooc n\'a pas été trouvé'}), 404
     data = request.get_json() or {}
     missing_fields = utile.validate_fields(data, ['message'])
     if missing_fields:
-        return jsonify({'error': f'Missing fields: {", ".join(missing_fields)}'}), 400
+        return jsonify({'error': f'Champs manquants: {", ".join(missing_fields)}'}), 400
 
     is_enrolled = user_model.is_user_enrolled(
         current_user['_id'], str(formation["_id"]), course['_id'])
 
     if not is_enrolled and not utile.check_admin_or_owner(current_user):
-        return jsonify({'error': 'You have to enroll the course before do this operation'}), 400
+        return jsonify({'error': 'Vous devez vous inscrire au Mooc avant de faire cette opération'}), 400
 
     course = formation_model.get_course_from_formation_by_name(
         category_name, course_name)
     if not course:
-        return jsonify({'error': 'Course not found'}), 404
+        return jsonify({'error': 'Le Mooc n\'a pas été trouvé'}), 404
 
     comment = next((c for c in course.get('comments', [])
                    if str(c['_id']) == comment_id), None)
 
     if not comment:
-        return jsonify({'error': 'Comment not found'}), 404
+        return jsonify({'error': 'Le commentaire n\'a pas été trouvé'}), 404
 
     message = str(data['message']).strip()
 
     comment = formation_model.add_comment_replay_to_course_by_name(
         category_name, course_name, message, current_user, comment_id)
 
-    return jsonify({'message': 'Comment added successfully', 'comment': comment})
+    return jsonify({'message': 'Le commentaire a été ajouté avec succès', 'comment': comment})
 
 
 @bp.route('/formations/<category_name>/courses/<course_name>/comments/<root_comment_id>/reply/<comment_id>/pullUp', methods=['PATCH'])
@@ -1512,7 +1515,7 @@ def pull_up_reply_comment(current_user, category_name, course_name, root_comment
     formation = formation_model.get_formation_by_category_with_id(
         category_name)
     if not formation:
-        return jsonify({'error': 'Formation with this category does not exist'}), 404
+        return jsonify({'error': 'La formation avec cette catégorie n\'existe past'}), 404
 
     # Find the course in the formation
     course = formation_model.get_course_from_formation_by_name(
@@ -1523,12 +1526,12 @@ def pull_up_reply_comment(current_user, category_name, course_name, root_comment
         current_user['_id'], str(formation["_id"]), course['_id'])
 
     if not is_enrolled and not utile.check_admin_or_owner(current_user):
-        return jsonify({'error': 'You have to enroll the course before do this operation'}), 400
+        return jsonify({'error': 'Vous devez vous inscrire au Mooc avant de faire cette opération'}), 400
 
     comment = formation_model.get_reply_comment_by_id(
         category_name, course_name, root_comment_id, comment_id)
     if not comment:
-        return jsonify({'error': 'Reply comment not found'}), 404
+        return jsonify({'error': 'le commentaire de réponse n\’a pas été trouvé'}), 404
 
     pull_down_status = current_user['username'] in comment.get(
         'usersPullUpList', [])
@@ -1537,13 +1540,13 @@ def pull_up_reply_comment(current_user, category_name, course_name, root_comment
         if pull_down_status:
             formation_model.pull_down_reply_comment(
                 category_name, course_name, root_comment_id, comment_id, current_user)
-            return jsonify({'message': 'Reply comment pulled down successfully',  'comment': {'pullDownStatus': pull_down_status, 'nbrPullUp': comment.get('nbrPullUp', 0)-1}})
+            return jsonify({'message': 'le commentaire de réponse a été retiré avec succès',  'comment': {'pullDownStatus': pull_down_status, 'nbrPullUp': comment.get('nbrPullUp', 0)-1}})
         else:
             formation_model.pull_up_reply_comment(
                 category_name, course_name, root_comment_id, comment_id, current_user)
-            return jsonify({'message': 'Reply comment pulled up successfully',  'comment': {'pullDownStatus': pull_down_status, 'nbrPullUp': comment.get('nbrPullUp', 0)+1}})
+            return jsonify({'message': 'le commentaire de réponse a été extrait avec succès',  'comment': {'pullDownStatus': pull_down_status, 'nbrPullUp': comment.get('nbrPullUp', 0)+1}})
     else:
-        return jsonify({'error': 'Permission denied'}), 403
+        return jsonify({'error': 'La permission refusée'}), 403
 
 
 @bp.route('/formations/<category_name>/courses/<course_name>/comments/<root_comment_id>/reply/<comment_id>', methods=['DELETE'])
@@ -1555,17 +1558,17 @@ def delete_reply_comment(current_user, category_name, course_name, root_comment_
     comment = formation_model.get_reply_comment_by_id(
         category_name, course_name, root_comment_id, comment_id)
     if not comment:
-        return jsonify({'error': 'Reply comment not found'}), 404
+        return jsonify({'error': 'le commentaire de réponse n\'a pas été trouvé'}), 404
 
     if utile.check_admin_or_owner(current_user) or comment['username'] == current_user['username']:
         result = formation_model.delete_reply_comment_from_course_by_name(
             category_name, course_name, root_comment_id, comment_id)
         if result.modified_count == 1:
-            return jsonify({'message': 'Reply comment deleted successfully'})
+            return jsonify({'message': 'le commentaire de réponse a été supprimé avec succès'})
         else:
-            return jsonify({'error': 'Failed to delete reply comment'}), 500
+            return jsonify({'error': 'Impossible de supprimer le commentaire de réponse'}), 500
     else:
-        return jsonify({'error': 'Permission denied'}), 403
+        return jsonify({'error': 'La permission refusée'}), 403
 
 
 @bp.route('/formations/<category_name>/courses/<course_name>/comments/<root_comment_id>/reply/<comment_id>', methods=['PUT'])
@@ -1576,22 +1579,22 @@ def update_reply_comment(current_user, category_name, course_name, root_comment_
     data = request.get_json() or {}
     message = str(data.get('message', "")).strip()
     if 'message' not in data or not message:
-        return jsonify({'error': 'Message field is required'}), 400
+        return jsonify({'error': 'le champ Message est requis'}), 400
 
     comment = formation_model.get_reply_comment_by_id(
         category_name, course_name, root_comment_id, comment_id)
     if not comment:
-        return jsonify({'error': 'Reply comment not found'}), 404
+        return jsonify({'error': 'le commentaire de réponse n\'est pas trouvé'}), 404
 
     if comment['username'] == current_user['username']:
         result = formation_model.update_reply_comment_message(
             category_name, course_name, root_comment_id, comment_id, message)
         if result.modified_count == 1:
-            return jsonify({'message': 'Reply comment updated successfully'})
+            return jsonify({'message': 'le commentaire de réponse a été mis à jour avec succès'})
         else:
-            return jsonify({'error': 'Failed to update reply comment'}), 500
+            return jsonify({'error': 'Impossible de mettre à jour le commentaire de réponse'}), 500
     else:
-        return jsonify({'error': 'Permission denied'}), 403
+        return jsonify({'error': 'La permission refusée'}), 403
 
 # review section :
 
@@ -1605,19 +1608,19 @@ def create_review(current_user, category_name, course_name):
     data = request.get_json() or {}
     missing_fields = utile.validate_fields(data, ['rating'])
     if missing_fields:
-        return jsonify({'error': f'Missing fields: {", ".join(missing_fields)}'}), 400
+        return jsonify({'error': f'Champs manquants: {", ".join(missing_fields)}'}), 400
 
     # Find the corresponding formation (category)
     formation = formation_model.get_formation_by_category_with_id(
         category_name)
     if not formation:
-        return jsonify({'error': 'Formation with this category does not exist'}), 404
+        return jsonify({'error': 'La formation avec cette catégorie n\'existe pas'}), 404
 
     # Find the course in the formation
     course = formation_model.get_course_from_formation_by_name(
         category_name, course_name)
     if not course:
-        return jsonify({'error': 'Course not found'}), 404
+        return jsonify({'error': 'Le Mooc n\'a pas été trouvé'}), 404
 
     course_id = course['_id']
     formation_id = str(formation["_id"])
@@ -1625,33 +1628,33 @@ def create_review(current_user, category_name, course_name):
         current_user['_id'], formation_id, course_id)
 
     if not is_enrolled:
-        return jsonify({'error': 'You have to  enroll the course before do this operation'}), 400
+        return jsonify({'error': 'Vous devez vous inscrire au Mooc avant de faire cette opération'}), 400
 
     review = str(data.get('review', "")).strip()
     if not utile.is_numeric(data.get('rating', 0)):
-        return jsonify({'error': f'the rating should be a numeric value'}), 400
+        return jsonify({'error': f'la note doit être une valeur numérique'}), 400
     rating = float(data.get('rating', 0))
 
     if not 0 <= rating <= 5:
-        return jsonify({'error': 'Rating must be between 0 and 5'}), 400
+        return jsonify({'error': 'La note doit être comprise entre 0 et 5'}), 400
 
     course = formation_model.get_course_from_formation_by_name(
         category_name, course_name)
     if not course:
-        return jsonify({'error': 'Course not found'}), 404
+        return jsonify({'error': 'Le Mooc n\'a pas été trouvé'}), 404
 
     existing_review = formation_model.get_user_review(
         category_name, course_name, current_user['username'])
     if existing_review:
-        return jsonify({'error': 'You have already reviewed this course'}), 400
+        return jsonify({'error': 'Vous avez déjà évalué ce cours'}), 400
 
     review_result, average_rating = formation_model.add_review_to_course(
         category_name, course_name, review, rating, current_user)
     if review_result:
 
-        return jsonify({'message': 'Review added successfully', 'review': review_result, 'averageRating': average_rating}), 201
+        return jsonify({'message': 'la revue a été ajoutée avec succès', 'review': review_result, 'averageRating': average_rating}), 201
     else:
-        return jsonify({'error': 'Failed to add review'}), 500
+        return jsonify({'error': 'Impossible d\'ajouter la revue'}), 500
 
 
 @bp.route('/formations/<category_name>/courses/<course_name>/reviews', methods=['DELETE'])
@@ -1664,12 +1667,12 @@ def delete_review(current_user, category_name, course_name):
         category_name, course_name, current_user['username'])
 
     if not result:
-        return jsonify({'error': 'Failed to delete review'}), 500
+        return jsonify({'error': 'Impossible de supprimer la revue'}), 500
 
     if result and result.modified_count == 1:
-        return jsonify({'message': 'Review deleted successfully', 'averageRating': average_rating})
+        return jsonify({'message': 'la revue a été supprimée avec succès', 'averageRating': average_rating})
     elif result and result.modified_count == 0:
-        return jsonify({'message': 'Review not found'})
+        return jsonify({'message': 'La revue n\'a pas été trouvée'})
 
 
 @bp.route('/formations/<category_name>/courses/<course_name>/content/<title>/resources', methods=['POST'])
@@ -1686,13 +1689,13 @@ def add_resource(current_user, category_name, course_name, title):
     # Validate missing fields
     missing_fields = utile.validate_fields(request_data, required_fields)
     if missing_fields:
-        return jsonify({"error": f"Missing fields: {', '.join(missing_fields)}"}), 400
+        return jsonify({"error": f"Champs manquants: {', '.join(missing_fields)}"}), 400
 
     # Check if the course content (video) exists
     content = formation_model.get_course_content_by_title(
         category_name, course_name, title)
     if not content:
-        return jsonify({'error': 'Course content not found'}), 404
+        return jsonify({'error': 'Le Mooc n\'a pas été trouvé'}), 404
 
     try:
         resource_data = {
@@ -1722,7 +1725,7 @@ def get_resources(current_user, category_name, course_name, title):
     content = formation_model.get_course_content_by_title(
         category_name, course_name, title)
     if not content:
-        return jsonify({'error': 'Course content not found'}), 404
+        return jsonify({'error': 'le contenu du Mooc n\'a pas été trouvé'}), 404
 
     resources = content.get('resources', [])
 
@@ -1740,10 +1743,10 @@ def update_resource(current_user, category_name, course_name, title, resource_id
     request_data = request.get_json()
 
     if not request_data:
-        return jsonify({"error": "No update data provided"}), 400
+        return jsonify({"error": "Aucune donnée mise à jour n\'a été fournie"}), 400
 
     if request_data.get("title") == "" or request_data.get("link") == "":
-        return jsonify({"error": "the title and the link should not be empty"})
+        return jsonify({"error": "le titre et le lien ne doivent pas être vides"})
 
     try:
 
@@ -1790,7 +1793,7 @@ def add_quiz_question(current_user, category_name, course_name, title):
     formation = formation_model.get_formation_by_category_with_id(
         category_name)
     if not formation:
-        return jsonify({'error': 'Formation with this category does not exist'}), 404
+        return jsonify({'error': 'la Formation avec cette catégorie n\'existe pas'}), 404
 
     course = formation_model.get_course_from_formation_by_name(
         category_name, course_name)
@@ -1800,7 +1803,7 @@ def add_quiz_question(current_user, category_name, course_name, title):
     content = formation_model.get_course_content_by_title(
         category_name, course_name, title)
     if not content:
-        return jsonify({'error': 'Course content not found'}), 404
+        return jsonify({'error': 'Le cours n\'a pas été trouvé'}), 404
 
     content_id = content['_id']
     course_id = course['_id']
@@ -1811,21 +1814,21 @@ def add_quiz_question(current_user, category_name, course_name, title):
     required_fields = ['question', 'possibleAnswers']
     missing_fields = utile.validate_fields(request_data, required_fields)
     if missing_fields:
-        return jsonify({"error": f"Missing fields: {', '.join(missing_fields)}"}), 400
+        return jsonify({"error": f"Champs manquants: {', '.join(missing_fields)}"}), 400
 
     # Validate possible answers
     if not isinstance(request_data['possibleAnswers'], list) or len(request_data['possibleAnswers']) < 2:
-        return jsonify({"error": "possibleAnswers must be a list with at least two items"}), 400
+        return jsonify({"error": "possibleAnsolutions doit être une liste avec au moins deux éléments"}), 400
 
     for answer in request_data['possibleAnswers']:
         if not isinstance(answer, dict) or 'answer' not in answer or 'status' not in answer:
-            return jsonify({"error": "Each answer must be an object with 'answer' and 'status' fields"}), 400
+            return jsonify({"error": "Chaque réponse doit être un objet avec les champs 'answer' et 'status'"}), 400
 
     # Check if the course content exists
     content = formation_model.get_course_content_by_title(
         category_name, course_name, title)
     if not content:
-        return jsonify({'error': 'Course content not found'}), 404
+        return jsonify({'error': 'le contenu du cours n\'a pas été trouvé'}), 404
 
     try:
         question_data = {
@@ -1856,17 +1859,17 @@ def delete_question(current_user, category_name, course_name, title, question_id
     formation = formation_model.get_formation_by_category_with_id(
         category_name)
     if not formation:
-        return jsonify({'error': 'Formation with this category does not exist'}), 404
+        return jsonify({'error': 'la Formation avec cette catégorie n\'existe past'}), 404
 
     course = formation_model.get_course_from_formation_by_name(
         category_name, course_name)
     if not course:
-        return jsonify({'error': 'Course not found'}), 404
+        return jsonify({'error': 'Le Mooc n\'a pas été trouvé'}), 404
 
     content = formation_model.get_course_content_by_title(
         category_name, course_name, title)
     if not content:
-        return jsonify({'error': 'Course content not found'}), 404
+        return jsonify({'error': 'le contenu du cours n\'a pas été trouvé'}), 404
 
     content_id = content['_id']
     course_id = course['_id']
@@ -1897,7 +1900,7 @@ def get_quiz(current_user, category_name, course_name, title):
     content = formation_model.get_course_content_by_title(
         category_name, course_name, title)
     if not content:
-        return jsonify({'error': 'Course content not found'}), 404
+        return jsonify({'error': 'le contenu du cours n\'a pas été trouvé'}), 404
 
     resources = content.get('quiz', [])
 
@@ -1914,17 +1917,17 @@ def update_quiz_question(current_user, category_name, course_name, title, questi
     formation = formation_model.get_formation_by_category_with_id(
         category_name)
     if not formation:
-        return jsonify({'error': 'Formation with this category does not exist'}), 404
+        return jsonify({'error': 'la Formation avec cette catégorie n\'existe past'}), 404
 
     course = formation_model.get_course_from_formation_by_name(
         category_name, course_name)
     if not course:
-        return jsonify({'error': 'Course not found'}), 404
+        return jsonify({'error': 'Le Mooc n\'a pas été trouvé'}), 404
 
     content = formation_model.get_course_content_by_title(
         category_name, course_name, title)
     if not content:
-        return jsonify({'error': 'Course content not found'}), 404
+        return jsonify({'error': 'le contenu du cours n\'a pas été trouvé'}), 404
 
     content_id = content['_id']
     course_id = course['_id']
@@ -1932,23 +1935,23 @@ def update_quiz_question(current_user, category_name, course_name, title, questi
     request_data = request.get_json()
 
     if request_data.get("question") == "":
-        return jsonify({'error': "the question should contains a value"})
+        return jsonify({'error': "la question doit contenir une valeur"})
     # Check if at least one field to update is provided
     if not request_data.get('question') and not request_data.get('possibleAnswers'):
-        return jsonify({"error": "At least one of 'question' or 'possibleAnswers' must be provided"}), 400
+        return jsonify({"error": "Au moins  'question'  ou 'possibleAnswers'  doit être fournie"}), 400
 
     # Validate possible answers if provided
     if 'possibleAnswers' in request_data:
         if not isinstance(request_data['possibleAnswers'], list) or len(request_data['possibleAnswers']) < 2:
-            return jsonify({"error": "possibleAnswers must be a list with at least two items"}), 400
+            return jsonify({"error": "possibleAnswers doit être une liste avec au moins deux éléments"}), 400
 
         for answer in request_data['possibleAnswers']:
             if not isinstance(answer, dict) or 'answer' not in answer or 'status' not in answer:
-                return jsonify({"error": "Each answer must be an object with 'answer' and 'status' fields"}), 400
+                return jsonify({"error": "Chaque réponse doit être un objet avec les champs 'answer' et 'status'"}), 400
 
         # Check if at least one answer is correct
         if not any(answer['status'] for answer in request_data['possibleAnswers']):
-            return jsonify({"error": "At least one answer must be marked as correct"}), 400
+            return jsonify({"error": "Au moins une réponse doit être marquée comme correcte"}), 400
         request_data['isMultipleAnswers'] = course_model.isMultipleAnswersQuestion(
             request_data)
 
@@ -1979,13 +1982,13 @@ def get_quiz_question_by_id(current_user, category_name, course_name, title, que
     content = formation_model.get_course_content_by_title(
         category_name, course_name, title)
     if not content:
-        return jsonify({'error': 'Course content not found'}), 404
+        return jsonify({'error': 'Le Mooc n\'a pas été trouvé'}), 404
 
     quiz = content.get('quiz', [])
     question = next((q for q in quiz if q['_id'] == question_id), None)
 
     if not question:
-        return jsonify({'error': 'Question not found'}), 404
+        return jsonify({'error': 'le contenu du cours n\'a pas été trouvé'}), 404
 
     return jsonify({'question': question}), 200
 
@@ -2002,17 +2005,17 @@ def pass_quiz_feedback(current_user, category_name, course_name, title):
     formation = formation_model.get_formation_by_category_with_id(
         category_name)
     if not formation:
-        return jsonify({'error': 'Formation with this category does not exist'}), 404
+        return jsonify({'error': 'la Formation avec cette catégorie n\'existe past'}), 404
 
     course = formation_model.get_course_from_formation_by_name(
         category_name, course_name)
     if not course:
-        return jsonify({'error': 'Course not found'}), 404
+        return jsonify({'error': 'Le Mooc n\'a pas été trouvé'}), 404
 
     content = formation_model.get_course_content_by_title(
         category_name, course_name, title)
     if not content:
-        return jsonify({'error': 'Course content not found'}), 404
+        return jsonify({'error': 'le contenu du cours n\'a pas été trouvé'}), 404
 
     # Step 3: Extract IDs for formation, course, and content
     content_id = content['_id']
@@ -2023,12 +2026,12 @@ def pass_quiz_feedback(current_user, category_name, course_name, title):
         current_user['_id'], str(formation["_id"]), course['_id'])
 
     if not is_enrolled and not utile.check_admin_or_owner(current_user):
-        return jsonify({'error': 'You have to enroll the course before do this operation'}), 400
+        return jsonify({'error': 'Vous devez mettre à jour au moins un champ [mot de passe,profileImg]n'}), 400
 
     # Step 4: Validate request data
     request_data = request.get_json()
     if not isinstance(request_data, dict):
-        return jsonify({"error": "Invalid input format. Expected a dictionary."}), 400
+        return jsonify({"error": "Format d\'entrée invalide. attendu un dictionnaire.."}), 400
 
     # Step 5: Process quiz and calculate feedback
     feedback, final_mark, total_marks = user_model.process_quiz_feedback(
@@ -2068,19 +2071,19 @@ def get_user_feedback_for_content(current_user, category_name, course_name, titl
     formation = formation_model.get_formation_by_category_with_id(
         category_name)
     if not formation:
-        return jsonify({'error': 'Formation with this category does not exist'}), 404
+        return jsonify({'error': 'la Formation avec cette catégorie n\'existe pas'}), 404
 
     # Find the course in the formation
     course = formation_model.get_course_from_formation_by_name(
         category_name, course_name)
     if not course:
-        return jsonify({'error': 'Course not found'}), 404
+        return jsonify({'error': 'Le Mooc n\'a pas été trouvé'}), 404
 
     # Find the specific content in the course
     content = formation_model.get_course_content_by_title(
         category_name, course_name, title)
     if not content:
-        return jsonify({'error': 'Course content not found'}), 404
+        return jsonify({'error': 'le contenu du Mooc n\'a pas été trouvé'}), 404
 
     content_id = content['_id']
     course_id = course['_id']
@@ -2105,11 +2108,10 @@ def get_user_feedback_for_content(current_user, category_name, course_name, titl
 
     # Find the feedback for the specific content (by content_id)
     feedback_for_content = next(
-        (feedback for feedback in user_feedbacks if feedback['contentId'] == str(
+        (feedback for feedback in user_feedbacks if 'contentId' in feedback and feedback['contentId'] == str(
             content_id)),
         None
     )
-
     # If feedback exists, return it; otherwise, return an empty message
     if feedback_for_content:
         return jsonify({'feedback': feedback_for_content}), 200
