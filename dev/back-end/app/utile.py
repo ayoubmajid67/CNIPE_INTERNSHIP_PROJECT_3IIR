@@ -34,6 +34,7 @@ def validate_password(password):
     return re.match(password_regex, password) is not None
 
 
+
 def are_all_strings(*args):
     return all(isinstance(arg, str) for arg in args)
 
